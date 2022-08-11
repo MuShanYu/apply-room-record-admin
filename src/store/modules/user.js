@@ -1,12 +1,22 @@
 import userApi from '@/api/user'
-import {getToken, setToken, removeToken, getUserInfo, removeUserInfo, setUserInfo} from '@/utils/auth'
+import {
+  getToken,
+  setToken,
+  removeToken,
+  getUserInfo,
+  removeUserInfo,
+  setUserInfo,
+  removeRoles,
+  setRoles, getRoles
+} from '@/utils/auth'
 import { resetRouter } from '@/router'
 import JSEncrypt from 'jsencrypt'
 
 const getDefaultState = () => {
   return {
     token: getToken(),
-    userInfo: getUserInfo()
+    userInfo: getUserInfo(),
+    roles: getRoles()
   }
 }
 
@@ -23,6 +33,19 @@ const mutations = {
   SET_USER_INFO: (state, userInfo) => {
     state.userInfo = userInfo
     setUserInfo(userInfo)
+  },
+  SET_ROLES: (state, roles) => {
+    state.roles = roles
+    setRoles(roles)
+  },
+  LOGOUT: (state) => {
+    state.token = ''
+    state.userInfo = null
+    state.roles = []
+    removeUserInfo()
+    removeToken()
+    removeRoles()
+    resetRouter()
   }
 }
 
@@ -44,10 +67,10 @@ const actions = {
           key: key
         }
         userApi.login(userLoginDTO).then(data => {
-          console.log(data);
           if (data !== null) {
-            commit('SET_TOKEN', data.tokenInfo.tokenValue)
+            commit('SET_TOKEN', data.token)
             commit('SET_USER_INFO', data.user)
+            commit('SET_ROLES', data.roles)
             resolve()
           } else {
             reject()
@@ -57,6 +80,14 @@ const actions = {
         })
       })
     })
+  },
+  refreshToken({commit}, userId) {
+    userApi.refreshToken(userId).then(data => {
+      commit('SET_TOKEN', data.token)
+    })
+  },
+  logout({ commit }) {
+    commit('LOGOUT')
   }
 }
 

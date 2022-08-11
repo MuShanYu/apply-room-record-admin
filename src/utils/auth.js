@@ -33,3 +33,23 @@ export function getUserInfo() {
 export function removeUserInfo() {
   return Cookies.remove('userInfo')
 }
+
+export function setRoles(roles) {
+  let userRoles = []
+  if (roles) {
+    userRoles = JSON.stringify(roles)
+  }
+  Cookies.set("roles", userRoles, { expires: 7 })
+}
+
+export function getRoles() {
+  let userRoles = Cookies.get("roles")
+  if (userRoles) {
+    return JSON.parse(userRoles)
+  }
+  return []
+}
+
+export function removeRoles() {
+  Cookies.remove("roles")
+}

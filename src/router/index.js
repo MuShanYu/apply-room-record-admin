@@ -35,6 +35,13 @@ export const constantRoutes = [
   { path: '*', redirect: '/404', hidden: true }
 ]
 
+const files = require.context('./modules', false, /\.router.js$/)
+files.keys().forEach(key => {
+  if (files(key).default) {
+    constantRoutes.push(...files(key).default)
+  }
+})
+
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),

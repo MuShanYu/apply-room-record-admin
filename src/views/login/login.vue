@@ -44,8 +44,7 @@
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
 
       <div class="tips">
-        <span style="margin-right:20px;">username: admin</span>
-        <span> password: any</span>
+        <span>密码和基础信息修改请在H5客户端进行！</span>
       </div>
 
     </el-form>
@@ -53,7 +52,6 @@
 </template>
 
 <script>
-import userApi from '@/api/user'
 export default {
   name: 'Login',
   data() {

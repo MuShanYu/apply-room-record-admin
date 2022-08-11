@@ -12,9 +12,25 @@ export default {
   },
   login(userLoginDTO) {
     return request({
-      url: '/user/login',
+      url: '/admin/login',
       method: 'post',
       data: userLoginDTO
+    })
+  },
+  refreshToken(userId) {
+    return request({
+      url: '/user/refreshToken',
+      method: 'get',
+      params: {
+        userId
+      }
+    })
+  },
+  userList(userListQueryDTO) {
+    return request({
+      url: '/admin/userList',
+      method: 'post',
+      data: userListQueryDTO
     })
   }
 }
