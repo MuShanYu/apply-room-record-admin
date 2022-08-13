@@ -11,6 +11,7 @@ import {
 } from '@/utils/auth'
 import { resetRouter } from '@/router'
 import JSEncrypt from 'jsencrypt'
+import {Message} from "element-ui";
 
 const getDefaultState = () => {
   return {
@@ -73,6 +74,11 @@ const actions = {
             commit('SET_ROLES', data.roles)
             resolve()
           } else {
+            Message({
+              message: '账号或密码错误',
+              type: 'error',
+              duration: 2500
+            })
             reject()
           }
         }).catch(error => {

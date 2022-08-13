@@ -8,6 +8,7 @@
 
 <script>
 import permission from '@/directive/permission'
+import userApi from "@/api/user"
 export default {
   name: 'Dashboard',
   directives: {
@@ -22,6 +23,7 @@ export default {
     }
   },
   created() {
+    userApi.userList({page: 1, size: 10, name: '', institute: ''})
   }
 }
 </script>

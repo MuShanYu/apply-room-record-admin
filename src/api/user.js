@@ -1,4 +1,6 @@
 import request from '@/utils/request'
+import { Message } from 'element-ui'
+
 
 export default {
   getPublicKey(currentTimeMills) {
@@ -28,7 +30,7 @@ export default {
   },
   userList(userListQueryDTO) {
     return request({
-      url: '/admin/userList',
+      url: '/admin/query/userList',
       method: 'post',
       data: userListQueryDTO
     })
