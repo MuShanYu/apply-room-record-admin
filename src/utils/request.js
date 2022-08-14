@@ -32,7 +32,6 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     const res = response.data
-
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 200) {
 
@@ -50,9 +49,7 @@ service.interceptors.response.use(
             }, 300)
           })
         }).catch(() => {
-          store.dispatch('user/logout').then(() => {
-            router.replace(`/login`)
-          })
+          router.replace(`/login`)
         })
       } else if (res.code === -1) {
         MessageBox.confirm('未登录，请先登录！', '提示', {
@@ -61,9 +58,7 @@ service.interceptors.response.use(
           type: 'warning',
         }).then(() => {
           // 清除数据然后跳转至登录
-          store.dispatch('user/logout').then(() => {
-            router.replace(`/login`)
-          })
+          router.replace(`/login`)
         })
       } else {
         Message({

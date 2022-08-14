@@ -9,7 +9,7 @@ import {
   removeRoles,
   setRoles, getRoles
 } from '@/utils/auth'
-import { resetRouter } from '@/router'
+import router, { resetRouter } from '@/router'
 import JSEncrypt from 'jsencrypt'
 import {Message} from "element-ui";
 
@@ -40,13 +40,15 @@ const mutations = {
     setRoles(roles)
   },
   LOGOUT: (state) => {
-    state.token = ''
-    state.userInfo = null
-    state.roles = []
-    removeUserInfo()
-    removeToken()
-    removeRoles()
-    resetRouter()
+    userApi.logout().then(() => {
+      state.token = ''
+      state.userInfo = null
+      state.roles = []
+      removeUserInfo()
+      removeToken()
+      removeRoles()
+      router.replace("/login")
+    })
   }
 }
 

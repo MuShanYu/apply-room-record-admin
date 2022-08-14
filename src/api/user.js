@@ -19,6 +19,12 @@ export default {
       data: userLoginDTO
     })
   },
+  logout() {
+    return request({
+      url: '/user/logout',
+      method: 'get'
+    })
+  },
   refreshToken(userId) {
     return request({
       url: '/user/refreshToken',
@@ -33,6 +39,13 @@ export default {
       url: '/admin/query/userList',
       method: 'post',
       data: userListQueryDTO
+    })
+  },
+  changeRole(userRoleChangeDTO) {
+    return request({
+      url: '/admin/update/role',
+      method: 'post',
+      data: userRoleChangeDTO
     })
   }
 }
