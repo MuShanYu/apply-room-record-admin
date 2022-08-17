@@ -1,6 +1,4 @@
 import request from '@/utils/request'
-import { Message } from 'element-ui'
-
 
 export default {
   getPublicKey(currentTimeMills) {

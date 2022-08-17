@@ -1,7 +1,23 @@
 <template>
-  <div>
-    <div>
-
+  <div style="margin: 10px;">
+    <div style="margin-bottom: 10px;">
+      <el-select clearable @change="getUserList" style="margin-right: 10px;" v-model="query.institute" placeholder="请选择学院">
+        <el-option
+          v-for="(item, index) in institute"
+          :label="item"
+          :key="index"
+          :value="item">
+        </el-option>
+      </el-select>
+      <el-input v-model="query.name"
+                clearable
+                @clear="getUserList"
+                placeholder="请输入检索的姓名" style="width: 200px;" class="filter-item"
+                @keyup.enter.native="getUserList"/>
+      <el-button v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-search"
+                 @click="getUserList">
+        搜索
+      </el-button>
     </div>
     <div>
       <el-table
@@ -54,12 +70,13 @@
         <el-table-column width="200" label="操作" align="center">
           <template slot-scope="{row, $index}">
             <el-button v-waves style="margin: 3px;" type="primary" size="mini">
-              轨迹详情
+              足迹详情
             </el-button>
             <el-button v-waves style="margin: 3px;" type="primary" size="mini">
               预约详情
             </el-button>
-            <el-button plain type="primary" @click="handleUpdateRoleClick(row, $index)" v-waves v-permission="['super-admin']" style="margin: 3px;" size="mini">
+            <el-button plain type="primary" @click="handleUpdateRoleClick(row, $index)" v-waves
+                       v-permission="['super-admin']" style="margin: 3px;" size="mini">
               权限修改
             </el-button>
           </template>
@@ -91,7 +108,7 @@
 
 <script>
 import userApi from "@/api/user";
-import {parseTime} from '@/utils'
+import dataStatistics from "@/api/data-statistics";
 import Pagination from "@/components/Pagination";
 
 export default {
@@ -129,16 +146,13 @@ export default {
       ],
       roleIds: [],
       currentUser: {},
-      dialogFormVisible: false
+      dialogFormVisible: false,
+      institute: []
     }
   },
   created() {
     this.getUserList()
-  },
-  filters: {
-    parseTime(time) {
-      return parseTime(time)
-    }
+    this.getInstitute()
   },
   methods: {
     getUserList() {
@@ -147,10 +161,14 @@ export default {
         this.userList = data.pageData
         this.total = data.totalSize
         this.listLoading = false
-        console.log(this.userList);
+        // console.log(this.userList);
       }).catch(e => {
         this.listLoading = false
       })
+    },
+    async getInstitute() {
+      let data = await dataStatistics.getInstituteClassifyInfo();
+      this.institute = data.institutes;
     },
     resetUpdateTempData() {
       this.currentUser = {}

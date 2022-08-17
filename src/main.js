@@ -25,6 +25,10 @@ Vue.use(ElementUI)
 Vue.use(Permission)
 Vue.use(Waves)
 
+import { parseTime } from "@/utils";
+
+Vue.filter("parseTime", parseTime)
+
 Vue.config.productionTip = false
 
 new Vue({
