@@ -29,7 +29,7 @@
         </el-table-column>
         <el-table-column label="预约人" width="100" align="center">
           <template slot-scope="{row}">
-            <span>{{ row.username }}</span>
+            <span>{{ row.name }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作日期(预约时间)" align="center">
@@ -54,10 +54,10 @@
         </el-table-column>
         <el-table-column label="审核人" width="100" align="center">
           <template slot-scope="{row}">
-            <span>{{ row.verifyUserName === null ? '暂无审核人' : row.verifyUserName }}</span>
+            <span>{{ row.verifyUserName === null ? '暂无' : row.verifyUserName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="状态" width="80" align="center">
+        <el-table-column label="状态" width="100" align="center">
           <template slot-scope="{row}">
             <el-tag :type="row.state | statusFilter">
               {{ row.state | msgFilter }}

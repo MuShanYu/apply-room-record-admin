@@ -1,7 +1,7 @@
 <template>
   <div style="margin: 10px;">
     <div style="margin-bottom: 10px;">
-      <el-select clearable @change="getRoomReservationReviewedList" style="margin-right: 10px;"
+      <el-select clearable @change="getRoomReserveList" style="margin-right: 10px;"
                  v-model="query.school" placeholder="请选择校区">
         <el-option
           v-for="(item, index) in school"
@@ -10,7 +10,7 @@
           :value="item">
         </el-option>
       </el-select>
-      <el-select clearable @change="getRoomReservationReviewedList" style="margin-right: 10px;"
+      <el-select clearable @change="getRoomReserveList" style="margin-right: 10px;"
                  v-model="query.teachBuilding" placeholder="请选择楼栋">
         <el-option
           v-for="(item, index) in teachBuilding"
@@ -19,7 +19,7 @@
           :value="item">
         </el-option>
       </el-select>
-      <el-select clearable @change="getRoomReservationReviewedList"
+      <el-select clearable @change="getRoomReserveList"
                  v-model="query.category" placeholder="请选择类别">
         <el-option
           v-for="(item, index) in category"
@@ -38,17 +38,17 @@
         fit
         highlight-current-row
         style="width: 100%;">
-        <el-table-column label="校区" width="100" align="center">
+        <el-table-column label="校区" width="150" align="center">
           <template slot-scope="{row}">
             <span>{{ row.school }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="楼栋" width="80" align="center">
+        <el-table-column label="楼栋" width="100" align="center">
           <template slot-scope="{row}">
             <span>{{ row.teachBuilding }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="房间名" width="100" align="center">
+        <el-table-column label="房间名" align="center">
           <template slot-scope="{row}">
             <span>{{ row.roomName }}</span>
           </template>
@@ -58,7 +58,7 @@
             <span>{{ row.equipmentInfo }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="容量" width="100" align="center">
+        <el-table-column label="容量" width="150" align="center">
           <template slot-scope="{row}">
             <span>{{ row.capacity }}</span>
           </template>
@@ -68,29 +68,24 @@
             <span>{{ row.category }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="状态" width="80" align="center">
+        <el-table-column label="状态" width="100" align="center">
           <template slot-scope="{row}">
             <el-tag :type="row.state | statusFilter">
               {{ row.state | msgFilter }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="预约人" width="100" align="center">
+        <el-table-column label="审批人" width="100" align="center">
           <template slot-scope="{row}">
-            <span>{{ row.name }}</span>
+            {{ row.verifyUserName === null ? '暂无' : row.verifyUserName}}
           </template>
         </el-table-column>
-        <el-table-column label="预约时间" width="100" align="center">
-          <template slot-scope="{row}">
-            <span>{{ row.createTime | parseTime }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="预约起始日期" width="100" align="center">
+        <el-table-column label="预约起始日期" width="180" align="center">
           <template slot-scope="{row}">
             <span>{{ row.reserveStartTime | parseTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="预约结束日期" width="100" align="center">
+        <el-table-column label="预约结束日期" width="180" align="center">
           <template slot-scope="{row}">
             <span>{{ row.reserveEndTime | parseTime }}</span>
           </template>
@@ -100,21 +95,15 @@
             <span>{{ row.roomUsage }}</span>
           </template>
         </el-table-column>
-        <el-table-column width="150" label="操作" align="center">
-          <template slot-scope="{row, $index}">
-            <el-button @click="handleRoomReservationPassClick(row, $index)" v-waves style="margin: 3px;" type="primary"
-                       size="mini">
-              通过
-            </el-button>
-            <el-button @click="handleRoomUpdateRejectClick(row, $index)" v-waves style="margin: 3px;" type="danger" size="mini">
-              驳回
-            </el-button>
+        <el-table-column label="操作日期" width="180" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.createTime | parseTime }}</span>
           </template>
         </el-table-column>
       </el-table>
 
       <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.size"
-                  @pagination="getRoomReservationReviewedList"/>
+                  @pagination="getRoomReserveList"/>
     </div>
   </div>
 </template>
@@ -144,9 +133,22 @@ const statusMap = {
   }
 }
 export default {
-  name: "RoomApprove",
+  name: "user-room-reserve",
   components: {
     Pagination
+  },
+  props: {
+    id: {
+      type: String,
+      default: ''
+    }
+  },
+  watch: {
+    id(val, oldVal) {
+      this.userId = val
+      this.query.userId = val
+      this.getRoomReserveList()
+    }
   },
   filters: {
     statusFilter(status) {
@@ -180,36 +182,36 @@ export default {
   },
   data() {
     return {
-      // 查询相关参数
+      userId: this.id,
+      teachBuilding: [],
+      school: [],
+      category: [],
       query: {
         page: 1,
         size: 10,
-        teachBuilding: '',
+        userId: '',
         school: '',
+        teachBuilding: '',
         category: ''
       },
       listLoading: false,
       roomList: [],
-      total: 0,
-      teachBuilding: [],
-      school: [],
-      category: [],
-      currentRoom: {}
+      total: 0
     }
   },
   created() {
-    this.getRoomReservationReviewedList()
+    this.query.userId = this.userId
+    this.getRoomReserveList()
     this.getRoomClassifyInfo()
   },
   methods: {
-    getRoomReservationReviewedList() {
+    getRoomReserveList() {
       this.listLoading = true
-      roomApi.userRoomReservationReviewed(this.query).then(data => {
+      roomApi.userRoomReservationRecord(this.query).then(data => {
         this.roomList = data.pageData
         this.total = data.totalSize
         this.listLoading = false
         this.roomList.forEach(item => this.$set(item, "detailBtnLoading", false))
-        console.log(this.roomList);
       }).catch(e => {
         this.listLoading = false
       })
@@ -221,34 +223,6 @@ export default {
         this.teachBuilding = data.teachBuildings
       })
     },
-    handleRoomReservationPassClick(item, index) {
-      this.$confirm('确定要通过该房间预约吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        roomApi.passOrRejectRoomReserve(item.id, true).then(() => {
-          this.roomList.splice(index, 1)
-          this.$message.success('操作成功')
-        })
-      }).catch(() => {
-
-      })
-    },
-    handleRoomUpdateRejectClick(item, index) {
-      this.$confirm('确定要驳回该房间预约吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        roomApi.passOrRejectRoomReserve(item.id, false).then(() => {
-          this.roomList.splice(index, 1)
-          this.$message.success('操作成功')
-        })
-      }).catch(() => {
-
-      })
-    }
   }
 }
 </script>

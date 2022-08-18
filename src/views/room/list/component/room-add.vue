@@ -1,55 +1,37 @@
 <template>
   <div style="margin: 10px;">
-    <el-form :model="currentRoom" :rules="rules" ref="ruleForm" label-width="100px">
+    <el-form :model="room" :rules="rules" ref="ruleForm" label-width="100px">
       <el-form-item label="校区" prop="school">
-        <el-input placeholder="请输入校区" v-model="currentRoom.school"></el-input>
+        <el-input placeholder="请输入校区(例如:花江校区)" v-model="room.school"></el-input>
       </el-form-item>
       <el-form-item label="楼栋" prop="teachBuilding">
-        <el-input placeholder="请输入楼栋" type="number" v-model="currentRoom.teachBuilding"></el-input>
+        <el-input placeholder="请输入楼栋(输入1代表1教，2代表2教)" type="number" v-model="room.teachBuilding"></el-input>
       </el-form-item>
       <el-form-item label="类别" prop="category">
-        <el-input placeholder="请输入类别" v-model="currentRoom.category"></el-input>
+        <el-input placeholder="请输入类别(例如:活动室、休息室等等)" v-model="room.category"></el-input>
       </el-form-item>
       <el-form-item label="容量" prop="capacity">
-        <el-input placeholder="请输入容量" v-model="currentRoom.capacity"></el-input>
+        <el-input placeholder="请输入容量(例如:100或者可容纳100人并附带凳子)" v-model="room.capacity"></el-input>
       </el-form-item>
       <el-form-item label="房间名称" prop="roomName">
-        <el-input placeholder="请输入房间名称" v-model="currentRoom.roomName"></el-input>
+        <el-input placeholder="请输入房间名称(例如:5501或者大礼堂等等)" v-model="room.roomName"></el-input>
       </el-form-item>
       <el-form-item label="设备信息" prop="equipmentInfo">
-        <el-input placeholder="请输入设备信息" :rows="4" type="textarea" v-model="currentRoom.equipmentInfo"></el-input>
+        <el-input placeholder="请输入设备信息(当前房间拥有的设备信息)" :rows="4" type="textarea" v-model="room.equipmentInfo"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button :loading="btnLoading" @click="submitForm" type="primary">修改</el-button>
+        <el-button :loading="btnLoading" @click="submitForm" type="primary">添加</el-button>
         <el-button @click="cancelUpdate" style="margin-left: 10px;">取消</el-button>
       </el-form-item>
     </el-form>
-    <div style="margin-bottom: 10px;">
-      <span style="font-size: 13px;color: #909399;margin-left: 10px;">(修改相应筛选条件后请刷新界面使用新的筛选条件)</span>
-    </div>
   </div>
 </template>
 
 <script>
 import roomApi from '@/api/room'
+
 export default {
-  name: "room-update",
-  props: {
-    room: {
-      type: Object,
-      default() {
-        return {}
-      }
-    }
-  },
-  watch:{
-    room(val, oldVal) {
-      this.$nextTick(() => {
-        this.currentRoom = val
-        this.$refs.ruleForm.resetFields();
-      })
-    }
-  },
+  name: "room-add",
   data() {
     const validateTeachBuilding = (rule, value, callback) => {
       if (value === '') {
@@ -61,7 +43,14 @@ export default {
       }
     }
     return {
-      currentRoom: this.room,
+      room: {
+        school: '花江校区',
+        teachBuilding: '2',
+        category: '休息室',
+        roomName: '02301',
+        equipmentInfo: '有电脑，固定桌椅',
+        capacity: '100',
+      },
       btnLoading: false,
       rules: {
         school: [
@@ -95,11 +84,11 @@ export default {
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
           this.btnLoading = true
-          roomApi.updateRoom(this.currentRoom).then(() => {
+          roomApi.addRoom(this.room).then(data => {
             this.btnLoading = false
-            this.$message.success("修改成功")
+            this.$message.success("添加成功")
             // 发送修改成功的对象
-            this.$emit("updateSuccess", this.currentRoom)
+            this.$emit("addSuccess", data)
           }).catch(e => {
             this.btnLoading = false
           })

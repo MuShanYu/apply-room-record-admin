@@ -72,7 +72,7 @@
             <el-button v-waves style="margin: 3px;" type="primary" size="mini">
               足迹详情
             </el-button>
-            <el-button v-waves style="margin: 3px;" type="primary" size="mini">
+            <el-button @click="handleReserveDetailClick(row, $index)" v-waves style="margin: 3px;" type="primary" size="mini">
               预约详情
             </el-button>
             <el-button plain type="primary" @click="handleUpdateRoleClick(row, $index)" v-waves
@@ -87,6 +87,14 @@
                   @pagination="getUserList"/>
     </div>
 
+    <el-drawer
+      size="100%"
+      title="预约详情"
+      :show-close="true"
+      :visible.sync="reservationDrawer"
+      direction="btt">
+      <user-room-reserve :id="currentUser.id" />
+    </el-drawer>
     <el-dialog @close="resetUpdateTempData" :close-on-click-modal="false" :center="true"
                :visible.sync="dialogFormVisible" title="修改权限">
       <div style="text-align: center;">
@@ -109,12 +117,15 @@
 <script>
 import userApi from "@/api/user";
 import dataStatistics from "@/api/data-statistics";
+
+import UserRoomReserve from "@/views/user/component/user-room-reserve";
 import Pagination from "@/components/Pagination";
 
 export default {
   name: "User",
   components: {
-    Pagination
+    Pagination,
+    UserRoomReserve
   },
   data() {
     return {
@@ -147,7 +158,8 @@ export default {
       roleIds: [],
       currentUser: {},
       dialogFormVisible: false,
-      institute: []
+      institute: [],
+      reservationDrawer: false,
     }
   },
   created() {
@@ -202,6 +214,10 @@ export default {
       }).catch(e => {
         this.dialogFormVisible = false
       })
+    },
+    handleReserveDetailClick(row, index) {
+      this.currentUser = Object.assign({}, row)
+      this.reservationDrawer = true
     }
   }
 }

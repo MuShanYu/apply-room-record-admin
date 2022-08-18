@@ -28,6 +28,9 @@
           :value="item">
         </el-option>
       </el-select>
+      <el-button @click="addRoomDrawer = true" v-waves style="margin-left: 10px;" type="primary" icon="el-icon-plus">
+        新建房间
+      </el-button>
     </div>
     <div>
       <el-table
@@ -120,7 +123,7 @@
     </el-drawer>
 
     <el-drawer
-      size="65%"
+      size="50%"
       title="修改房间"
       :show-close="false"
       :visible.sync="updateRoomDrawer"
@@ -128,6 +131,16 @@
       <room-update @cancelUpdate="updateRoomDrawer = false"
                    @updateSuccess="updateRoomSuccessHandler"
                    :room="currentRoom" />
+    </el-drawer>
+
+    <el-drawer
+      size="50%"
+      title="修改房间"
+      :show-close="false"
+      :visible.sync="addRoomDrawer"
+      direction="rtl">
+      <room-add @cancelUpdate="addRoomDrawer = false"
+                   @addSuccess="addRoomSuccessHandler"/>
     </el-drawer>
   </div>
 </template>
@@ -139,13 +152,15 @@ import dataStatistics from "@/api/data-statistics";
 import Pagination from "@/components/Pagination";
 import RoomReservationList from "@/views/room/list/component/room-reservation-list";
 import RoomUpdate from "@/views/room/list/component/room-update";
+import RoomAdd from "@/views/room/list/component/room-add";
 
 export default {
   name: "RoomList",
   components: {
     Pagination,
     RoomReservationList,
-    RoomUpdate
+    RoomUpdate,
+    RoomAdd
   },
   data() {
     return {
@@ -176,7 +191,8 @@ export default {
       // 操作相关参数
       currentRoom: {},
       reservationDrawer: false,
-      updateRoomDrawer: false
+      updateRoomDrawer: false,
+      addRoomDrawer: false
     }
   },
   created() {
@@ -241,6 +257,10 @@ export default {
       }).catch(() => {
 
       })
+    },
+    addRoomSuccessHandler(room) {
+      this.roomList.push(room)
+      this.addRoomDrawer = false
     }
   }
 }
