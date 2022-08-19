@@ -13,4 +13,24 @@ export default {
       method: 'get'
     })
   },
+
+  countRoomReservationTimes(roomId, startTime) {
+    return request({
+      url: '/admin/get/roomReservationTimes',
+      method: 'get',
+      params: {
+        roomId,
+        startTime
+      }
+    })
+  },
+  searchRoomByName(roomName) {
+  return request({
+    url: '/admin/get/search/roomName',
+    method: 'get',
+    params: {
+      roomName
+    }
+  })
+},
 }
