@@ -14,23 +14,39 @@ export default {
     })
   },
 
-  countRoomReservationTimes(roomId, startTime) {
+  searchRoomByName(roomName) {
     return request({
-      url: '/admin/get/roomReservationTimes',
+      url: '/admin/get/search/roomName',
       method: 'get',
       params: {
-        roomId,
-        startTime
+        roomName
       }
     })
   },
-  searchRoomByName(roomName) {
-  return request({
-    url: '/admin/get/search/roomName',
-    method: 'get',
-    params: {
-      roomName
-    }
-  })
-},
+  getSystemCount() {
+    return request({
+      url: '/admin/get/sys/count',
+      method: 'get'
+    })
+  },
+  countRoomReservationTimes(query) {
+    return request({
+      url: '/admin/get/roomReservationTimes/count',
+      method: 'get',
+      params: {
+        roomId: query.roomId,
+        startTime: query.startTime
+      }
+    })
+  },
+  countAccessRecordApi(query) {
+    return request({
+      url: '/admin/get/access/record/count',
+      method: 'get',
+      params: {
+        roomId: query.roomId,
+        startTime: query.startTime
+      }
+    })
+  },
 }

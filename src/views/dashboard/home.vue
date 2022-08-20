@@ -1,22 +1,29 @@
 <template>
   <div class="home-container">
     <div>
-      <panel-group/>
+      <panel-group :count-data="countData" />
     </div>
     <div style="margin-bottom: 10px;background: #ffffff;padding: 10px;" class="">
       <el-date-picker
         :clearable="false"
-        v-model="roomReserveQuery.startTime"
+        v-model="query.startTime"
         type="datetime"
         value-format="timestamp"
         placeholder="选择起始日期">
       </el-date-picker>
-      <el-select style="margin-left: 10px;" v-model="value" placeholder="请选择">
+      <el-select style="margin-left: 10px;"
+                 v-model="roomName"
+                 filterable
+                 remote
+                 reserve-keyword
+                 placeholder="请输入关键词"
+                 :remote-method="getRoomName"
+                 :loading="selectLoading">
         <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
+          v-for="item in roomOptions"
+          :key="item.id"
+          :label="item.roomName"
+          :value="item.id">
         </el-option>
       </el-select>
       <span style="color: #303133;font-size: 12px;margin-left: 10px;">
@@ -75,42 +82,49 @@ export default {
   },
   data() {
     return {
-      options: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
-      }],
-      value: '',
-      roomReserveQuery: {
+      roomOptions: [],
+      roomName: '',
+      query: {
         roomId: '',
         startTime: new Date().getTime()
       },
-      roomReserveData: {}
+      roomReserveData: {},
+      countData: {
+        accessRecordCount: 0,
+        roomCount: 0,
+        roomReserveReviewed: 0,
+        userCount: 0
+      },
+      selectLoading: false,
     }
   },
   created() {
-    this.getRoomReservationCount()
+    this.getCount()
+    this.getSystemCountInfo()
   },
   methods: {
-    getRoomReservationCount() {
-      console.log(this.roomReserveQuery);
-      dataStatistics.countRoomReservationTimes(
-        this.roomReserveQuery.roomId,
-        this.roomReserveQuery.startTime).then(data => {
+    getCount() {
+      dataStatistics.countRoomReservationTimes(this.query).then(data => {
         this.roomReserveData = data
-        console.log(data);
+        console.log(data, '预约记录');
       })
+      dataStatistics.countAccessRecordApi(this.query).then(data => {
+        console.log(data, '进出记录');
+      })
+    },
+    getSystemCountInfo() {
+      dataStatistics.getSystemCount().then(data => {
+        this.countData = data.countData
+      })
+    },
+    getRoomName(roomName) {
+      if (roomName !== '') {
+        this.selectLoading = true
+        dataStatistics.searchRoomByName(roomName).then(res => {
+          this.roomOptions = res
+          this.selectLoading = false
+        })
+      }
     }
   }
 }
