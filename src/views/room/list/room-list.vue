@@ -95,7 +95,7 @@
                        size="mini">
               预约详情
             </el-button>
-            <el-button @click="handleRoomUpdateClick(row, $index)" v-waves style="margin: 3px;" type="primary" size="mini">
+            <el-button :disabled="row.state !== 1" @click="handleRoomUpdateClick(row, $index)" v-waves style="margin: 3px;" type="primary" size="mini">
               修改
             </el-button>
             <el-button type="danger" v-waves plain @click="handleDeleteClick(row)"

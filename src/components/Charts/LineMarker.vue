@@ -1,5 +1,5 @@
 <template>
-  <div :id="id" :class="className" :style="{height:height,width:width}" />
+  <div :id="id" :class="className" :style="{height:height,width:width}"/>
 </template>
 
 <script>
@@ -24,6 +24,20 @@ export default {
     height: {
       type: String,
       default: '200px'
+    },
+    chartData: {
+      type: Object,
+      default() {
+        return {}
+      }
+    }
+  },
+  watch: {
+    chartData: {
+      deep: true,
+      handler(val) {
+        this.setOptions(val)
+      }
     }
   },
   data() {
@@ -32,7 +46,9 @@ export default {
     }
   },
   mounted() {
-    this.initChart()
+    this.$nextTick(() => {
+      this.initChart()
+    })
   },
   beforeDestroy() {
     if (!this.chart) {
@@ -44,7 +60,9 @@ export default {
   methods: {
     initChart() {
       this.chart = echarts.init(document.getElementById(this.id))
-
+      this.setOptions(this.chartData)
+    },
+    setOptions({rejectTimes, canceledTimes, reviewTimes, reviewedTimes, dates} = {}) {
       this.chart.setOption({
         title: {
           text: '房间预约次数统计',
@@ -68,7 +86,7 @@ export default {
           itemWidth: 14,
           itemHeight: 5,
           itemGap: 13,
-          data: ['CMCC', 'CTCC', 'CUCC'],
+          data: ['已预约', '已取消', '已通过', '已驳回'],
           right: '2%',
           textStyle: {
             fontSize: 12
@@ -89,11 +107,10 @@ export default {
               color: '#409EFF'
             }
           },
-          data: ['13:00', '13:05', '13:10', '13:15', '13:20', '13:25', '13:30', '13:35', '13:40', '13:45', '13:50', '13:55']
+          data: dates
         }],
         yAxis: [{
           type: 'value',
-          name: '(%)',
           axisTick: {
             show: false
           },
@@ -115,7 +132,7 @@ export default {
           }
         }],
         series: [{
-          name: 'CMCC',
+          name: '已预约',
           type: 'line',
           smooth: true,
           symbol: 'circle',
@@ -147,9 +164,9 @@ export default {
 
             }
           },
-          data: [220, 182, 191, 134, 150, 120, 110, 125, 145, 122, 165, 122]
+          data: reviewTimes
         }, {
-          name: 'CTCC',
+          name: '已取消',
           type: 'line',
           smooth: true,
           symbol: 'circle',
@@ -181,9 +198,9 @@ export default {
 
             }
           },
-          data: [120, 110, 125, 145, 122, 165, 122, 220, 182, 191, 134, 150]
+          data: canceledTimes
         }, {
-          name: 'CUCC',
+          name: '已通过',
           type: 'line',
           smooth: true,
           symbol: 'circle',
@@ -214,8 +231,42 @@ export default {
               borderWidth: 12
             }
           },
-          data: [220, 182, 125, 145, 122, 191, 134, 150, 120, 110, 165, 122]
-        }]
+          data: reviewedTimes
+        },
+          {
+            name: '已驳回',
+            type: 'line',
+            smooth: true,
+            symbol: 'circle',
+            symbolSize: 5,
+            showSymbol: false,
+            lineStyle: {
+              normal: {
+                width: 1
+              }
+            },
+            areaStyle: {
+              normal: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                  offset: 0,
+                  color: 'rgba(219, 50, 51, 0.3)'
+                }, {
+                  offset: 0.8,
+                  color: 'rgba(219, 50, 51, 0)'
+                }], false),
+                shadowColor: 'rgba(0, 0, 0, 0.1)',
+                shadowBlur: 10
+              }
+            },
+            itemStyle: {
+              normal: {
+                color: 'rgb(41,74,161)',
+                borderColor: 'rgba(54,61,169,0.2)',
+                borderWidth: 12
+              }
+            },
+            data: rejectTimes
+          }]
       })
     }
   }

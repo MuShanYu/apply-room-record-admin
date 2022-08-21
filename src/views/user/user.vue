@@ -21,7 +21,7 @@
     </div>
     <div>
       <el-table
-        :key="'1'"
+        key="1"
         v-loading="listLoading"
         :data="userList"
         border
@@ -69,7 +69,7 @@
         </el-table-column>
         <el-table-column width="200" label="操作" align="center">
           <template slot-scope="{row, $index}">
-            <el-button v-waves style="margin: 3px;" type="primary" size="mini">
+            <el-button @click="handleUserAccessRecordClick(row, $index)" v-waves style="margin: 3px;" type="primary" size="mini">
               足迹详情
             </el-button>
             <el-button @click="handleReserveDetailClick(row, $index)" v-waves style="margin: 3px;" type="primary" size="mini">
@@ -92,9 +92,19 @@
       title="预约详情"
       :show-close="true"
       :visible.sync="reservationDrawer"
-      direction="btt">
-      <user-room-reserve :id="currentUser.id" />
+      direction="rtl">
+      <user-room-reserve :id="reserveUserId" />
     </el-drawer>
+
+    <el-drawer
+      size="100%"
+      title="足迹详情"
+      :show-close="true"
+      :visible.sync="accessRecordDrawer"
+      direction="rtl">
+      <user-access-record :id="recordUserId" />
+    </el-drawer>
+
     <el-dialog @close="resetUpdateTempData" :close-on-click-modal="false" :center="true"
                :visible.sync="dialogFormVisible" title="修改权限">
       <div style="text-align: center;">
@@ -119,13 +129,15 @@ import userApi from "@/api/user";
 import dataStatistics from "@/api/data-statistics";
 
 import UserRoomReserve from "@/views/user/component/user-room-reserve";
+import UserAccessRecord from "@/views/user/component/user-access-record";
 import Pagination from "@/components/Pagination";
 
 export default {
   name: "User",
   components: {
     Pagination,
-    UserRoomReserve
+    UserRoomReserve,
+    UserAccessRecord
   },
   data() {
     return {
@@ -160,6 +172,9 @@ export default {
       dialogFormVisible: false,
       institute: [],
       reservationDrawer: false,
+      accessRecordDrawer: false,
+      recordUserId: '',
+      reserveUserId: ''
     }
   },
   created() {
@@ -193,6 +208,7 @@ export default {
     },
     updateRole() {
       let that = this
+      console.log(this.currentUser);
       userApi.changeRole({
         userId: that.currentUser.id,
         roleIds: that.roleIds
@@ -216,8 +232,12 @@ export default {
       })
     },
     handleReserveDetailClick(row, index) {
-      this.currentUser = Object.assign({}, row)
+      this.reserveUserId = row.id
       this.reservationDrawer = true
+    },
+    handleUserAccessRecordClick(row, index) {
+      this.recordUserId = row.id
+      this.accessRecordDrawer = true
     }
   }
 }

@@ -31,7 +31,7 @@
     </div>
     <div>
       <el-table
-        :key="'1'"
+        key="2"
         v-loading="listLoading"
         :data="roomList"
         border

@@ -22,7 +22,21 @@ export default {
     },
     height: {
       type: String,
-      default: '300px'
+      default: '450px'
+    },
+    chartData: {
+      type: Object,
+      default() {
+        return {}
+      }
+    }
+  },
+  watch: {
+    chartData: {
+      deep: true,
+      handler(val) {
+        this.setOptions(val)
+      }
     }
   },
   data() {
@@ -45,7 +59,9 @@ export default {
   methods: {
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
-
+      this.setOptions(this.chartData)
+    },
+    setOptions({dates, totalTimes} = {}) {
       this.chart.setOption({
         title: {
           text: '人员流动总次数统计',
@@ -55,6 +71,7 @@ export default {
             color: '#909399'
           }
         },
+
         tooltip: {
           trigger: 'axis',
           axisPointer: { // 坐标轴指示器，坐标轴触发有效
@@ -70,7 +87,7 @@ export default {
         },
         xAxis: [{
           type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: dates,
           axisTick: {
             alignWithLabel: true
           }
@@ -82,11 +99,11 @@ export default {
           }
         }],
         series: [{
-          name: 'pageA',
+          name: '进出总次数统计',
           type: 'bar',
           stack: 'vistors',
           barWidth: '60%',
-          data: [79, 52, 200, 334, 390, 330, 220],
+          data: totalTimes,
           animationDuration
         }]
       })

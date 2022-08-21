@@ -20,7 +20,21 @@ export default {
     },
     height: {
       type: String,
-      default: '300px'
+      default: '450px'
+    },
+    chartData: {
+      type: Object,
+      default() {
+        return {}
+      }
+    }
+  },
+  watch: {
+    chartData: {
+      deep: true,
+      handler(val) {
+        this.setOptions(val)
+      }
     }
   },
   data() {
@@ -43,7 +57,9 @@ export default {
   methods: {
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
-
+      this.setOptions(this.chartData)
+    },
+    setOptions({rejectTimesCount, cancelTimesCount, reviewTimesCount, reviewedTimesCount} = {}) {
       this.chart.setOption({
         title: {
           text: '房间预约总次数统计',
@@ -60,21 +76,20 @@ export default {
         legend: {
           left: 'center',
           bottom: '10',
-          data: ['Industries', 'Technology', 'Forex', 'Gold', 'Forecasts']
+          data: ['已预约次数', '已取消次数', '已审批次数', '已驳回次数']
         },
         series: [
           {
-            name: 'WEEKLY WRITE ARTICLES',
+            name: '总次数统计',
             type: 'pie',
             roseType: 'radius',
             radius: [15, 95],
             center: ['50%', '38%'],
             data: [
-              { value: 320, name: 'Industries' },
-              { value: 240, name: 'Technology' },
-              { value: 149, name: 'Forex' },
-              { value: 100, name: 'Gold' },
-              { value: 59, name: 'Forecasts' }
+              { value: reviewTimesCount, name: '已预约次数' },
+              { value: cancelTimesCount, name: '已取消次数' },
+              { value: reviewedTimesCount, name: '已审批次数' },
+              { value: rejectTimesCount, name: '已驳回次数' }
             ],
             animationEasing: 'cubicInOut',
             animationDuration: 2600

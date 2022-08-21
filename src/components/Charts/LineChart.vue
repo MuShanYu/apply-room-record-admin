@@ -63,7 +63,7 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
       this.setOptions(this.chartData)
     },
-    setOptions({ expectedData, actualData } = {}) {
+    setOptions({ entryTimes, outTimes, dates } = {}) {
       this.chart.setOption({
         title: {
           text: '人员流动次数统计',
@@ -74,16 +74,14 @@ export default {
           }
         },
         xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          type: 'category',
           boundaryGap: false,
-          axisTick: {
-            show: false
-          },
           axisLine: {
             lineStyle: {
               color: '#409EFF'
             }
-          }
+          },
+          data: dates
         },
         grid: {
           top: 60,
@@ -117,14 +115,14 @@ export default {
             itemWidth: 14,
             itemHeight: 5,
             itemGap: 13,
-            data: ['expected', 'actual'],
+            data: ['进入次数', '离开次数'],
             textStyle: {
               fontSize: 12
             }
           }
         },
         series: [{
-          name: 'expected',
+          name: '进入次数',
           itemStyle: {
             normal: {
               color: '#FF005A',
@@ -136,12 +134,12 @@ export default {
           },
           smooth: true,
           type: 'line',
-          data: [120, 82, 91, 154, 162, 140, 145],
+          data: entryTimes,
           animationDuration: 2800,
           animationEasing: 'cubicInOut'
         },
         {
-          name: 'actual',
+          name: '离开次数',
           smooth: true,
           type: 'line',
           itemStyle: {
@@ -153,7 +151,7 @@ export default {
               }
             }
           },
-          data: [100, 120, 161, 134, 105, 160, 165],
+          data: outTimes,
           animationDuration: 2800,
           animationEasing: 'quadraticOut'
         }]
