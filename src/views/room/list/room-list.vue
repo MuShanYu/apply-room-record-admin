@@ -59,7 +59,7 @@
         </el-table-column>
         <el-table-column label="房间名" align="center">
           <template slot-scope="{row}">
-            <span>{{ row.roomName }}</span>
+            <span @click="handleCopy('https://www.mushanyu.xyz:8800/#/pages/record/index?target=' + row.id, $event)" class="link-type">{{ row.roomName }}</span>
           </template>
         </el-table-column>
         <el-table-column label="设备信息" align="center">
@@ -91,16 +91,18 @@
         </el-table-column>
         <el-table-column width="200" label="操作" align="center">
           <template slot-scope="{row, $index}">
-            <el-button :loading="row.detailBtnLoading" @click="handleRoomReservationClick(row, $index)" v-waves style="margin: 3px;" type="primary"
+            <el-button :loading="row.detailBtnLoading" @click="handleRoomReservationClick(row, $index)" v-waves
+                       style="margin: 3px;" type="primary"
                        size="mini">
               预约详情
             </el-button>
-            <el-button :disabled="row.state !== 1" @click="handleRoomUpdateClick(row, $index)" v-waves style="margin: 3px;" type="primary" size="mini">
+            <el-button :disabled="row.state !== 1" @click="handleRoomUpdateClick(row, $index)" v-waves
+                       style="margin: 3px;" type="primary" size="mini">
               修改
             </el-button>
             <el-button type="danger" v-waves plain @click="handleDeleteClick(row)"
                        v-permission="['super-admin']" style="margin: 3px;" size="mini">
-              {{row.state === -1 ? '解除' : '禁用'}}
+              {{ row.state === -1 ? '解除' : '禁用' }}
             </el-button>
           </template>
         </el-table-column>
@@ -119,7 +121,7 @@
       direction="rtl">
       <room-reservation-list :detail-query="detailQuery" :room-id="detailQuery.roomId"
                              :room-reservation-list="roomReservationList"
-                             :total-size="roomReservationTotal" />
+                             :total-size="roomReservationTotal"/>
     </el-drawer>
 
     <el-drawer
@@ -130,7 +132,7 @@
       direction="rtl">
       <room-update @cancelUpdate="updateRoomDrawer = false"
                    @updateSuccess="updateRoomSuccessHandler"
-                   :room="currentRoom" />
+                   :room="currentRoom"/>
     </el-drawer>
 
     <el-drawer
@@ -140,7 +142,7 @@
       :visible.sync="addRoomDrawer"
       direction="rtl">
       <room-add @cancelUpdate="addRoomDrawer = false"
-                   @addSuccess="addRoomSuccessHandler"/>
+                @addSuccess="addRoomSuccessHandler"/>
     </el-drawer>
   </div>
 </template>
@@ -154,8 +156,14 @@ import RoomReservationList from "@/views/room/list/component/room-reservation-li
 import RoomUpdate from "@/views/room/list/component/room-update";
 import RoomAdd from "@/views/room/list/component/room-add";
 
+import clip from '@/utils/clipboard' // use clipboard directly
+import clipboard from '@/directive/clipboard/index.js' // use clipboard by v-directive
+
 export default {
   name: "RoomList",
+  directives: {
+    clipboard
+  },
   components: {
     Pagination,
     RoomReservationList,
@@ -261,11 +269,23 @@ export default {
     addRoomSuccessHandler(room) {
       this.roomList.push(room)
       this.addRoomDrawer = false
-    }
+    },
+    handleCopy(text, event) {
+      clip(text, event)
+    },
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.link-type,
+.link-type:focus {
+  color: #337ab7;
+  cursor: pointer;
 
+  & :hover {
+    color: rgb(32, 160, 255);
+  }
+
+}
 </style>

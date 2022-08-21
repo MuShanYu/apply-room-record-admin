@@ -41,7 +41,7 @@ const mutations = {
   },
   LOGOUT: (state) => {
     userApi.logout().then(() => {
-      state.token = ''
+      state.token = null
       state.userInfo = null
       state.roles = []
       removeUserInfo()
