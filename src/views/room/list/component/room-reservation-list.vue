@@ -21,12 +21,6 @@
         fit
         highlight-current-row
         style="width: 100%;">
-        <el-table-column
-          label="序号"
-          align="center"
-          type="index"
-          width="80">
-        </el-table-column>
         <el-table-column label="预约人" width="100" align="center">
           <template slot-scope="{row}">
             <span>{{ row.name }}</span>

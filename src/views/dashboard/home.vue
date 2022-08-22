@@ -8,7 +8,7 @@
         :clearable="false"
         v-model="query.startTime"
         @change="getCount"
-        type="datetime"
+        type="date"
         value-format="timestamp"
         placeholder="选择起始日期">
       </el-date-picker>
