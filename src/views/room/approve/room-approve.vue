@@ -68,7 +68,7 @@
             <span>{{ row.category }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="状态" width="80" align="center">
+        <el-table-column label="状态" width="110" align="center">
           <template slot-scope="{row}">
             <el-tag :type="row.state | statusFilter">
               {{ row.state | msgFilter }}
@@ -102,11 +102,11 @@
         </el-table-column>
         <el-table-column width="150" label="操作" align="center">
           <template slot-scope="{row, $index}">
-            <el-button @click="handleRoomReservationPassClick(row, $index)" v-waves style="margin: 3px;" type="primary"
+            <el-button :disabled="row.state === 6" @click="handleRoomReservationPassClick(row, $index)" v-waves style="margin: 3px;" type="primary"
                        size="mini">
               通过
             </el-button>
-            <el-button @click="handleRoomUpdateRejectClick(row, $index)" v-waves style="margin: 3px;" type="danger" size="mini">
+            <el-button :disabled="row.state === 6" @click="handleRoomUpdateRejectClick(row, $index)" v-waves style="margin: 3px;" type="danger" size="mini">
               驳回
             </el-button>
           </template>
@@ -141,6 +141,10 @@ const statusMap = {
   userCanceled: {
     status: 'info',
     msg: '用户取消'
+  },
+  timeOut: {
+    status: 'info',
+    msg: '超时未处理'
   }
 }
 export default {
@@ -163,6 +167,8 @@ export default {
           return statusMap.userCanceled.status
         case 2:
           return statusMap.reviewed.status
+        case 6:
+          return statusMap.timeOut.status
       }
     },
     msgFilter(status) {
@@ -175,6 +181,8 @@ export default {
           return statusMap.userCanceled.msg
         case 2:
           return statusMap.reviewed.msg
+        case 6:
+          return statusMap.timeOut.msg
       }
     },
   },
@@ -209,7 +217,7 @@ export default {
         this.total = data.totalSize
         this.listLoading = false
         this.roomList.forEach(item => this.$set(item, "detailBtnLoading", false))
-        console.log(this.roomList);
+        // console.log(this.roomList);
       }).catch(e => {
         this.listLoading = false
       })

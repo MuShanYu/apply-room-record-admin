@@ -215,7 +215,7 @@ export default {
         this.total = data.totalSize
         this.listLoading = false
         this.roomList.forEach(item => this.$set(item, "detailBtnLoading", false))
-        console.log(this.roomList);
+        // console.log(this.roomList);
       }).catch(e => {
         this.listLoading = false
       })

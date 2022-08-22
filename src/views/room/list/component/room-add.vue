@@ -44,12 +44,12 @@ export default {
     }
     return {
       room: {
-        school: '花江校区',
-        teachBuilding: '2',
-        category: '休息室',
-        roomName: '02301',
-        equipmentInfo: '有电脑，固定桌椅',
-        capacity: '100',
+        school: '',
+        teachBuilding: '',
+        category: '',
+        roomName: '',
+        equipmentInfo: '',
+        capacity: '',
       },
       btnLoading: false,
       rules: {

@@ -30,17 +30,51 @@ export const constantRoutes = [
       meta: { title: '首页', icon: 'dashboard', affix: true, noCache: false }
     }]
   },
-
+  {
+    path: '/room',
+    component: Layout,
+    name: 'Room',
+    redirect: '/room/list',
+    meta: {title: '房间管理', icon: 'table'},
+    children: [
+      {
+        path: 'list',
+        name: 'RoomList',
+        component: () => import('@/views/room/list/room-list'),
+        meta: {title: '房间列表'}
+      },
+      {
+        path: 'approve',
+        name: 'RoomApprove',
+        component: () => import('@/views/room/approve/room-approve'),
+        meta: {title: '预约审批'}
+      }
+    ]
+  },
+  {
+    path: '/user',
+    component: Layout,
+    redirect: '/user/index',
+    children: [{
+      path: 'index',
+      name: 'UserManager',
+      component: () => import('@/views/user/user'),
+      meta: { title: '用户管理', icon: 'user', noCache: true }
+    }]
+  },
+  {
+    path: 'qrcode-link',
+    component: Layout,
+    children: [
+      {
+        path: 'https://cn.online-qrcode-generator.com/',
+        meta: { title: '二维码生成', icon: 'link' }
+      }
+    ]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
-
-const files = require.context('./modules', false, /\.router.js$/)
-files.keys().forEach(key => {
-  if (files(key).default) {
-    constantRoutes.push(...files(key).default)
-  }
-})
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support

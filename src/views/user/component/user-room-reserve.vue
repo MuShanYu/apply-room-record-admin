@@ -130,6 +130,10 @@ const statusMap = {
   userCanceled: {
     status: 'info',
     msg: '用户取消'
+  },
+  timeOut: {
+    status: 'info',
+    msg: '超时未处理'
   }
 }
 export default {
@@ -165,6 +169,8 @@ export default {
           return statusMap.userCanceled.status
         case 2:
           return statusMap.reviewed.status
+        case 6:
+          return statusMap.timeOut.status
       }
     },
     msgFilter(status) {
@@ -177,6 +183,8 @@ export default {
           return statusMap.userCanceled.msg
         case 2:
           return statusMap.reviewed.msg
+        case 6:
+          return statusMap.timeOut.msg
       }
     },
   },
