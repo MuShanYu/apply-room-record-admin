@@ -96,8 +96,13 @@
                        size="mini">
               预约详情
             </el-button>
+            <el-button :loading="row.detailBtnLoading" @click="handleAccessRecordClick(row, $index)" v-waves
+                       style="margin-left: 3px;" type="primary"
+                       size="mini">
+              足迹详情
+            </el-button>
             <el-button :disabled="row.state !== 1" @click="handleRoomUpdateClick(row, $index)" v-waves
-                       style="margin: 3px;" type="primary" size="mini">
+                       style="margin: 3px;" type="info" size="mini">
               修改
             </el-button>
             <el-button type="danger" v-waves plain @click="handleDeleteClick(row)"
@@ -144,6 +149,15 @@
       <room-add @cancelUpdate="addRoomDrawer = false"
                 @addSuccess="addRoomSuccessHandler"/>
     </el-drawer>
+
+    <el-drawer
+      size="80%"
+      title="足迹详情"
+      :show-close="false"
+      :visible.sync="accessRecordDrawer"
+      direction="rtl">
+      <room-access-record-list :room-id="currentRoomId"/>
+    </el-drawer>
   </div>
 </template>
 
@@ -155,6 +169,7 @@ import Pagination from "@/components/Pagination";
 import RoomReservationList from "@/views/room/list/component/room-reservation-list";
 import RoomUpdate from "@/views/room/list/component/room-update";
 import RoomAdd from "@/views/room/list/component/room-add";
+import RoomAccessRecordList from "@/views/room/list/component/room-access-record-list";
 
 import clip from '@/utils/clipboard' // use clipboard directly
 import clipboard from '@/directive/clipboard/index.js' // use clipboard by v-directive
@@ -168,7 +183,8 @@ export default {
     Pagination,
     RoomReservationList,
     RoomUpdate,
-    RoomAdd
+    RoomAdd,
+    RoomAccessRecordList
   },
   data() {
     return {
@@ -200,7 +216,9 @@ export default {
       currentRoom: {},
       reservationDrawer: false,
       updateRoomDrawer: false,
-      addRoomDrawer: false
+      addRoomDrawer: false,
+      currentRoomId: '',
+      accessRecordDrawer: false
     }
   },
   created() {
@@ -273,6 +291,10 @@ export default {
     handleCopy(text, event) {
       clip(text, event)
     },
+    handleAccessRecordClick(row, index) {
+      this.currentRoomId = row.id
+      this.accessRecordDrawer = true
+    }
   }
 }
 </script>

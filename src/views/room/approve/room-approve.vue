@@ -237,6 +237,7 @@ export default {
       }).then(() => {
         roomApi.passOrRejectRoomReserve(item.id, true).then(() => {
           this.roomList.splice(index, 1)
+          this.total -= 1
           this.$message.success('操作成功')
         })
       }).catch(() => {
@@ -251,6 +252,7 @@ export default {
       }).then(() => {
         roomApi.passOrRejectRoomReserve(item.id, false).then(() => {
           this.roomList.splice(index, 1)
+          this.total -= 1
           this.$message.success('操作成功')
         })
       }).catch(() => {

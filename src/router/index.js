@@ -63,6 +63,17 @@ export const constantRoutes = [
     }]
   },
   {
+    path: '/config',
+    component: Layout,
+    redirect: '/config/index',
+    children: [{
+      path: 'index',
+      name: 'Config',
+      component: () => import('@/views/config/index'),
+      meta: { title: '配置管理', icon: 'config', noCache: true }
+    }]
+  },
+  {
     path: 'qrcode-link',
     component: Layout,
     children: [

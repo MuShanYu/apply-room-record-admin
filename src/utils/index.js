@@ -1,6 +1,20 @@
 /**
- * Created by PanJiaChen on 16/11/18.
+ * 下载文件
+ * @param response
  */
+import { decode } from 'qs/lib/utils'
+
+export function downloadFile(response) {
+  const link = document.createElement('a');
+  const blob = new Blob([response.data], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  link.style.display = 'none';
+  link.href = URL.createObjectURL(blob);//创建url对象
+  link.download = decode(response.headers['content-disposition']).substring(21); //下载后文件名
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(link.href);//销毁url对象
+}
 
 /**
  * Parse the time to string

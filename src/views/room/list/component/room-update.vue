@@ -2,13 +2,17 @@
   <div style="margin: 10px;">
     <el-form :model="currentRoom" :rules="rules" ref="ruleForm" label-width="100px">
       <el-form-item label="校区" prop="school">
-        <el-input placeholder="请输入校区" v-model="currentRoom.school"></el-input>
+        <el-select style="width: 100%;" v-model="currentRoom.school" placeholder="请选择校区(例如:花江校区)">
+          <el-option :key="index" v-for="(item, index) in schools" :label="item" :value="item"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="楼栋" prop="teachBuilding">
         <el-input placeholder="请输入楼栋" type="number" v-model="currentRoom.teachBuilding"></el-input>
       </el-form-item>
       <el-form-item label="类别" prop="category">
-        <el-input placeholder="请输入类别" v-model="currentRoom.category"></el-input>
+        <el-select style="width: 100%;" v-model="room.category" placeholder="请选择类别(例如:活动室、休息室等等)">
+          <el-option :key="index" v-for="(item, index) in categories" :label="item" :value="item"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="容量" prop="capacity">
         <el-input placeholder="请输入容量" v-model="currentRoom.capacity"></el-input>
@@ -32,6 +36,7 @@
 
 <script>
 import roomApi from '@/api/room'
+import configApi from "@/api/config";
 export default {
   name: "room-update",
   props: {
@@ -51,29 +56,21 @@ export default {
     }
   },
   data() {
-    const validateTeachBuilding = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请填写校区'))
-      } else if (parseInt(value) === Number(0) || parseInt(value) > Number(100)) {
-        callback(new Error('楼栋范围有误 1 到 100 之间'))
-      } else {
-        callback()
-      }
-    }
     return {
+      schools: [],
+      categories: [],
       currentRoom: this.room,
       btnLoading: false,
       rules: {
         school: [
+          {required: true, message: '请选择校区', trigger: 'change'}
+        ],
+        teachBuilding: [
           {required: true, message: '请填写校区', trigger: 'blur'},
           {min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur'}
         ],
-        teachBuilding: [
-          {required: true, trigger: 'blur', validator: validateTeachBuilding}
-        ],
         category: [
-          {required: true, message: '请填写类别', trigger: 'blur'},
-          {min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur'}
+          {required: true, message: '请选择类别', trigger: 'change'}
         ],
         capacity: [
           {required: true, message: '请填写容量', trigger: 'blur'},
@@ -90,7 +87,18 @@ export default {
       }
     };
   },
+  created() {
+    this.getConfigInfo()
+  },
   methods: {
+    getConfigInfo() {
+      configApi.querySysConfigByKeyApi("schools").then(data => {
+        this.schools = JSON.parse(data.configValue).schools
+      })
+      configApi.querySysConfigByKeyApi("categories").then(data => {
+        this.categories = JSON.parse(data.configValue).categories
+      })
+    },
     submitForm() {
       this.$refs.ruleForm.validate(valid => {
         if (valid) {

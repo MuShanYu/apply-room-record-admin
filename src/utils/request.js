@@ -32,6 +32,10 @@ service.interceptors.request.use(
 // response interceptor
 service.interceptors.response.use(
   response => {
+    // 文件下载
+    if (response.config.responseType === 'blob') {
+      return response
+    }
     const res = response.data
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 200) {

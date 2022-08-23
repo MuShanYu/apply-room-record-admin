@@ -24,7 +24,21 @@ export default {
       }
     })
   },
-
+  queryUserAccessRecordByRoomIdApi(userAccessQueryDTO) {
+    return request({
+      url: '/record/query/list/byRoomId',
+      method: 'post',
+      data: userAccessQueryDTO
+    })
+  },
+  exportUserAccessRecordByRoomIdApi(userAccessQueryDTO) {
+    return request({
+      url: '/record/query/export/byRoomId',
+      responseType: 'blob',
+      method: 'post',
+      data: userAccessQueryDTO
+    })
+  },
   delRecord(accessRecordId) {
     return request({
       url: '/admin/record/delete/' + accessRecordId,
