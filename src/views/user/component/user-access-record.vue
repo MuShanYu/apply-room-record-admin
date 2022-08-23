@@ -134,6 +134,7 @@ export default {
     id(val, oldVal) {
       this.query.userId = val
       this.getUserAccessRecordListAdmin()
+      this.seeCount = false
     }
   },
   data() {
