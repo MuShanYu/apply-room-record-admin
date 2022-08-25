@@ -23,7 +23,7 @@
         style="width: 100%;">
         <el-table-column label="预约人" width="100" align="center">
           <template slot-scope="{row}">
-            <span>{{ row.name }}</span>
+            <span>{{ row.nickname }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作日期(预约时间)" align="center">

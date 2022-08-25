@@ -34,7 +34,7 @@
           type="index"
           width="80">
         </el-table-column>
-        <el-table-column label="学号" align="center">
+        <el-table-column label="学号/工号" align="center">
           <template slot-scope="{row}">
             <span>{{ row.stuNum }}</span>
           </template>

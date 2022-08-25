@@ -39,7 +39,7 @@
             <span>{{ row.roomName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="昵称" width="100" align="center">
+        <el-table-column label="姓名" width="100" align="center">
           <template slot-scope="{row}">
             <span>{{ row.nickname }}</span>
           </template>
@@ -154,6 +154,10 @@ export default {
       this.getAccessRecordByRoomId()
     },
     handleExportData() {
+      if (this.query.startTime === null || this.query.endTime === null) {
+        this.$message.error('起始日期或者结束日期未选择')
+        return
+      }
       this.exportBtnLoading = true
       this.query.roomId = this.roomId
       recordApi.exportUserAccessRecordByRoomIdApi(this.query).then(response => {
