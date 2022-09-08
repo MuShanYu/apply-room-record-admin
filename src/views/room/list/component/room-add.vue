@@ -53,7 +53,7 @@ export default {
           {required: true, message: '请选择校区', trigger: 'change'}
         ],
         teachBuilding: [
-          {required: true, message: '请填写校区', trigger: 'blur'},
+          {required: true, message: '请填写楼栋信息', trigger: 'blur'},
           {min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur'}
         ],
         category: [

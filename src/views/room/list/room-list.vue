@@ -91,7 +91,7 @@
         </el-table-column>
         <el-table-column width="200" label="操作" align="center">
           <template slot-scope="{row, $index}">
-            <el-button :loading="row.detailBtnLoading" @click="handleRoomReservationClick(row, $index)" v-waves
+            <el-button @click="handleRoomReservationClick(row, $index)" v-waves
                        style="margin: 3px;" type="primary"
                        size="mini">
               预约详情
@@ -232,7 +232,6 @@ export default {
         this.roomList = data.pageData
         this.total = data.totalSize
         this.listLoading = false
-        this.roomList.forEach(item => this.$set(item, "detailBtnLoading", false))
         // console.log(this.roomList);
       }).catch(e => {
         this.listLoading = false
@@ -247,12 +246,10 @@ export default {
     },
     handleRoomReservationClick(item, index) {
       this.detailQuery.roomId = item.id
-      item.detailBtnLoading = true
       roomApi.roomReservationDetail(this.detailQuery).then(data => {
         this.roomReservationList = data.pageData
         this.roomReservationTotal = data.totalSize
         // console.log(this.roomReservationList);
-        item.detailBtnLoading = false
         this.reservationDrawer = true
       })
     },
