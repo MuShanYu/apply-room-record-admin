@@ -24,6 +24,7 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import roomApi from "@/api/room";
 
 export default {
   components: {
@@ -40,9 +41,18 @@ export default {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
-    async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$router.replace(`/login?redirect=${this.$route.fullPath}`)
+    logout() {
+      this.$confirm('您确认要退出登录吗?该操作会导致您其他端的登录状态同时失效.', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$store.dispatch('user/logout').then(() => {
+          this.$router.replace(`/login?redirect=${this.$route.fullPath}`)
+        })
+      }).catch(() => {
+
+      })
     }
   }
 }
