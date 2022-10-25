@@ -8,6 +8,13 @@ export default {
       data: room
     })
   },
+  insertRoomAndRegisterAdminUser(roomAddUpdateDTO) {
+    return request({
+      url: '/room/insert-and-register-admin',
+      method: 'post',
+      data: roomAddUpdateDTO
+    })
+  },
   delRoom(id) {
     return request({
       url: '/room/delete',
@@ -29,6 +36,13 @@ export default {
       url: '/room/update',
       method: 'post',
       data: room
+    })
+  },
+  updateRoomCharger(roomChargerDTO) {
+    return request({
+      url: '/room/updateCharger',
+      method: 'post',
+      data: roomChargerDTO
     })
   },
   roomReservationDetail(roomApplyDetailListQueryDTO) {

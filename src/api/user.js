@@ -39,6 +39,13 @@ export default {
       data: userListQueryDTO
     })
   },
+  batchInsertUser(registerDTOS) {
+    return request({
+      url: '/admin/batchInsert/users',
+      method: 'post',
+      data: registerDTOS
+    })
+  },
   changeRole(userRoleChangeDTO) {
     return request({
       url: '/admin/update/role',

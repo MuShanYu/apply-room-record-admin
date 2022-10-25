@@ -28,9 +28,14 @@
           :value="item">
         </el-option>
       </el-select>
-      <el-button @click="addRoomDrawer = true" v-waves style="margin-left: 10px;" type="primary" icon="el-icon-plus">
+      <el-button v-permission="['super-admin']" @click="addRoomDrawer = true" v-waves style="margin-left: 10px;" type="primary" icon="el-icon-plus">
         新建房间
       </el-button>
+      <el-button v-permission="['super-admin']" @click="$router.push('/room/import')"
+                 v-waves style="margin-left: 10px;" type="primary" icon="el-icon-upload2">
+        批量导入
+      </el-button>
+      <el-link :href="constants.roomExcelHref" v-permission="['super-admin']" style="margin-left: 10px;" :underline="false" type="primary">房间信息导入模板下载</el-link>
     </div>
     <div>
       <el-table
@@ -84,9 +89,14 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="注册日期" width="180" align="center">
+        <el-table-column label="创建时间" width="180" align="center">
           <template slot-scope="{row}">
             <span>{{ row.createTime | parseTime }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="负责人" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.chargePerson }}</span>
           </template>
         </el-table-column>
         <el-table-column width="200" label="操作" align="center">
@@ -101,12 +111,12 @@
                        size="mini">
               足迹详情
             </el-button>
-            <el-button :disabled="row.state !== 1" @click="handleRoomUpdateClick(row, $index)" v-waves
+            <el-button v-if="currentUserId === row.chargePersonId || isSuperAdmin" :disabled="row.state !== 1" @click="handleRoomUpdateClick(row, $index)" v-waves
                        style="margin: 3px;" type="info" size="mini">
               修改
             </el-button>
-            <el-button type="danger" v-waves plain @click="handleDeleteClick(row)"
-                       v-permission="['super-admin']" style="margin: 3px;" size="mini">
+            <el-button v-if="row.chargePersonId === currentUserId || isSuperAdmin" type="danger" v-waves plain
+                       @click="handleDeleteClick(row)" style="margin: 3px;" size="mini">
               {{ row.state === -1 ? '解除' : '禁用' }}
             </el-button>
           </template>
@@ -142,7 +152,7 @@
 
     <el-drawer
       size="50%"
-      title="修改房间"
+      title="添加房间"
       :show-close="false"
       :visible.sync="addRoomDrawer"
       direction="rtl">
@@ -172,12 +182,23 @@ import RoomAdd from "@/views/room/list/component/room-add";
 import RoomAccessRecordList from "@/views/room/list/component/room-access-record-list";
 
 import clip from '@/utils/clipboard' // use clipboard directly
-import clipboard from '@/directive/clipboard/index.js' // use clipboard by v-directive
+import clipboard from '@/directive/clipboard/index.js'
+import {mapGetters} from "vuex"; // use clipboard by v-directive
+import constants from "@/common/CommonCantans";
 
 export default {
   name: "RoomList",
   directives: {
     clipboard
+  },
+  computed: {
+    ...mapGetters([
+      'userInfo',
+      'roles'
+    ]),
+    constants() {
+      return constants;
+    }
   },
   components: {
     Pagination,
@@ -218,10 +239,14 @@ export default {
       updateRoomDrawer: false,
       addRoomDrawer: false,
       currentRoomId: '',
-      accessRecordDrawer: false
+      accessRecordDrawer: false,
+      currentUserId: '',
+      isSuperAdmin: false
     }
   },
   created() {
+    this.currentUserId = this.userInfo.id
+    this.isSuperAdmin = this.roles.some(v => v === 'super-admin')
     this.getRoomList()
     this.getRoomClassifyInfo()
   },

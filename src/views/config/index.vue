@@ -1,7 +1,7 @@
 <template>
   <div class="" style="margin: 5px;">
     <div style="margin-bottom: 5px;text-align: right;">
-      <el-button v-waves icon="el-icon-plus" @click="showAdd = true" type="primary">
+      <el-button v-permission="['super-admin']" v-waves icon="el-icon-plus" @click="showAdd = true" type="primary">
         添加配置
       </el-button>
     </div>
@@ -49,7 +49,7 @@
         </el-table-column>
         <el-table-column width="150" label="操作" align="center">
           <template slot-scope="{row, $index}">
-            <el-button :disabled="row.state !== 1" @click="handleUpdateConfigClick(row, $index)" v-waves
+            <el-button v-permission="['super-admin']" :disabled="row.state !== 1" @click="handleUpdateConfigClick(row, $index)" v-waves
                        style="margin: 3px;" type="primary" size="mini">
               修改
             </el-button>

@@ -71,8 +71,8 @@ export default {
     }
     return {
       loginForm: {
-        tel: '',
-        pwd: ''
+        tel: '18326790543',
+        pwd: '123456'
       },
       loginRules: {
         tel: [{ required: true, trigger: 'blur', validator: validateTel }],

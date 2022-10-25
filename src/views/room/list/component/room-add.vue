@@ -20,6 +20,12 @@
       <el-form-item label="房间名称" prop="roomName">
         <el-input placeholder="请输入房间名称(例如:5501或者大礼堂等等)" v-model="room.roomName"></el-input>
       </el-form-item>
+      <el-form-item label="负责人姓名" prop="chargePerson">
+        <el-input placeholder="请输入该房间的负责人姓名" v-model="room.chargePerson"></el-input>
+      </el-form-item>
+      <el-form-item label="负责人电话" prop="chargePersonTel">
+        <el-input placeholder="请输入该房间的负责人电话" v-model="room.chargePersonTel"></el-input>
+      </el-form-item>
       <el-form-item label="设备信息" prop="equipmentInfo">
         <el-input placeholder="请输入设备信息(当前房间拥有的设备信息,如电脑、投影仪等)" :rows="4" type="textarea" v-model="room.equipmentInfo"></el-input>
       </el-form-item>
@@ -46,6 +52,8 @@ export default {
         roomName: '',
         equipmentInfo: '',
         capacity: '',
+        chargePerson: '',
+        chargePersonTel: ''
       },
       btnLoading: false,
       rules: {
@@ -54,7 +62,7 @@ export default {
         ],
         teachBuilding: [
           {required: true, message: '请填写楼栋信息', trigger: 'blur'},
-          {min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur'}
+          {min: 1, max: 16, message: '长度在 1 到 16 个字符', trigger: 'blur'}
         ],
         category: [
           {required: true, message: '请选择类别', trigger: 'change'}
@@ -66,6 +74,14 @@ export default {
         roomName: [
           {required: true, message: '请填写房间名称(房间名称+房间号)', trigger: 'blur'},
           {min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur'}
+        ],
+        chargePerson: [
+          {required: true, message: '请填写负责人姓名', trigger: 'blur'},
+          {min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur'}
+        ],
+        chargePersonTel: [
+          {required: true, message: '请填写房间负责人联系方式', trigger: 'blur'},
+          {min: 11, max: 11, message: '请输入11位联系方式', trigger: 'blur'}
         ],
         equipmentInfo: [
           {required: true, message: '请填写设备信息', trigger: 'blur'},

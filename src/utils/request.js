@@ -3,11 +3,12 @@ import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import router from '@/router'
 import { getToken } from '@/utils/auth'
-import el from "element-ui/src/locale/lang/el";
+
+import constants from "@/common/CommonCantans";
 
 // create an axios instance
 const service = axios.create({
-  baseURL: 'http://localhost:8500', // url = base url + request url
+  baseURL: constants.baseUrl, // url = base url + request url
   // baseURL: 'https://www.mushanyu.xyz:8500', // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 50000 // request timeout
@@ -39,7 +40,6 @@ service.interceptors.response.use(
     const res = response.data
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 200) {
-
       // 需要动态刷新token
       if (res.code === -2 || res.code === -3 || res.code === -4 || res.code === -5) {
         MessageBox.confirm('您的登录状态过期或已被强制下线', '提示', {
@@ -65,6 +65,8 @@ service.interceptors.response.use(
           // 清除数据然后跳转至登录
           router.replace(`/login`)
         })
+      } else if (res.code === 999) {
+
       } else {
         Message({
           message: res.message || 'Error',
@@ -72,7 +74,7 @@ service.interceptors.response.use(
           duration: 2500
         })
       }
-      return Promise.reject(new Error(res.message || 'Error'))
+      return Promise.reject(res.message || "Error")
     } else {
       return res.queryData
     }

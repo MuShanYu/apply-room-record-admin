@@ -1,7 +1,8 @@
 <template>
   <div style="margin: 10px;">
-    <div style="margin-bottom: 10px;">
-      <el-select clearable @change="getUserList" style="margin-right: 10px;" v-model="query.institute" placeholder="请选择学院">
+    <div style="margin-bottom: 10px;display: flex;">
+      <el-select clearable @change="getUserList" style="margin-right: 10px;" v-model="query.institute"
+                 placeholder="请选择学院">
         <el-option
           v-for="(item, index) in institute"
           :label="item"
@@ -18,6 +19,10 @@
                  @click="getUserList">
         搜索
       </el-button>
+      <el-button v-permission="['super-admin']" @click="$router.push('/user/import')" v-waves style="margin-left: 10px;" type="primary" icon="el-icon-upload2">
+        导入用户数据
+      </el-button>
+      <el-link :href="constants.userExcelHref" v-permission="['super-admin']" style="margin-left: 10px;" :underline="false" type="primary">下载用户导入数据模板</el-link>
     </div>
     <div>
       <el-table
@@ -69,10 +74,12 @@
         </el-table-column>
         <el-table-column width="200" label="操作" align="center">
           <template slot-scope="{row, $index}">
-            <el-button @click="handleUserAccessRecordClick(row, $index)" v-waves style="margin: 3px;" type="primary" size="mini">
+            <el-button @click="handleUserAccessRecordClick(row, $index)" v-waves style="margin: 3px;" type="primary"
+                       size="mini">
               足迹详情
             </el-button>
-            <el-button @click="handleReserveDetailClick(row, $index)" v-waves style="margin: 3px;" type="primary" size="mini">
+            <el-button @click="handleReserveDetailClick(row, $index)" v-waves style="margin: 3px;" type="primary"
+                       size="mini">
               预约详情
             </el-button>
             <el-button plain type="primary" @click="handleUpdateRoleClick(row, $index)" v-waves
@@ -93,7 +100,7 @@
       :show-close="true"
       :visible.sync="reservationDrawer"
       direction="rtl">
-      <user-room-reserve :id="reserveUserId" />
+      <user-room-reserve :id="reserveUserId"/>
     </el-drawer>
 
     <el-drawer
@@ -102,7 +109,7 @@
       :show-close="true"
       :visible.sync="accessRecordDrawer"
       direction="rtl">
-      <user-access-record :id="recordUserId" />
+      <user-access-record :id="recordUserId"/>
     </el-drawer>
 
     <el-dialog @close="resetUpdateTempData" :close-on-click-modal="false" :center="true"
@@ -132,12 +139,23 @@ import UserRoomReserve from "@/views/user/component/user-room-reserve";
 import UserAccessRecord from "@/views/user/component/user-access-record";
 import Pagination from "@/components/Pagination";
 
+import constants from '@/common/CommonCantans'
+import {mapGetters} from "vuex";
+
 export default {
   name: "User",
   components: {
     Pagination,
     UserRoomReserve,
     UserAccessRecord
+  },
+  computed: {
+    constants() {
+      return constants;
+    },
+    ...mapGetters([
+      'token'
+    ])
   },
   data() {
     return {
@@ -238,6 +256,16 @@ export default {
     handleUserAccessRecordClick(row, index) {
       this.recordUserId = row.id
       this.accessRecordDrawer = true
+    },
+    handelUploadSuccess() {
+
+    },
+    handleUploadError() {
+
+    },
+    handleBeforeUpload(file) {
+      console.log(file);
+      return false;
     }
   }
 }

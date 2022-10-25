@@ -27,7 +27,7 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/home'),
-      meta: { title: '首页', icon: 'dashboard', affix: true, noCache: false }
+      meta: {title: '首页', icon: 'dashboard', affix: true, noCache: false}
     }]
   },
   {
@@ -48,6 +48,13 @@ export const constantRoutes = [
         name: 'RoomApprove',
         component: () => import('@/views/room/approve/room-approve'),
         meta: {title: '预约审批'}
+      },
+      {
+        path: 'import',
+        name: 'RoomImport',
+        component: () => import('@/views/room/import/import-room'),
+        meta: {title: '导入房间数据', activeMenu: '/room/list'},
+        hidden: true
       }
     ]
   },
@@ -55,12 +62,21 @@ export const constantRoutes = [
     path: '/user',
     component: Layout,
     redirect: '/user/index',
-    children: [{
-      path: 'index',
-      name: 'UserManager',
-      component: () => import('@/views/user/user'),
-      meta: { title: '用户管理', icon: 'user', noCache: true }
-    }]
+    children: [
+      {
+        path: 'index',
+        name: 'UserManager',
+        component: () => import('@/views/user/user'),
+        meta: {title: '用户管理', icon: 'user', noCache: true}
+      },
+      {
+        path: 'import',
+        name: 'UserImport',
+        component: () => import('@/views/user/import/import-user'),
+        meta: { title: '导入用户数据', activeMenu: '/user/index' },
+        hidden: true
+      }
+    ]
   },
   {
     path: '/config',
@@ -70,7 +86,7 @@ export const constantRoutes = [
       path: 'index',
       name: 'Config',
       component: () => import('@/views/config/index'),
-      meta: { title: '配置管理', icon: 'config', noCache: true }
+      meta: {title: '配置管理', icon: 'config', noCache: true}
     }]
   },
   {
@@ -79,17 +95,17 @@ export const constantRoutes = [
     children: [
       {
         path: 'https://cn.online-qrcode-generator.com/',
-        meta: { title: '二维码生成', icon: 'link' }
+        meta: {title: '二维码生成', icon: 'link'}
       }
     ]
   },
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  {path: '*', redirect: '/404', hidden: true}
 ]
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: () => ({y: 0}),
   routes: constantRoutes
 })
 

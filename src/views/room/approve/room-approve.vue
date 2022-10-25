@@ -68,7 +68,8 @@
             <span>{{ row.category }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="状态" width="110" align="center">
+        <el-table-column :filters="filters" :filter-method="filterHandler"
+                         label="状态" width="110" align="center">
           <template slot-scope="{row}">
             <el-tag :type="row.state | statusFilter">
               {{ row.state | msgFilter }}
@@ -80,7 +81,7 @@
             <span>{{ row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="预约时间" width="100" align="center">
+        <el-table-column label="创建时间" width="100" align="center">
           <template slot-scope="{row}">
             <span>{{ row.createTime | parseTime }}</span>
           </template>
@@ -102,11 +103,13 @@
         </el-table-column>
         <el-table-column width="150" label="操作" align="center">
           <template slot-scope="{row, $index}">
-            <el-button :disabled="row.state === 6" @click="handleRoomReservationPassClick(row, $index)" v-waves style="margin: 3px;" type="primary"
+            <el-button :disabled="row.state === 6" @click="handleRoomReservationPassClick(row, $index)" v-waves
+                       style="margin: 3px;" type="primary"
                        size="mini">
               通过
             </el-button>
-            <el-button :disabled="row.state === 6" @click="handleRoomUpdateRejectClick(row, $index)" v-waves style="margin: 3px;" type="danger" size="mini">
+            <el-button :disabled="row.state === 6" @click="handleRoomUpdateRejectClick(row, $index)" v-waves
+                       style="margin: 3px;" type="danger" size="mini">
               驳回
             </el-button>
           </template>
@@ -202,7 +205,14 @@ export default {
       teachBuilding: [],
       school: [],
       category: [],
-      currentRoom: {}
+      currentRoom: {},
+      filters: [
+        {text: '待审批', value: 0},
+        {text: '已审批', value: 2},
+        {text: '驳回', value: 4},
+        {text: '用户取消', value: 3},
+        {text: '超时未处理', value: 6}
+      ]
     }
   },
   created() {
@@ -258,6 +268,9 @@ export default {
       }).catch(() => {
 
       })
+    },
+    filterHandler(value, row, column) {
+      return row.state === value;
     }
   }
 }
