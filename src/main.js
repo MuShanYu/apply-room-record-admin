@@ -18,10 +18,13 @@ import Permission from "@/directive/permission";
 
 import Waves from '@/directive/waves'
 
+import VueQr from 'vue-qr'
+
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
 Vue.use(ElementUI)
+Vue.use(VueQr)
 Vue.use(Permission)
 Vue.use(Waves)
 

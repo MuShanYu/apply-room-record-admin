@@ -1,6 +1,6 @@
 <template>
   <div style="margin: 10px;">
-    <div style="margin-bottom: 10px;">
+    <div style="margin-bottom: 10px;margin-top: 10px;">
       <el-select clearable @change="getRoomList" style="margin-right: 10px;"
                  v-model="query.school" placeholder="请选择校区">
         <el-option
@@ -35,6 +35,10 @@
                  v-waves style="margin-left: 10px;" type="primary" icon="el-icon-upload2">
         批量导入
       </el-button>
+      <el-button v-permission="['super-admin']" @click="handleBatchDownloadQRCode"
+                 v-waves style="margin-left: 10px;" type="primary" icon="el-icon-picture-outline">
+        批量生成二维码
+      </el-button>
       <el-link :href="constants.roomExcelHref" v-permission="['super-admin']" style="margin-left: 10px;" :underline="false" type="primary">房间信息导入模板下载</el-link>
     </div>
     <div>
@@ -44,13 +48,13 @@
         :data="roomList"
         border
         fit
+        @selection-change="handleSelectionChange"
         highlight-current-row
         style="width: 100%;">
         <el-table-column
-          label="序号"
           align="center"
-          type="index"
-          width="80">
+          type="selection"
+          width="60">
         </el-table-column>
         <el-table-column label="校区" width="150" align="center">
           <template slot-scope="{row}">
@@ -64,7 +68,7 @@
         </el-table-column>
         <el-table-column label="房间名" align="center">
           <template slot-scope="{row}">
-            <span @click="handleCopy('https://www.mushanyu.xyz:8800/#/pages/record/index?target=' + row.id, $event)" class="link-type">{{ row.roomName }}</span>
+            <span @click="handleCopy(constants.qrCodeUrlPrefix + row.id, $event)" class="link-type">{{ row.roomName }}</span>
           </template>
         </el-table-column>
         <el-table-column label="设备信息" align="center">
@@ -127,6 +131,15 @@
                   @pagination="getRoomList"/>
     </div>
 
+    <el-dialog
+      :center="true"
+      title="批量生成房间二维码预览"
+      :fullscreen="true"
+      :destroy-on-close="true"
+      :visible.sync="generateQRCodeDialog">
+      <room-qr-code-generate :room-list="roomSelectedList" />
+    </el-dialog>
+
     <!-- 查看预约详情 -->
     <el-drawer
       size="65%"
@@ -180,6 +193,7 @@ import RoomReservationList from "@/views/room/list/component/room-reservation-li
 import RoomUpdate from "@/views/room/list/component/room-update";
 import RoomAdd from "@/views/room/list/component/room-add";
 import RoomAccessRecordList from "@/views/room/list/component/room-access-record-list";
+import RoomQrCodeGenerate from "@/views/room/list/component/room-qr-code-generate";
 
 import clip from '@/utils/clipboard' // use clipboard directly
 import clipboard from '@/directive/clipboard/index.js'
@@ -205,7 +219,8 @@ export default {
     RoomReservationList,
     RoomUpdate,
     RoomAdd,
-    RoomAccessRecordList
+    RoomAccessRecordList,
+    RoomQrCodeGenerate
   },
   data() {
     return {
@@ -241,7 +256,9 @@ export default {
       currentRoomId: '',
       accessRecordDrawer: false,
       currentUserId: '',
-      isSuperAdmin: false
+      isSuperAdmin: false,
+      roomSelectedList: [],
+      generateQRCodeDialog: false
     }
   },
   created() {
@@ -316,6 +333,16 @@ export default {
     handleAccessRecordClick(row, index) {
       this.currentRoomId = row.id
       this.accessRecordDrawer = true
+    },
+    handleSelectionChange(selectedVal) {
+      this.roomSelectedList = selectedVal;
+    },
+    handleBatchDownloadQRCode() {
+      if (this.roomSelectedList.length === 0) {
+        this.$message.error("请选择要生成二维码的房间");
+        return
+      }
+      this.generateQRCodeDialog = true
     }
   }
 }

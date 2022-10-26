@@ -24,7 +24,6 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import roomApi from "@/api/room";
 
 export default {
   components: {
