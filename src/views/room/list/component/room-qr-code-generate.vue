@@ -1,12 +1,13 @@
 <template>
   <div class="">
     <div class="option" style="text-align: center;margin-bottom: 10px;">
+      <div style="font-size: 12px;color: #909399;margin-bottom: 10px;">二维码的生成由于网络原因可能会加载过慢，请耐心等待</div>
       <el-button :disabled="isDownload" :loading="loading" @click="batchDownloadImgToZip" type="primary" icon="el-icon-download">一键打包下载</el-button>
     </div>
     <div class="main">
       <div style="margin: 10px;text-align: center;" :id="'image-' + index" v-for="(item, index) in roomList" :key="item.id">
         <div style="color: #303133;font-size: 16px;margin-bottom: 8px;">{{item.roomName}}</div>
-        <vue-qr :callback="generateQRCodeCallBack" :margin="0" :size="227" :logo-src="logo" :text="constants.qrCodeUrlPrefix + item.id"></vue-qr>
+        <vue-qr :callback="generateQRCodeCallBack" :margin="0" :size="227" :logo-src="constants.logo" :text="constants.qrCodeUrlPrefix + item.id"></vue-qr>
       </div>
     </div>
   </div>
@@ -35,7 +36,6 @@ export default {
   },
   data() {
     return {
-      logo: 'https://static-17b6ad9e-b994-419f-9c7b-fa8f76f5d943.bspapp.com/otherStatic/logo.png',
       loading: false,
       QRCodeURLs: [],
       isDownload: false
@@ -64,7 +64,7 @@ export default {
             // 生成二进制流
             saveAs(content, "房间二维码.zip"); // 利用file-saver保存文件
             this.loading = false
-            this.isDownload = true
+            this.QRCodeURLs = [] // 重置
             this.$message.success("已将二维码生成，并压缩下载")
             setTimeout(() => {
               this.$notify({

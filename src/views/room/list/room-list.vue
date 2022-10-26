@@ -135,7 +135,6 @@
       :center="true"
       title="批量生成房间二维码预览"
       :fullscreen="true"
-      :destroy-on-close="true"
       :visible.sync="generateQRCodeDialog">
       <room-qr-code-generate :room-list="roomSelectedList" />
     </el-dialog>
