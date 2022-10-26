@@ -65,7 +65,7 @@ export default {
             saveAs(content, "房间二维码.zip"); // 利用file-saver保存文件
             this.loading = false
             this.isDownload = true
-            this.$message.success("已将二维码生成，并压缩并下载")
+            this.$message.success("已将二维码生成，并压缩下载")
             setTimeout(() => {
               this.$notify({
                 title: '提示',
