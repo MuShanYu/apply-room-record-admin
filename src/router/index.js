@@ -95,7 +95,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'https://cn.online-qrcode-generator.com/',
-        meta: {title: '二维码生成', icon: 'link'}
+        meta: {title: '自定义二维码生成', icon: 'link'}
       }
     ]
   },
