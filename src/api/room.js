@@ -15,9 +15,9 @@ export default {
       data: roomAddUpdateDTO
     })
   },
-  delRoom(id) {
+  disableRoom(id) {
     return request({
-      url: '/room/delete',
+      url: '/room/disable',
       method: 'get',
       params: {
         id

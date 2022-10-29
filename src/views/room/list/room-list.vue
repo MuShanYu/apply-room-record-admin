@@ -120,7 +120,7 @@
               修改
             </el-button>
             <el-button v-if="row.chargePersonId === currentUserId || isSuperAdmin" type="danger" v-waves plain
-                       @click="handleDeleteClick(row)" style="margin: 3px;" size="mini">
+                       @click="handleDisableClick(row)" style="margin: 3px;" size="mini">
               {{ row.state === -1 ? '解除' : '禁用' }}
             </el-button>
           </template>
@@ -302,14 +302,15 @@ export default {
       let roomIndex = this.roomList.findIndex(item => item.id === room.id)
       this.roomList.splice(roomIndex, 1, room);
     },
-    handleDeleteClick(room) {
+    handleDisableClick(room) {
       let text = room.state === 1 ? '确定要禁用该房间吗?' : '确定要解除禁用该房间吗?'
       this.$confirm(text, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        roomApi.delRoom(room.id).then(() => {
+        this.$message.info('正在完成操作，请您耐心等待')
+        roomApi.disableRoom(room.id).then(() => {
           if (room.state === -1) {
             room.state = 1
             this.$message.success("解除禁用成功")

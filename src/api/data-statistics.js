@@ -29,24 +29,26 @@ export default {
       method: 'get'
     })
   },
-  countRoomReservationTimes(query) {
+  countRoomReservationTimes(roomReservationCountDTO) {
     return request({
-      url: '/admin/get/roomReservationTimes/count',
-      method: 'get',
-      params: {
-        roomId: query.roomId,
-        startTime: query.startTime
-      }
+      url: '/admin/post/roomReservationTimes/count',
+      method: 'post',
+      data: roomReservationCountDTO
     })
   },
-  countAccessRecordApi(query) {
+  countAccessRecordApi(roomRecordCountDTO) {
     return request({
-      url: '/admin/get/access/record/count',
-      method: 'get',
-      params: {
-        roomId: query.roomId,
-        startTime: query.startTime
-      }
+      url: '/admin/post/access/record/count',
+      method: 'post',
+      data: roomRecordCountDTO
+    })
+  },
+  countRoomRecordAccessCountData(roomRecordCountDTO) {
+    return request({
+      url: '/admin/query/export/access/record',
+      responseType: 'blob',
+      method: 'post',
+      data: roomRecordCountDTO
     })
   },
 }

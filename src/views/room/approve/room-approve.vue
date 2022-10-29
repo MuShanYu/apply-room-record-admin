@@ -103,12 +103,12 @@
         </el-table-column>
         <el-table-column width="150" label="操作" align="center">
           <template slot-scope="{row, $index}">
-            <el-button :disabled="row.state === 6" @click="handleRoomReservationPassClick(row, $index)" v-waves
+            <el-button :disabled="row.state !== 0" @click="handleRoomReservationPassClick(row, $index)" v-waves
                        style="margin: 3px;" type="primary"
                        size="mini">
               通过
             </el-button>
-            <el-button :disabled="row.state === 6" @click="handleRoomUpdateRejectClick(row, $index)" v-waves
+            <el-button :disabled="row.state !== 0" @click="handleRoomUpdateRejectClick(row, $index)" v-waves
                        style="margin: 3px;" type="danger" size="mini">
               驳回
             </el-button>
@@ -246,8 +246,7 @@ export default {
         type: 'warning'
       }).then(() => {
         roomApi.passOrRejectRoomReserve(item.id, true).then(() => {
-          this.roomList.splice(index, 1)
-          this.total -= 1
+          item.state = 2
           this.$message.success('操作成功')
         })
       }).catch(() => {
@@ -261,8 +260,7 @@ export default {
         type: 'warning'
       }).then(() => {
         roomApi.passOrRejectRoomReserve(item.id, false).then(() => {
-          this.roomList.splice(index, 1)
-          this.total -= 1
+          item.state = 4
           this.$message.success('操作成功')
         })
       }).catch(() => {
