@@ -56,7 +56,7 @@
           type="selection"
           width="60">
         </el-table-column>
-        <el-table-column label="校区" width="150" align="center">
+        <el-table-column label="校区" width="100" align="center">
           <template slot-scope="{row}">
             <span>{{ row.school }}</span>
           </template>
@@ -76,7 +76,7 @@
             <span>{{ row.equipmentInfo }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="容量" width="150" align="center">
+        <el-table-column label="容量" width="80" align="center">
           <template slot-scope="{row}">
             <span>{{ row.capacity }}</span>
           </template>
@@ -98,7 +98,7 @@
             <span>{{ row.createTime | parseTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="负责人" align="center">
+        <el-table-column label="负责人" align="center" width="80">
           <template slot-scope="{row}">
             <span>{{ row.chargePerson }}</span>
           </template>
@@ -119,10 +119,12 @@
                        style="margin: 3px;" type="info" size="mini">
               修改
             </el-button>
-            <el-button v-if="row.chargePersonId === currentUserId || isSuperAdmin" type="danger" v-waves plain
-                       @click="handleDisableClick(row)" style="margin: 3px;" size="mini">
-              {{ row.state === -1 ? '解除' : '禁用' }}
-            </el-button>
+            <el-tooltip effect="light" content="禁用是指该房间设置为不可预约状态" placement="bottom-start">
+              <el-button v-if="row.chargePersonId === currentUserId || isSuperAdmin" type="danger" v-waves plain
+                         @click="handleDisableClick(row)" style="margin: 3px;" size="mini">
+                {{ row.state === -1 ? '解除' : '禁用' }}
+              </el-button>
+            </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
