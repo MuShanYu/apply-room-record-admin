@@ -52,5 +52,19 @@ export default {
       method: 'post',
       data: userRoleChangeDTO
     })
+  },
+  updateUserTel(userUpdateTelDTO) {
+    return request({
+      url: '/admin/update/user/tel',
+      method: 'post',
+      data: userUpdateTelDTO
+    })
+  },
+  updateUserName(userUpdateNameDTO) {
+    return request({
+      url: '/admin/update/user/name',
+      method: 'post',
+      data: userUpdateNameDTO
+    })
   }
 }

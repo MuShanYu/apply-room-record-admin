@@ -19,10 +19,13 @@
                  @click="getUserList">
         搜索
       </el-button>
-      <el-button v-permission="['super-admin']" @click="$router.push('/user/import')" v-waves style="margin-left: 10px;" type="primary" icon="el-icon-upload2">
+      <el-button v-permission="['super-admin']" @click="$router.push('/user/import')" v-waves style="margin-left: 10px;"
+                 type="primary" icon="el-icon-upload2">
         导入用户数据
       </el-button>
-      <el-link :href="constants.userExcelHref" v-permission="['super-admin']" style="margin-left: 10px;" :underline="false" type="primary">下载用户导入数据模板</el-link>
+      <el-link :href="constants.userExcelHref" v-permission="['super-admin']" style="margin-left: 10px;"
+               :underline="false" type="primary">下载用户导入数据模板
+      </el-link>
     </div>
     <div>
       <el-table
@@ -46,7 +49,7 @@
         </el-table-column>
         <el-table-column label="姓名" align="center">
           <template slot-scope="{row}">
-            <span>{{ row.name }}</span>
+            <span @click="handleUpdateUserNameClick(row)" class="link-type">{{ row.name }}</span>
           </template>
         </el-table-column>
         <el-table-column label="学院" align="center">
@@ -56,7 +59,7 @@
         </el-table-column>
         <el-table-column label="联系电话" align="center">
           <template slot-scope="{row}">
-            <span>{{ row.tel }}</span>
+            <span @click="handleUpdateUserTelClick(row)" class="link-type">{{ row.tel }}</span>
           </template>
         </el-table-column>
         <el-table-column label="注册日期" align="center">
@@ -154,7 +157,8 @@ export default {
       return constants;
     },
     ...mapGetters([
-      'token'
+      'token',
+      'roles'
     ])
   },
   data() {
@@ -192,12 +196,14 @@ export default {
       reservationDrawer: false,
       accessRecordDrawer: false,
       recordUserId: '',
-      reserveUserId: ''
+      reserveUserId: '',
+      isSuperAdmin: false,
     }
   },
   created() {
     this.getUserList()
     this.getInstitute()
+    this.isSuperAdmin = this.roles.some(v => v === 'super-admin')
   },
   methods: {
     getUserList() {
@@ -257,20 +263,81 @@ export default {
       this.recordUserId = row.id
       this.accessRecordDrawer = true
     },
-    handelUploadSuccess() {
+    handleUpdateUserTelClick(row) {
+      if (!this.isSuperAdmin) {
+        this.$message.error('您的权限不足，该修改操作需要超级管理员权限')
+        return
+      }
+      this.$prompt('请输入要更改的新手机号', '更改用户手机号', {
+        confirmButtonText: '更改',
+        cancelButtonText: '取消',
+        inputPattern: /^1[3-9]\d{9}$/,
+        inputErrorMessage: '请输入正确的手机号'
+      }).then(({value}) => {
+        this.$message.info('正在完成操作，请稍等')
+        let obj = {
+          userId: row.id,
+          tel: value
+        }
+        userApi.updateUserTel(obj).then(() => {
+          row.tel = value.replace(/^(\d{3})\d{4}(\d+)/, '$1****$2');
+          this.$message.success('修改成功')
+        })
+      }).catch(() => {
 
+      });
     },
-    handleUploadError() {
+    handleUpdateUserNameClick(row) {
+      if (!this.isSuperAdmin) {
+        this.$message.error('您的权限不足，该修改操作需要超级管理员权限')
+        return
+      }
+      this.$prompt('请输入要更改的新姓名', '更改用户姓名', {
+        confirmButtonText: '更改',
+        cancelButtonText: '取消',
+        inputValidator: (val) => {
+          if (val === null || val.trim() === '') {
+            return '请输入姓名'
+          } else if (val.trim().length < 2 || val.trim().length > 8) {
+            return '姓名的长度必须在2~8之间'
+          }
+        }
+      }).then(({value}) => {
+        this.$message.info('正在完成操作，请稍等')
+        let obj = {
+          userId: row.id,
+          name: value.trim()
+        }
+        userApi.updateUserName(obj).then(() => {
+          row.name = this.encodeName(value.trim())
+          this.$message.success('修改成功')
+        })
+      }).catch(() => {
 
+      });
     },
-    handleBeforeUpload(file) {
-      console.log(file);
-      return false;
+    encodeName(name) {
+      if (name !== null && name.length === 2) {
+        return name.replace(name.substring(1), "*");
+      }
+      if (name !== null && name.length > 2) {
+        return name.replace(name.substring(1, name.length - 1), "*");
+      }
+      return name;
     }
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.link-type,
+.link-type:focus {
+  color: #337ab7;
+  cursor: pointer;
 
+  & :hover {
+    color: rgb(32, 160, 255);
+  }
+
+}
 </style>
