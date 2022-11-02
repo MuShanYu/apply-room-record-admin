@@ -7,7 +7,7 @@
     <div class="main">
       <div style="margin: 10px;text-align: center;" :id="'image-' + index" v-for="(item, index) in roomList" :key="item.id">
         <div style="color: #303133;font-size: 16px;margin-bottom: 8px;">{{item.roomName}}</div>
-        <vue-qr :callback="generateQRCodeCallBack" :margin="0" :size="227" :logo-src="constants.logo" :text="constants.qrCodeUrlPrefix + item.id"></vue-qr>
+        <vue-qr :callback="generateQRCodeCallBack" :margin="10" :size="227" :logo-src="constants.logo" :text="constants.qrCodeUrlPrefix + item.id"></vue-qr>
       </div>
     </div>
   </div>
