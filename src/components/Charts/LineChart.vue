@@ -20,7 +20,7 @@ export default {
     },
     height: {
       type: String,
-      default: '350px'
+      default: '400px'
     },
     autoResize: {
       type: Boolean,
@@ -66,7 +66,7 @@ export default {
     setOptions({ entryTimes, outTimes, dates } = {}) {
       this.chart.setOption({
         title: {
-          text: '人员流动次数统计',
+          text: '人员进出人次统计',
           textStyle: {
             fontWeight: 'normal',
             fontSize: 14,

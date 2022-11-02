@@ -22,7 +22,7 @@ export default {
     },
     height: {
       type: String,
-      default: '450px'
+      default: '400px'
     },
     chartData: {
       type: Object,
@@ -61,10 +61,10 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
       this.setOptions(this.chartData)
     },
-    setOptions({dates, totalTimes} = {}) {
+    setOptions({dates, totalEntryAndOutPeople} = {}) {
       this.chart.setOption({
         title: {
-          text: '人员流动总次数统计',
+          text: '人员进出人数统计',
           textStyle: {
             fontWeight: 'normal',
             fontSize: 14,
@@ -79,7 +79,7 @@ export default {
           }
         },
         grid: {
-          top: 45,
+          top: 60,
           left: '2%',
           right: '2%',
           bottom: '3%',
@@ -99,11 +99,11 @@ export default {
           }
         }],
         series: [{
-          name: '进出总次数统计',
+          name: '进出人数',
           type: 'bar',
           stack: 'vistors',
           barWidth: '60%',
-          data: totalTimes,
+          data: totalEntryAndOutPeople,
           animationDuration
         }]
       })

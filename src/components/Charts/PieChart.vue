@@ -62,7 +62,7 @@ export default {
     setOptions({rejectTimesCount, cancelTimesCount, reviewTimesCount, reviewedTimesCount} = {}) {
       this.chart.setOption({
         title: {
-          text: '房间预约总次数统计',
+          text: '房间预约总次数统计(所指定的时间跨度内)',
           textStyle: {
             fontWeight: 'normal',
             fontSize: 14,
@@ -76,7 +76,7 @@ export default {
         legend: {
           left: 'center',
           bottom: '10',
-          data: ['已预约次数', '已取消次数', '已审批次数', '已驳回次数']
+          data: ['已预约总次数', '已取消总次数', '已通过总次数', '已驳回总次数']
         },
         series: [
           {
@@ -86,10 +86,10 @@ export default {
             radius: [15, 95],
             center: ['50%', '38%'],
             data: [
-              { value: reviewTimesCount, name: '已预约次数' },
-              { value: cancelTimesCount, name: '已取消次数' },
-              { value: reviewedTimesCount, name: '已审批次数' },
-              { value: rejectTimesCount, name: '已驳回次数' }
+              { value: reviewTimesCount, name: '已预约总次数' },
+              { value: cancelTimesCount, name: '已取消总次数' },
+              { value: reviewedTimesCount, name: '已通过总次数' },
+              { value: rejectTimesCount, name: '已驳回总次数' }
             ],
             animationEasing: 'cubicInOut',
             animationDuration: 2600

@@ -49,11 +49,14 @@
         </el-button>
       </div>
       <div style="text-align: left;margin-top: 15px;">
-        <span style="color: #909399;font-size: 12px;margin-left: 10px;">
-        （通过改变起始日期条件查看对应统计图表）（图表最多展示14天的数据，超出会有提示）（房间名称和房间类别为非必要筛选数据）
+        <span style="color: #909399;font-size: 12px">
+        （图表最多展示14天的数据，超出会有提示）（房间名称和房间类别为非必要筛选数据）
         </span>
         <span style="color: #909399;font-size: 12px;">
         （说明:一天是指从00:00:00~23:59:59）
+        </span>
+        <span style="color: #909399;font-size: 12px;">
+        （说明:人次是指用户的扫码次数，人数是指在指定时间段有哪些人来过）
         </span>
       </div>
     </div>
@@ -61,23 +64,14 @@
     <div v-loading="loading" class="chart-wrapper">
       <line-chart :chart-data="accessRecordCount" :class-name="'line-chart'"/>
     </div>
-
+    <div v-loading="loading" class="chart-wrapper">
+      <bar-chart :chart-data="accessRecordCount" :class-name="'bar-chart'"/>
+    </div>
     <div v-loading="loading" class="chart-wrapper">
       <line-marker :chart-data="roomReserveCount" :id="'line-marker'" :width="'100%'" :height="'400px'"/>
     </div>
-    <div>
-      <el-row :gutter="30">
-        <el-col :span="12">
-          <div v-loading="loading" class="chart-wrapper">
-            <pie-chart :chart-data="roomReserveCount" :class-name="'pie-chart'"/>
-          </div>
-        </el-col>
-        <el-col :span="12">
-          <div v-loading="loading" class="chart-wrapper">
-            <bar-chart :chart-data="accessRecordCount" :class-name="'bar-chart'"/>
-          </div>
-        </el-col>
-      </el-row>
+    <div v-loading="loading" class="chart-wrapper">
+      <pie-chart :chart-data="roomReserveCount" :class-name="'pie-chart'"/>
     </div>
 
     <el-dialog
