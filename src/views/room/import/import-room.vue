@@ -17,42 +17,42 @@
     <div v-if="errorData.length > 0 && showResult">
       <div style="text-align: center;font-size: 18px;color: #000000;">错误数据如下</div>
       <el-table :data="errorData" border highlight-current-row style="width: 100%;margin-top:20px;">
-        <el-table-column label="校区" width="150" align="center">
+        <el-table-column label="校区" align="center">
           <template slot-scope="{row}">
             <span>{{ row.school }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="楼栋" width="100" align="center">
+        <el-table-column label="楼栋" align="center">
           <template slot-scope="{row}">
             <span>{{ row.teachBuilding }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="房间类别" width="100" align="center">
+        <el-table-column label="房间类别" align="center">
           <template slot-scope="{row}">
             <span>{{ row.category }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="容量" width="100" align="center">
+        <el-table-column label="容量" align="center">
           <template slot-scope="{row}">
             <span>{{ row.capacity }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="房间名称" width="100" align="center">
+        <el-table-column label="房间名称" align="center">
           <template slot-scope="{row}">
             <span>{{ row.roomName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="设备信息" width="100" align="center">
+        <el-table-column label="设备信息" align="center">
           <template slot-scope="{row}">
             <span>{{ row.equipmentInfo }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="负责人姓名" width="100" align="center">
+        <el-table-column label="负责人姓名" align="center">
           <template slot-scope="{row}">
             <span>{{ row.chargePerson }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="负责人联系方式" width="100" align="center">
+        <el-table-column label="负责人联系方式" align="center">
           <template slot-scope="{row}">
             <span>{{ row.chargePersonTel }}</span>
           </template>
