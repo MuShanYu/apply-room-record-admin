@@ -76,5 +76,13 @@ export default {
       }
     })
   },
-
+  disableReserveRoom(roomId) {
+    return request({
+      url: '/room/disable/reserve',
+      method: 'get',
+      params: {
+        roomId
+      }
+    })
+  },
 }

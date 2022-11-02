@@ -28,6 +28,15 @@
           :value="item">
         </el-option>
       </el-select>
+      <el-input v-model="query.roomName"
+                clearable
+                @clear="getRoomList"
+                placeholder="请输入检索的房间名称" style="width: 200px;margin-left: 10px;"
+                @keyup.enter.native="getRoomList"/>
+      <el-button v-waves style="margin-left: 10px;" type="primary" icon="el-icon-search"
+                 @click="getRoomList">
+        搜索
+      </el-button>
       <el-button v-permission="['super-admin']" @click="addRoomDrawer = true" v-waves style="margin-left: 10px;" type="primary" icon="el-icon-plus">
         新建房间
       </el-button>
@@ -35,11 +44,31 @@
                  v-waves style="margin-left: 10px;" type="primary" icon="el-icon-upload2">
         批量导入
       </el-button>
+    </div>
+    <div style="margin-bottom: 10px;">
       <el-button v-permission="['super-admin']" @click="handleBatchDownloadQRCode"
-                 v-waves style="margin-left: 10px;" type="primary" icon="el-icon-picture-outline">
-        批量生成二维码
+                 v-waves type="primary" icon="el-icon-picture-outline">
+        批量生成房间二维码
       </el-button>
+      <el-tooltip effect="light" placement="bottom-end">
+        <el-button @click="handleBatchDisableReserve" v-waves type="primary" icon="el-icon-close">
+          批量禁止预约
+        </el-button>
+        <div slot="content">
+          是禁止预约状态的房间会被重置为正常状态，<br/>正常状态的房间会被重置为禁止预约状态
+        </div>
+      </el-tooltip>
+      <el-tooltip effect="light" placement="bottom-end">
+        <el-button @click="handleBatchDisableRoom" v-waves type="danger" icon="el-icon-delete">
+          批量禁用
+        </el-button>
+        <div slot="content">
+          是禁用状态的房间会被重置为正常状态，<br/>正常状态的房间会被重置为禁止状态
+        </div>
+      </el-tooltip>
       <el-link :href="constants.roomExcelHref" v-permission="['super-admin']" style="margin-left: 10px;" :underline="false" type="primary">房间信息导入模板下载</el-link>
+      <span style="margin-left: 10px;font-size: 12px;color: #909399;">(注意不可以同时设置为禁止预约状态和禁用状态)</span>
+      <span style="margin-left: 10px;font-size: 12px;color: #909399;">(条件均为空时点击搜索查看的是全部数据)</span>
     </div>
     <div>
       <el-table
@@ -86,10 +115,10 @@
             <span>{{ row.category }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="状态" width="80" align="center">
+        <el-table-column label="状态" width="93" align="center">
           <template slot-scope="{row}">
-            <el-tag :type="row.state === 1 ? 'primary' : 'danger'">
-              {{ row.state === 1 ? '正常' : '禁用' }}
+            <el-tag :type="row.state === 1 || row.state === 5 ? 'primary' : 'danger'">
+              {{ row.state | roomStateFilter }}
             </el-tag>
           </template>
         </el-table-column>
@@ -115,15 +144,19 @@
                        size="mini">
               足迹详情
             </el-button>
-            <el-button v-if="currentUserId === row.chargePersonId || isSuperAdmin" :disabled="row.state !== 1" @click="handleRoomUpdateClick(row, $index)" v-waves
+            <el-button v-if="currentUserId === row.chargePersonId || isSuperAdmin" @click="handleRoomUpdateClick(row, $index)" v-waves
                        style="margin: 3px;" type="info" size="mini">
               修改
             </el-button>
-            <el-tooltip effect="light" content="禁用是指该房间设置为不可预约状态" placement="bottom-start">
+
+            <el-tooltip effect="light" placement="bottom-start">
               <el-button v-if="row.chargePersonId === currentUserId || isSuperAdmin" type="danger" v-waves plain
                          @click="handleDisableClick(row)" style="margin: 3px;" size="mini">
                 {{ row.state === -1 ? '解除' : '禁用' }}
               </el-button>
+              <div slot="content">
+                禁用是指该房间相关数据将不会再被统计，<br/>但是不影响旧数据的查看与统计
+              </div>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -215,6 +248,18 @@ export default {
       return constants;
     }
   },
+  filters: {
+    roomStateFilter(state) {
+      switch (state) {
+        case -1:
+          return '禁用'
+        case 1:
+          return '正常'
+        case 5:
+          return '禁止预约'
+      }
+    }
+  },
   components: {
     Pagination,
     RoomReservationList,
@@ -231,7 +276,8 @@ export default {
         size: 10,
         teachBuilding: '',
         school: '',
-        category: ''
+        category: '',
+        roomName: ''
       },
       detailQuery: {
         page: 1,
@@ -345,6 +391,60 @@ export default {
         return
       }
       this.generateQRCodeDialog = true
+    },
+    async handleBatchDisableReserve() {
+      if (this.roomSelectedList.length === 0) {
+        this.$message.error('未选择要禁止预约的房间')
+        return
+      }
+      this.$message.info('正在进行批量操作，请稍等')
+      for(let room of this.roomSelectedList) {
+        await this.doDisableReserveRoom(room)
+      }
+    },
+    doDisableReserveRoom(room) {
+      return new Promise((resolve, reject) => {
+        roomApi.disableReserveRoom(room.id).then(() => {
+          if (room.state === 5) {
+            room.state = 1
+            this.$message.success('已解除' + room.roomName + '的禁止预约')
+          } else {
+            room.state = 5
+            this.$message.success('已禁止预约房间' + room.roomName)
+          }
+          resolve()
+        }).catch(e => {
+          console.log(e);
+          resolve()
+        })
+      })
+    },
+    async handleBatchDisableRoom() {
+      if (this.roomSelectedList.length === 0) {
+        this.$message.error('未选择要禁用的房间')
+        return
+      }
+      this.$message.info('正在进行批量操作，请稍等')
+      for(let room of this.roomSelectedList) {
+        await this.doDisableRoom(room)
+      }
+    },
+    doDisableRoom(room) {
+      return new Promise((resolve, reject) => {
+        roomApi.disableRoom(room.id).then(() => {
+          if (room.state === -1) {
+            room.state = 1
+            this.$message.success(room.roomName + "解除禁用成功")
+          } else {
+            room.state = -1
+            this.$message.success(room.roomName + "禁用成功")
+          }
+          resolve()
+        }).catch(e => {
+          console.log(e);
+          resolve()
+        })
+      })
     }
   }
 }
