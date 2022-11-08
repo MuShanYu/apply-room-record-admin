@@ -69,32 +69,40 @@ export default {
             color: '#909399'
           }
         },
+        xAxis: {
+          max: 'dataMax'
+        },
+        yAxis: {
+          type: 'category',
+          data: ['已预约总次数', '已取消总次数', '已通过总次数', '已驳回总次数'],
+          inverse: true,
+          animationDuration: 300,
+          animationDurationUpdate: 300,
+          max: 3 // only the largest 3 bars will be displayed
+        },
         tooltip: {
           trigger: 'item',
-          formatter: '{a} <br/>{b} : {c} ({d}%)'
-        },
-        legend: {
-          left: 'center',
-          bottom: '10',
-          data: ['已预约总次数', '已取消总次数', '已通过总次数', '已驳回总次数']
+          formatter: '{b} : {c}'
         },
         series: [
           {
-            name: '总次数统计',
-            type: 'pie',
-            roseType: 'radius',
-            radius: [15, 95],
-            center: ['50%', '38%'],
-            data: [
-              { value: reviewTimesCount, name: '已预约总次数' },
-              { value: cancelTimesCount, name: '已取消总次数' },
-              { value: reviewedTimesCount, name: '已通过总次数' },
-              { value: rejectTimesCount, name: '已驳回总次数' }
-            ],
-            animationEasing: 'cubicInOut',
-            animationDuration: 2600
+            name: '总次数',
+            type: 'bar',
+            data: [reviewTimesCount, cancelTimesCount, reviewedTimesCount, rejectTimesCount],
+            label: {
+              show: true,
+              position: 'right',
+              valueAnimation: true
+            }
           }
-        ]
+        ],
+        legend: {
+          show: true
+        },
+        animationDuration: 2000,
+        animationDurationUpdate: 3000,
+        animationEasing: 'linear',
+        animationEasingUpdate: 'linear'
       })
     }
   }
