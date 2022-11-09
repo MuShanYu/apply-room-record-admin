@@ -39,6 +39,14 @@ export default {
       data: userAccessQueryDTO
     })
   },
+  exportUserAccessCountDataApi(userAccessCountDataQueryDTO) {
+    return request({
+      url: '/record/query/export/byRoomId/count',
+      responseType: 'blob',
+      method: 'post',
+      data: userAccessCountDataQueryDTO
+    })
+  },
   delRecord(accessRecordId) {
     return request({
       url: '/admin/record/delete/' + accessRecordId,

@@ -2,15 +2,17 @@
   <div style="margin: 10px;">
     <div style="margin-bottom: 10px;">
       <el-date-picker
+        :clearable="false"
         @change="handleTimeChange"
         v-model="selectedTime"
         value-format="timestamp"
-        type="datetimerange"
+        type="daterange"
+        :picker-options="pickerOptions"
         range-separator="至"
         start-placeholder="起始日期"
         end-placeholder="结束日期">
       </el-date-picker>
-      <span style="font-size: 13px;color: #909399;margin-left: 10px;">(选择进行操作的起始和结束时间范围筛选数据)</span>
+      <span style="font-size: 13px;color: #909399;margin-left: 10px;">(选择进行操作的起始和结束时间范围筛选数据)(系统只支持查看30天的数据)</span>
     </div>
     <div>
       <el-table
@@ -21,12 +23,12 @@
         fit
         highlight-current-row
         style="width: 100%;">
-        <el-table-column label="预约人" width="100" align="center">
+        <el-table-column label="预约人" align="center">
           <template slot-scope="{row}">
-            <span>{{ row.nickname }}</span>
+            <span>{{ row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作日期(预约时间)" align="center">
+        <el-table-column label="操作时间" align="center">
           <template slot-scope="{row}">
             <span>{{ row.createTime | parseTime }}</span>
           </template>
@@ -127,59 +129,68 @@ export default {
     },
   },
   props: {
-    roomReservationList: {
-      type: Array,
-      default() {
-        return []
-      }
-    },
-    totalSize: {
-      type: Number,
-      default: 0
-    },
     roomId: {
       type: String,
       default: ''
-    },
-    detailQuery: {
-      type: Object,
-      default() {
-        return {}
-      }
     }
   },
   components: {
     Pagination
   },
   watch: {
-    roomReservationList(val, oldVal) {
-      this.$nextTick(() => {
-        this.dataList = val
-      })
-    },
-    detailQuery(val, oldVal) {
-      this.$nextTick(() => {
-        this.query = val
-      })
-    },
-    totalSize(val, oldVal) {
-      this.$nextTick(() => {
-        this.total = val
-      })
+    roomId(val, oldVal) {
+      this.getRoomReservationList()
     }
   },
   data() {
     return {
       listLoading: false,
-      query: this.detailQuery,
-      dataList: this.roomReservationList,
-      total: this.totalSize,
-      selectedTime: ''
+      query: {
+        page: 1,
+        size: 10,
+        startTime: new Date().getTime() - (7 * 24 * 60 * 60 * 1000),
+        endTime: new Date().getTime(),
+        roomId: ''
+      },
+      dataList: [],
+      total: 0,
+      selectedTime: [new Date().getTime() - (7 * 24 * 60 * 60 * 1000), new Date().getTime()],
+      pickerOptions: {
+        shortcuts: [{
+          text: '最近一周',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', [start.getTime(), end.getTime()]);
+          }
+        }, {
+          text: '最近半个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 14);
+            picker.$emit('pick', [start.getTime(), end.getTime()]);
+          }
+        }, {
+          text: '最近一个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            picker.$emit('pick', [start.getTime(), end.getTime()]);
+          }
+        }]
+      },
     }
+  },
+  created() {
+    this.getRoomReservationList()
   },
   methods: {
     getRoomReservationList() {
       this.listLoading = true
+      this.query.roomId = this.roomId
       roomApi.roomReservationDetail(this.query).then(data => {
         this.dataList = data.pageData
         this.total = data.totalSize
@@ -190,13 +201,21 @@ export default {
       })
     },
     handleTimeChange(val) {
-      if (val !== null) {
-        this.query.startTime = val[0]
-        this.query.endTime = val[1]
+      let days = (val[1] - val[0]) / 1000 / 60 / 60 / 24
+      if (days > 30) {
+        this.query.startTime = val[1] - (3600 * 1000 * 24 * 30)
+        this.$notify({
+          title: '系统提示',
+          message: '您所选择的时间跨度大于30天，下面数据将显示结束日期前三十天的数据',
+          type: 'warning',
+          duration: 6000
+        });
+        this.selectedTime[0] = this.query.startTime
       } else {
-        this.query.startTime = val
-        this.query.endTime = val
+        this.query.startTime = val[0]
       }
+      this.query.endTime = val[1]
+      this.query.page = 1
       this.getRoomReservationList()
     }
   }

@@ -139,7 +139,7 @@
                        size="mini">
               预约详情
             </el-button>
-            <el-button :loading="row.detailBtnLoading" @click="handleAccessRecordClick(row, $index)" v-waves
+            <el-button @click="handleAccessRecordClick(row, $index)" v-waves
                        style="margin-left: 3px;" type="primary"
                        size="mini">
               足迹详情
@@ -181,9 +181,7 @@
       :show-close="false"
       :visible.sync="reservationDrawer"
       direction="rtl">
-      <room-reservation-list :detail-query="detailQuery" :room-id="detailQuery.roomId"
-                             :room-reservation-list="roomReservationList"
-                             :total-size="roomReservationTotal"/>
+      <room-reservation-list :room-id="currentRoomId"/>
     </el-drawer>
 
     <el-drawer
@@ -279,13 +277,6 @@ export default {
         category: '',
         roomName: ''
       },
-      detailQuery: {
-        page: 1,
-        size: 10,
-        startTime: null,
-        endTime: null,
-        roomId: ''
-      },
       listLoading: false,
       detailListLoading: false,
       roomList: [],
@@ -333,14 +324,9 @@ export default {
         this.teachBuilding = data.teachBuildings
       })
     },
-    handleRoomReservationClick(item, index) {
-      this.detailQuery.roomId = item.id
-      roomApi.roomReservationDetail(this.detailQuery).then(data => {
-        this.roomReservationList = data.pageData
-        this.roomReservationTotal = data.totalSize
-        // console.log(this.roomReservationList);
-        this.reservationDrawer = true
-      })
+    handleRoomReservationClick(row, index) {
+      this.currentRoomId = row.id
+      this.reservationDrawer = true
     },
     handleRoomUpdateClick(item, index) {
       this.currentRoom = Object.assign({}, item)

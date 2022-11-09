@@ -53,7 +53,8 @@
         </el-table-column>
         <el-table-column label="离开时间" align="center">
           <template slot-scope="{row}">
-            <span>{{ row.outTime | parseTime }}</span>
+            <span v-if="row.outTime !== null">{{ row.outTime | parseTime }}</span>
+            <span v-else>暂无</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center">
@@ -97,12 +98,12 @@
             <span>{{ row.category }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="进入次数" align="center">
+        <el-table-column label="扫码进入次数" align="center">
           <template slot-scope="{row}">
             <span>{{ row.entryTimes }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="离开次数" align="center">
+        <el-table-column label="扫码离开次数" align="center">
           <template slot-scope="{row}">
             <span>{{ row.outTimes }}</span>
           </template>

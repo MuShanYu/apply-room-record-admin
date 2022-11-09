@@ -2,18 +2,23 @@
   <div style="margin: 10px;">
     <div style="margin-bottom: 10px;">
       <el-date-picker
+        :clearable="false"
         @change="handleTimeChange"
         v-model="selectedTime"
         value-format="timestamp"
-        type="datetimerange"
+        type="daterange"
+        :picker-options="pickerOptions"
         range-separator="至"
         start-placeholder="起始日期"
         end-placeholder="结束日期">
       </el-date-picker>
       <el-button @click="handleExportData" :loading="exportBtnLoading" style="margin-left: 10px;"  icon="el-icon-download" v-waves type="primary">
-        导出数据
+        导出表格数据
       </el-button>
-      <span style="font-size: 13px;color: #909399;margin-left: 10px;">(选择进行操作的起始和结束时间范围筛选数据)</span>
+      <el-button @click="handleExportUserAccessCountData" :loading="exportCountBtnLoading" style="margin-left: 10px;"  icon="el-icon-download" v-waves type="primary">
+        导出统计数据
+      </el-button>
+      <span style="font-size: 13px;color: #909399;margin-left: 10px;">(选择进行操作的起始和结束时间范围筛选或者导出数据)(系统只支持导出30天的数据)</span>
     </div>
     <div >
       <el-table
@@ -29,7 +34,7 @@
             <span>{{ row.school }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="楼栋"align="center">
+        <el-table-column label="楼栋" align="center">
           <template slot-scope="{row}">
             <span>{{ row.teachBuilding }}</span>
           </template>
@@ -39,26 +44,27 @@
             <span>{{ row.roomName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="姓名" width="100" align="center">
+        <el-table-column label="姓名" align="center">
           <template slot-scope="{row}">
             <span>{{ row.nickname }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="状态" width="80" align="center">
+        <el-table-column label="状态" align="center">
           <template slot-scope="{row}">
             <el-tag :type="row.state === 1 ? 'primary' : 'danger'">
               {{ row.state === 1 ? '正常' : '删除' }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="进入时间" width="100" align="center">
+        <el-table-column label="进入时间" align="center">
           <template slot-scope="{row}">
             <span>{{ row.entryTime | parseTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="离开时间" width="100 " align="center">
+        <el-table-column label="离开时间" align="center">
           <template slot-scope="{row}">
-            <span>{{ row.outTime | parseTime }}</span>
+            <span v-if="row.outTime !== null">{{ row.outTime | parseTime }}</span>
+            <span v-else>暂无</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center">
@@ -97,15 +103,43 @@ export default {
       query: {
         page: 1,
         size: 10,
-        startTime: null,
-        endTime: null,
-        roomId: ''
+        roomId: '',
+        startTime: new Date().getTime() - (7 * 24 * 60 * 60 * 1000),
+        endTime: new Date().getTime()
       },
       listLoading: false,
       recordList: [],
       total: 0,
-      selectedTime: null,
-      exportBtnLoading: false
+      selectedTime: [new Date().getTime() - (7 * 24 * 60 * 60 * 1000), new Date().getTime()],
+      exportBtnLoading: false,
+      exportCountBtnLoading: false,
+      pickerOptions: {
+        shortcuts: [{
+          text: '最近一周',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', [start.getTime(), end.getTime()]);
+          }
+        }, {
+          text: '最近半个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 14);
+            picker.$emit('pick', [start.getTime(), end.getTime()]);
+          }
+        }, {
+          text: '最近一个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            picker.$emit('pick', [start.getTime(), end.getTime()]);
+          }
+        }]
+      },
     }
   },
   watch: {
@@ -144,24 +178,41 @@ export default {
       })
     },
     handleTimeChange(val) {
-      if (val !== null) {
-        this.query.startTime = val[0]
-        this.query.endTime = val[1]
+      let days = (val[1] - val[0]) / 1000 / 60 / 60 / 24
+      if (days > 30) {
+        this.query.startTime = val[1] - (3600 * 1000 * 24 * 30)
+        this.$notify({
+          title: '系统提示',
+          message: '您所选择的时间跨度大于30天，下面数据将显示结束日期前三十天的数据',
+          type: 'warning',
+          duration: 6000
+        });
+        this.selectedTime[0] = this.query.startTime
       } else {
-        this.query.startTime = val
-        this.query.endTime = val
+        this.query.startTime = val[0]
       }
+      this.query.endTime = val[1]
+      this.query.page = 1
       this.getAccessRecordByRoomId()
     },
     handleExportData() {
-      if (this.query.startTime === null || this.query.endTime === null) {
-        this.$message.error('起始日期或者结束日期未选择')
-        return
-      }
       this.exportBtnLoading = true
       this.query.roomId = this.roomId
       recordApi.exportUserAccessRecordByRoomIdApi(this.query).then(response => {
         this.exportBtnLoading = false
+        downloadFile(response)
+      })
+    },
+    handleExportUserAccessCountData() {
+      this.exportCountBtnLoading = true
+      let that = this
+      let obj = {
+        roomId: that.roomId,
+        startTime: that.query.startTime,
+        endTime: that.query.endTime
+      }
+      recordApi.exportUserAccessCountDataApi(obj).then(response => {
+        this.exportCountBtnLoading = false
         downloadFile(response)
       })
     }

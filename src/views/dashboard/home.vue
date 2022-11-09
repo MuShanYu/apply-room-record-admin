@@ -252,7 +252,7 @@ export default {
           title: '系统提示',
           message: '您所选择的时间跨度大于14天，下面图表将显示近14天的数据，这不影响您导出数据',
           type: 'warning',
-          duration: 10000
+          duration: 6000
         });
       } else {
         this.roomCountDTO.startTime = val[0]
