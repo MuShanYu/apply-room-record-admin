@@ -42,19 +42,12 @@ service.interceptors.response.use(
     if (res.code !== 200) {
       // 需要动态刷新token
       if (res.code === -2 || res.code === -3 || res.code === -4 || res.code === -5) {
-        MessageBox.confirm('您的登录状态过期或已被强制下线', '提示', {
-          confirmButtonText: '重新登录',
-          cancelButtonText: '退出登录',
-          type: 'warning',
-        }).then(() => {
-          // 刷新token
-          store.dispatch('user/refreshToken', store.getters.userInfo.id).then(() => {
-            setTimeout(() => {
-              location.reload()
-            }, 300)
+        store.dispatch('user/logout').then(() => {
+          Message({
+            message: '您的登录状态过期或者无效，请您重新登录！',
+            type: 'error',
+            duration: 2500
           })
-        }).catch(() => {
-          router.replace(`/login`)
         })
       } else if (res.code === -1) {
         MessageBox.confirm('未登录，请先登录！', '提示', {

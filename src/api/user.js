@@ -23,15 +23,6 @@ export default {
       method: 'get'
     })
   },
-  refreshToken(userId) {
-    return request({
-      url: '/user/refreshToken',
-      method: 'get',
-      params: {
-        userId
-      }
-    })
-  },
   userList(userListQueryDTO) {
     return request({
       url: '/admin/query/userList',

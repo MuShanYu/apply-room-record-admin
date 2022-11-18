@@ -400,7 +400,7 @@ export default {
           }
           resolve()
         }).catch(e => {
-          console.log(e);
+          // console.log(e);
           resolve()
         })
       })
@@ -427,7 +427,7 @@ export default {
           }
           resolve()
         }).catch(e => {
-          console.log(e);
+          // console.log(e);
           resolve()
         })
       })

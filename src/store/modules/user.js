@@ -89,11 +89,6 @@ const actions = {
       })
     })
   },
-  refreshToken({commit}, userId) {
-    userApi.refreshToken(userId).then(data => {
-      commit('SET_TOKEN', data.token)
-    })
-  },
   logout({ commit }) {
     commit('LOGOUT')
   }

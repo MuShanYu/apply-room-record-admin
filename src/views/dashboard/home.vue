@@ -105,14 +105,14 @@
                 <i class="el-icon-watch"></i>
                 起始时间
               </template>
-              {{ filterCondition.startTime }}
+              {{ filterCondition.startTime | parseTime('{y}-{m}-{d}') }}
             </el-descriptions-item>
             <el-descriptions-item>
               <template slot="label">
                 <i class="el-icon-watch"></i>
                 结束时间
               </template>
-              {{ filterCondition.endTime }}
+              {{ filterCondition.endTime | parseTime('{y}-{m}-{d}') }}
             </el-descriptions-item>
           </el-descriptions>
         </div>
@@ -260,13 +260,6 @@ export default {
       this.roomCountDTO.endTime = val[1]
       this.getCountData()
     },
-    dateInYearMonthDay(mills) {
-      let date = new Date(mills)
-      let year = date.getFullYear()
-      let month = date.getMonth() + 1
-      let day = date.getDate()
-      return year + '-' + month + '-' + day
-    },
     handleExportCountDataClick() {
       if (this.roomCountDTO.roomId !== '') {
         let index = this.roomOptions.findIndex(v => v.id === this.roomCountDTO.roomId)
@@ -279,13 +272,16 @@ export default {
       } else {
         this.filterCondition.roomCategory = ''
       }
-      this.filterCondition.startTime = this.dateInYearMonthDay(this.roomCountDTO.startTime)
-      this.filterCondition.endTime = this.dateInYearMonthDay(this.roomCountDTO.endTime)
+      this.filterCondition.startTime = this.selectedTime[0]
+      this.filterCondition.endTime = this.selectedTime[1]
       this.exportDialog = true
     },
     exportCountData() {
       this.exportCountDataBtnLoading = true
-      dataStatistics.countRoomRecordAccessCountData(this.roomCountDTO).then(response => {
+      let obj = Object.assign({}, this.roomCountDTO)
+      obj.startTime = this.selectedTime[0]
+      obj.endTime = this.selectedTime[1]
+      dataStatistics.countRoomRecordAccessCountData(obj).then(response => {
         this.exportCountDataBtnLoading = false
         this.exportDialog = false
         this.$message.success('统计数据成功导出')

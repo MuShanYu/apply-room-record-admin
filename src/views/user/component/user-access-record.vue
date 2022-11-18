@@ -168,7 +168,7 @@ export default {
         this.countTotal = res.totalSize
         this.countLoading = false
         this.btnLoading = false
-        console.log(this.countList);
+        // console.log(this.countList);
       }).catch(e => {
         this.countLoading = false
         this.btnLoading = false

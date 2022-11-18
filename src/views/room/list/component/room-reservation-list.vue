@@ -12,7 +12,7 @@
         start-placeholder="起始日期"
         end-placeholder="结束日期">
       </el-date-picker>
-      <span style="font-size: 13px;color: #909399;margin-left: 10px;">(选择进行操作的起始和结束时间范围筛选数据)(系统只支持查看30天的数据)</span>
+      <span style="font-size: 13px;color: #909399;margin-left: 10px;">(选择进行操作的起始和结束时间范围筛选数据)</span>
     </div>
     <div>
       <el-table
@@ -201,19 +201,7 @@ export default {
       })
     },
     handleTimeChange(val) {
-      let days = (val[1] - val[0]) / 1000 / 60 / 60 / 24
-      if (days > 30) {
-        this.query.startTime = val[1] - (3600 * 1000 * 24 * 30)
-        this.$notify({
-          title: '系统提示',
-          message: '您所选择的时间跨度大于30天，下面数据将显示结束日期前三十天的数据',
-          type: 'warning',
-          duration: 6000
-        });
-        this.selectedTime[0] = this.query.startTime
-      } else {
-        this.query.startTime = val[0]
-      }
+      this.query.startTime = val[0]
       this.query.endTime = val[1]
       this.query.page = 1
       this.getRoomReservationList()

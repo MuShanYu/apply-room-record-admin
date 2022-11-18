@@ -232,7 +232,7 @@ export default {
     },
     updateRole() {
       let that = this
-      console.log(this.currentUser);
+      // console.log(this.currentUser);
       userApi.changeRole({
         userId: that.currentUser.id,
         roleIds: that.roleIds
