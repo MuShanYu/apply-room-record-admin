@@ -31,6 +31,7 @@
       </el-select>
     </div>
     <div style="display: flex;flex-wrap: wrap;justify-content: space-around;">
+      <el-empty :image-size="320" :image="constants.emptyImg" description="您暂无待审批申请"></el-empty>
       <div v-for="(item, index) in roomList" :key="item.id" class="card-container">
         <!-- tag -->
         <div class="card-tag-position">
@@ -84,6 +85,7 @@ import dataStatistics from "@/api/data-statistics";
 
 import Pagination from "@/components/Pagination";
 import {mapState} from "vuex";
+import constants from "@/common/CommonCantans";
 
 const statusMap = {
   notReviewed: {
@@ -115,7 +117,10 @@ export default {
   computed: {
     ...mapState({
       fixedHeader: state => state.settings.fixedHeader
-    })
+    }),
+    constants() {
+      return constants
+    }
   },
   filters: {
     msgFilter(status) {
@@ -171,7 +176,7 @@ export default {
         this.total = data.totalSize
         this.listLoading = false
         this.roomList.forEach(item => this.$set(item, "detailBtnLoading", false))
-        console.log(this.roomList);
+        // console.log(this.roomList);
       }).catch(e => {
         this.listLoading = false
       })

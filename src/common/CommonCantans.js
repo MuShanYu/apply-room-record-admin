@@ -6,8 +6,10 @@ const constants = {
   qrCodeUrlPrefix: 'https://www.mushanyu.xyz:8800/#/pages/record/index?target=',
   logo: 'https://www.mushanyu.xyz:8600/logo.png',
   avatar: 'https://www.mushanyu.xyz:8600/header1.gif',
+  emptyImg: 'https://www.mushanyu.xyz:8600/empty.png'
   // logo: 'http://localhost:9528/logo.png',
-  // avatar: 'http://localhost:9528/header1.gif'
+  // avatar: 'http://localhost:9528/header1.gif',
+  // emptyImg: 'http://localhost:9528/empty.png'
 }
 
 export default constants;
