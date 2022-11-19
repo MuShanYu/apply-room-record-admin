@@ -31,8 +31,8 @@
       </el-select>
     </div>
     <div style="display: flex;flex-wrap: wrap;justify-content: space-around;">
-      <el-empty :image-size="320" :image="constants.emptyImg" description="您暂无待审批申请"></el-empty>
-      <div v-for="(item, index) in roomList" :key="item.id" class="card-container">
+      <el-empty v-if="roomList.length === 0" :image-size="320" :image="constants.emptyImg" description="您暂无待审批申请"></el-empty>
+      <div v-else v-for="(item, index) in roomList" :key="item.id" class="card-container">
         <!-- tag -->
         <div class="card-tag-position">
           <div class="card-tag">{{ item.state | msgFilter }}</div>
