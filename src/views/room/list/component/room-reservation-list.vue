@@ -12,7 +12,6 @@
         start-placeholder="起始日期"
         end-placeholder="结束日期">
       </el-date-picker>
-      <span style="font-size: 13px;color: #909399;margin-left: 10px;">(选择进行操作的起始和结束时间范围筛选数据)</span>
     </div>
     <div>
       <el-table

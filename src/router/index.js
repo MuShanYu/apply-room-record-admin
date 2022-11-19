@@ -47,7 +47,7 @@ export const constantRoutes = [
         path: 'approve',
         name: 'RoomApprove',
         component: () => import('@/views/room/approve/room-approve'),
-        meta: {title: '预约审批'}
+        meta: {title: '预约申请审批'}
       },
       {
         path: 'import',

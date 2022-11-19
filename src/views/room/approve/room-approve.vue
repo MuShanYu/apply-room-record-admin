@@ -1,7 +1,8 @@
 <template>
-  <div style="margin: 10px;">
-    <div style="margin-bottom: 10px;">
-      <el-select clearable @change="getRoomReservationReviewedList" style="margin-right: 10px;"
+  <div v-loading="listLoading" class="app-container" id="room-approve-container">
+    <div style="text-align: center; border: 1px solid #dcdfe6;padding-top: 10px;box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);" :style="fixedHeader ? 'margin-top: 35px;' : ''"
+         class="filter-container">
+      <el-select clearable @change="getRoomReservationReviewedList" style="margin-right: 30px;width: 250px;"
                  v-model="query.school" placeholder="请选择校区">
         <el-option
           v-for="(item, index) in school"
@@ -10,7 +11,7 @@
           :value="item">
         </el-option>
       </el-select>
-      <el-select clearable @change="getRoomReservationReviewedList" style="margin-right: 10px;"
+      <el-select clearable @change="getRoomReservationReviewedList" style="margin-right: 30px;width: 250px;"
                  v-model="query.teachBuilding" placeholder="请选择楼栋">
         <el-option
           v-for="(item, index) in teachBuilding"
@@ -19,7 +20,7 @@
           :value="item">
         </el-option>
       </el-select>
-      <el-select clearable @change="getRoomReservationReviewedList"
+      <el-select clearable @change="getRoomReservationReviewedList" style="width: 250px;"
                  v-model="query.category" placeholder="请选择类别">
         <el-option
           v-for="(item, index) in category"
@@ -29,95 +30,50 @@
         </el-option>
       </el-select>
     </div>
-    <div>
-      <el-table
-        :key="'1'"
-        v-loading="listLoading"
-        :data="roomList"
-        border
-        fit
-        highlight-current-row
-        style="width: 100%;">
-        <el-table-column label="校区" width="100" align="center">
-          <template slot-scope="{row}">
-            <span>{{ row.school }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="楼栋" width="80" align="center">
-          <template slot-scope="{row}">
-            <span>{{ row.teachBuilding }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="房间名" width="100" align="center">
-          <template slot-scope="{row}">
-            <span>{{ row.roomName }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="设备信息" align="center">
-          <template slot-scope="{row}">
-            <span>{{ row.equipmentInfo }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="容量" width="100" align="center">
-          <template slot-scope="{row}">
-            <span>{{ row.capacity }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="类别" width="100" align="center">
-          <template slot-scope="{row}">
-            <span>{{ row.category }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column :filters="filters" :filter-method="filterHandler"
-                         label="状态" width="110" align="center">
-          <template slot-scope="{row}">
-            <el-tag :type="row.state | statusFilter">
-              {{ row.state | msgFilter }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="预约人" width="100" align="center">
-          <template slot-scope="{row}">
-            <span>{{ row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="创建时间" width="100" align="center">
-          <template slot-scope="{row}">
-            <span>{{ row.createTime | parseTime }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="预约起始日期" width="100" align="center">
-          <template slot-scope="{row}">
-            <span>{{ row.reserveStartTime | parseTime }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="预约结束日期" width="100" align="center">
-          <template slot-scope="{row}">
-            <span>{{ row.reserveEndTime | parseTime }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="预约理由" align="center">
-          <template slot-scope="{row}">
-            <span>{{ row.roomUsage }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column width="150" label="操作" align="center">
-          <template slot-scope="{row, $index}">
-            <el-button :disabled="row.state !== 0" @click="handleRoomReservationPassClick(row, $index)" v-waves
-                       style="margin: 3px;" type="primary"
-                       size="mini">
-              通过
-            </el-button>
-            <el-button :disabled="row.state !== 0" @click="handleRoomUpdateRejectClick(row, $index)" v-waves
-                       style="margin: 3px;" type="danger" size="mini">
-              驳回
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-
-      <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.size"
-                  @pagination="getRoomReservationReviewedList"/>
+    <div style="display: flex;flex-wrap: wrap;justify-content: space-around;">
+      <div v-for="(item, index) in roomList" :key="item.id" class="card-container">
+        <!-- tag -->
+        <div class="card-tag-position">
+          <div class="card-tag">{{ item.state | msgFilter }}</div>
+        </div>
+        <!--header-->
+        <div class="card-title">
+          {{ item.createTime | parseTime }} {{ item.name }}的{{ item.roomName }}预约申请
+        </div>
+        <!--body-->
+        <div style="margin-bottom: 15px;">
+          <div class="card-tip">
+            <div>
+              {{ item.school }}
+            </div>
+            <div>
+              {{ item.teachBuilding }}
+            </div>
+            <div>
+              {{ item.category }}
+            </div>
+          </div>
+          <div class="card-reason">
+            申请理由：{{ item.roomUsage }}
+          </div>
+        </div>
+        <!--footer-->
+        <div class="card-time">
+          <div>
+            预约起始时间：{{ item.reserveEndTime | parseTime }}
+          </div>
+          <div>
+            预约结束时间：{{ item.reserveEndTime | parseTime }}
+          </div>
+        </div>
+        <div style="margin-top: 15px;text-align: right;">
+          <el-button @click="handleRoomReservationPassClick(item, index)" :disabled="item.state === 2 || item.state === 3 || item.state === 6"
+                     style="margin-right: 5px;" type="primary" size="mini">通过</el-button>
+          <el-button style="margin-right: 5px;" @click="handleRoomUpdateRejectClick(item, index)" :disabled="item.state === 4 || item.state === 3 || item.state === 6"
+                     type="danger" size="mini">拒绝</el-button>
+          <el-button @click="handleRoomRecordDel(item.id, index)" icon="el-icon-delete" type="text"></el-button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -127,6 +83,7 @@ import roomApi from '@/api/room'
 import dataStatistics from "@/api/data-statistics";
 
 import Pagination from "@/components/Pagination";
+import {mapState} from "vuex";
 
 const statusMap = {
   notReviewed: {
@@ -155,25 +112,12 @@ export default {
   components: {
     Pagination
   },
+  computed: {
+    ...mapState({
+      fixedHeader: state => state.settings.fixedHeader
+    })
+  },
   filters: {
-    statusFilter(status) {
-      switch (status) {
-        case 1:
-          return 'primary'
-        case -1:
-          return 'info'
-        case 4:
-          return statusMap.ban.status
-        case 0:
-          return statusMap.notReviewed.status
-        case 3:
-          return statusMap.userCanceled.status
-        case 2:
-          return statusMap.reviewed.status
-        case 6:
-          return statusMap.timeOut.status
-      }
-    },
     msgFilter(status) {
       switch (status) {
         case 4:
@@ -227,7 +171,7 @@ export default {
         this.total = data.totalSize
         this.listLoading = false
         this.roomList.forEach(item => this.$set(item, "detailBtnLoading", false))
-        // console.log(this.roomList);
+        console.log(this.roomList);
       }).catch(e => {
         this.listLoading = false
       })
@@ -245,8 +189,10 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        this.listLoading = true
         roomApi.passOrRejectRoomReserve(item.id, true).then(() => {
           item.state = 2
+          this.listLoading = false
           this.$message.success('操作成功')
         })
       }).catch(() => {
@@ -259,21 +205,96 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        this.listLoading = true
         roomApi.passOrRejectRoomReserve(item.id, false).then(() => {
           item.state = 4
+          this.listLoading = false
           this.$message.success('操作成功')
         })
       }).catch(() => {
 
       })
     },
-    filterHandler(value, row, column) {
-      return row.state === value;
+    handleRoomRecordDel(id, index) {
+      this.$confirm('确定要永久删除该房间预约记录吗?这会导致对应的预约人查看不到自己的该条预约记录。', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.listLoading = true
+        roomApi.delRoomReservationRecord(id).then(() => {
+          this.roomList.splice(index, 1)
+          this.listLoading = false
+          this.$message.success('删除成功')
+        })
+      }).catch((e) => {
+        this.listLoading = false
+      })
     }
   }
 }
 </script>
 
 <style scoped>
+#room-approve-container {
+  /*padding: 32px;*/
+  /*background-color: #f1f1f1;*/
+  /*position: relative;*/
+  /*height: 100vh;*/
+}
+
+.card-container {
+  border: 1px solid #dcdfe6;
+  margin: 15px;
+  width: 480px;
+  padding: 15px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.card-title {
+  margin-top: 12px;
+  font-size: 16px;
+  color: #303133;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.card-tip {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #909399;
+}
+
+.card-reason {
+  margin-top: 15px;
+  word-break: break-all;
+  font-size: 14px;
+  color: #606266;
+}
+
+.card-tag-position {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 3px;
+  font-size: 13px;
+  color: #606266;
+}
+
+.card-time {
+  font-size: 12px;
+  color: #909399;
+  display: flex;
+  justify-content: space-between;
+}
+
+.card-tag {
+  font-size: 13px;
+  border: 1px solid #409EFF;
+  padding: 2px;
+  border-radius: 4px;
+}
 
 </style>

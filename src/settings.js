@@ -1,6 +1,11 @@
 module.exports = {
+  title: '房间预约与人员统计管理',
 
-  title: '会议室预约与人员统计管理',
+  /**
+   * @type {boolean} true | false
+   * @description Whether show the settings right-panel
+   */
+  showSettings: true,
 
   /**
    * @type {boolean} true | false
@@ -12,5 +17,11 @@ module.exports = {
    * @type {boolean} true | false
    * @description Whether show the logo in sidebar
    */
-  sidebarLogo: false
+  sidebarLogo: true,
+
+  /**
+   * @type {boolean} true | false
+   * @description Whether need tagsView
+   */
+  tagsView: true,
 }

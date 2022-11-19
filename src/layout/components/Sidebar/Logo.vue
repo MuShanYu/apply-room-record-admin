@@ -2,18 +2,20 @@
   <div class="sidebar-logo-container" :class="{'collapse':collapse}">
     <transition name="sidebarLogoFade">
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
-        <img v-if="logo" :src="logo" class="sidebar-logo">
-        <h1 v-else class="sidebar-title">{{ title }} </h1>
+        <img alt="logo" v-if="constants.logo" :src="constants.logo" class="sidebar-logo">
+        <h1 v-else class="sidebar-title">{{ '欢迎您，' + userInfo.name }} </h1>
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
-        <img v-if="logo" :src="logo" class="sidebar-logo">
-        <h1 class="sidebar-title">{{ title }} </h1>
+        <img alt="logo" v-if="constants.logo" :src="constants.logo" class="sidebar-logo">
+        <h1 class="sidebar-title">{{ '欢迎您，' + userInfo.name }} </h1>
       </router-link>
     </transition>
   </div>
 </template>
 
 <script>
+import constants from "@/common/CommonCantans";
+import {mapState} from "vuex";
 export default {
   name: 'SidebarLogo',
   props: {
@@ -22,10 +24,17 @@ export default {
       required: true
     }
   },
+  computed: {
+    constants() {
+      return constants
+    },
+    ...mapState({
+      userInfo: state => state.user.userInfo
+    }),
+  },
   data() {
     return {
-      title: 'Vue Admin Template',
-      logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
+      title: '房间预约与人员流动统计',
     }
   }
 }
@@ -47,7 +56,7 @@ export default {
   height: 50px;
   line-height: 50px;
   background: #2b2f3a;
-  text-align: center;
+  //background: #263446;
   overflow: hidden;
 
   & .sidebar-logo-link {
@@ -59,6 +68,7 @@ export default {
       height: 32px;
       vertical-align: middle;
       margin-right: 12px;
+      margin-left: 6px;
     }
 
     & .sidebar-title {

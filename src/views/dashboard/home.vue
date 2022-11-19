@@ -5,59 +5,54 @@
     </div>
     <div style="margin-bottom: 10px;background: #ffffff;padding: 15px;" class="">
       <div style="display: flex;justify-content: flex-start;">
-        <el-date-picker
-          :clearable="false"
-          @change="handleTimeChange"
-          v-model="selectedTime"
-          value-format="timestamp"
-          type="daterange"
-          :picker-options="pickerOptions"
-          range-separator="至"
-          start-placeholder="起始日期"
-          end-placeholder="结束日期">
-        </el-date-picker>
-        <el-select style="margin-left: 15px;"
-                   clearable
-                   @change="getCountData" v-model="roomCountDTO.roomCategory"
-                   placeholder="请选择房间类别">
-          <el-option
-            v-for="(item, index) in category"
-            :label="item"
-            :key="index"
-            :value="item">
-          </el-option>
-        </el-select>
-        <el-select style="margin-left: 15px;"
-                   v-model="roomCountDTO.roomId"
-                   clearable
-                   @change="getCountData"
-                   filterable
-                   remote
-                   reserve-keyword
-                   placeholder="请输入房间名称"
-                   :remote-method="getRoomName"
-                   :loading="selectLoading">
-          <el-option
-            v-for="item in roomOptions"
-            :key="item.id"
-            :label="item.roomName"
-            :value="item.id">
-          </el-option>
-        </el-select>
-        <el-button @click="handleExportCountDataClick" icon="el-icon-download"
-                   style="margin-left: 15px;" type="primary">导出报表数据
-        </el-button>
-      </div>
-      <div style="text-align: left;margin-top: 15px;">
-        <span style="color: #909399;font-size: 12px">
-        （图表最多展示14天的数据，超出会有提示）（房间名称和房间类别为非必要筛选数据）
-        </span>
-        <span style="color: #909399;font-size: 12px;">
-        （说明:一天是指从00:00:00~23:59:59）
-        </span>
-        <span style="color: #909399;font-size: 12px;">
-        （说明:人次是指用户的扫码次数，人数是指在指定时间段有哪些人来过）
-        </span>
+        <div id="home-select-time">
+          <el-date-picker
+            :clearable="false"
+            @change="handleTimeChange"
+            v-model="selectedTime"
+            value-format="timestamp"
+            type="daterange"
+            :picker-options="pickerOptions"
+            range-separator="至"
+            start-placeholder="起始日期"
+            end-placeholder="结束日期">
+          </el-date-picker>
+        </div>
+        <div id="home-select-room-category" style="margin-left: 15px;">
+          <el-select clearable
+                     @change="getCountData" v-model="roomCountDTO.roomCategory"
+                     placeholder="请选择房间类别">
+            <el-option
+              v-for="(item, index) in category"
+              :label="item"
+              :key="index"
+              :value="item">
+            </el-option>
+          </el-select>
+        </div>
+        <div id="home-search-room-name" style="margin-left: 15px;">
+          <el-select v-model="roomCountDTO.roomId"
+                     clearable
+                     @change="getCountData"
+                     filterable
+                     remote
+                     reserve-keyword
+                     placeholder="请输入房间名称"
+                     :remote-method="getRoomName"
+                     :loading="selectLoading">
+            <el-option
+              v-for="item in roomOptions"
+              :key="item.id"
+              :label="item.roomName"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </div>
+        <div id="home-export-btn" style="margin-left: 15px;" >
+          <el-button @click="handleExportCountDataClick" icon="el-icon-download" type="primary">
+            导出报表数据
+          </el-button>
+        </div>
       </div>
     </div>
 
@@ -295,7 +290,7 @@ export default {
 <style lang="scss" scoped>
 .home-container {
   padding: 32px;
-  background-color: rgb(240, 242, 245);
+  background-color: #f1f1f1;
   position: relative;
 }
 

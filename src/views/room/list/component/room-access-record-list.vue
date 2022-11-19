@@ -18,7 +18,6 @@
       <el-button @click="handleExportUserAccessCountData" :loading="exportCountBtnLoading" style="margin-left: 10px;"  icon="el-icon-download" v-waves type="primary">
         导出统计数据
       </el-button>
-      <span style="font-size: 13px;color: #909399;margin-left: 10px;">(选择进行操作的起始和结束时间范围筛选或者导出数据)</span>
     </div>
     <div >
       <el-table

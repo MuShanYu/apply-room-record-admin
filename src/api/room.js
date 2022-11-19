@@ -85,4 +85,13 @@ export default {
       }
     })
   },
+  delRoomReservationRecord(id) {
+    return request({
+      url: '/roomReservation/del/record',
+      method: 'get',
+      params: {
+        id
+      }
+    })
+  },
 }

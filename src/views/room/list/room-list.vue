@@ -1,74 +1,82 @@
 <template>
-  <div style="margin: 10px;">
-    <div style="margin-bottom: 10px;margin-top: 10px;">
-      <el-select clearable @change="getRoomList" style="margin-right: 10px;"
-                 v-model="query.school" placeholder="请选择校区">
-        <el-option
-          v-for="(item, index) in school"
-          :label="item"
-          :key="index"
-          :value="item">
-        </el-option>
-      </el-select>
-      <el-select clearable @change="getRoomList" style="margin-right: 10px;"
-                 v-model="query.teachBuilding" placeholder="请选择楼栋">
-        <el-option
-          v-for="(item, index) in teachBuilding"
-          :label="item"
-          :key="index"
-          :value="item">
-        </el-option>
-      </el-select>
-      <el-select clearable @change="getRoomList"
-                 v-model="query.category" placeholder="请选择类别">
-        <el-option
-          v-for="(item, index) in category"
-          :label="item"
-          :key="index"
-          :value="item">
-        </el-option>
-      </el-select>
-      <el-input v-model="query.roomName"
-                clearable
-                @clear="getRoomList"
-                placeholder="请输入检索的房间名称" style="width: 200px;margin-left: 10px;"
-                @keyup.enter.native="getRoomList"/>
-      <el-button v-waves style="margin-left: 10px;" type="primary" icon="el-icon-search"
-                 @click="getRoomList">
-        搜索
-      </el-button>
-      <el-button v-permission="['super-admin']" @click="addRoomDrawer = true" v-waves style="margin-left: 10px;" type="primary" icon="el-icon-plus">
-        新建房间
-      </el-button>
-      <el-button v-permission="['super-admin']" @click="$router.push('/room/import')"
-                 v-waves style="margin-left: 10px;" type="primary" icon="el-icon-upload2">
-        批量导入
-      </el-button>
+  <div class="app-container">
+    <div style="display: flex;justify-content: flex-start;"
+         :style="fixedHeader ? 'margin-top: 35px;' : ''">
+      <div id="room-list-add">
+        <el-button style="margin-right: 10px;" v-permission="['super-admin']" @click="addRoomDrawer = true" v-waves
+                   type="primary" icon="el-icon-plus">
+          添加
+        </el-button>
+      </div>
+      <div id="room-list-operate-apply" style="margin-right: 10px;">
+        <el-button @click="handleBatchDisableReserve" v-waves type="info"
+                   icon="el-icon-document-delete">
+          禁止预约
+        </el-button>
+      </div>
+      <div id="room-list-operate-ban" >
+        <el-button @click="handleBatchDisableRoom" v-waves
+                   type="danger"
+                   icon="el-icon-circle-close">
+          禁用
+        </el-button>
+      </div>
+      <div id="room-list-select-filter" style="display: flex;margin-right: 10px;margin-left: 10px;">
+        <el-select clearable @change="getRoomList"
+                   v-model="query.school" placeholder="请选择校区">
+          <el-option
+            v-for="(item, index) in school"
+            :label="item"
+            :key="index"
+            :value="item">
+          </el-option>
+        </el-select>
+        <el-select clearable @change="getRoomList" style="margin-right: 10px;margin-left: 10px;"
+                   v-model="query.teachBuilding" placeholder="请选择楼栋">
+          <el-option
+            v-for="(item, index) in teachBuilding"
+            :label="item"
+            :key="index"
+            :value="item">
+          </el-option>
+        </el-select>
+        <el-select clearable @change="getRoomList"
+                   v-model="query.category" placeholder="请选择类别">
+          <el-option
+            v-for="(item, index) in category"
+            :label="item"
+            :key="index"
+            :value="item">
+          </el-option>
+        </el-select>
+      </div>
+      <div id="room-list-room-name" style="display: flex;">
+        <el-input v-model="query.roomName"
+                  clearable
+                  @clear="getRoomList"
+                  placeholder="请输入检索的房间名称" style="width: 200px;"
+                  @keyup.enter.native="getRoomList"/>
+        <el-button v-waves style="margin-left: 10px;" type="primary" icon="el-icon-search"
+                   @click="getRoomList">
+          搜索
+        </el-button>
+      </div>
     </div>
-    <div style="margin-bottom: 10px;">
-      <el-button v-permission="['super-admin']" @click="handleBatchDownloadQRCode"
+    <div style="margin-bottom: 18px;display: flex;justify-content: flex-start;margin-top: 15px;">
+      <el-button id="room-list-operate-qr-code" v-permission="['super-admin']" @click="handleBatchDownloadQRCode"
                  v-waves type="primary" icon="el-icon-picture-outline">
-        批量生成房间二维码
+        生成房间二维码
       </el-button>
-      <el-tooltip effect="light" placement="bottom-end">
-        <el-button @click="handleBatchDisableReserve" v-waves type="primary" icon="el-icon-close">
-          批量禁止预约
+      <div id="room-list-import" style="display: flex;margin-left: 10px;">
+        <el-button v-permission="['super-admin']" @click="$router.push('/room/import')"
+                   v-waves type="primary" icon="el-icon-upload2">
+          导入
         </el-button>
-        <div slot="content">
-          是禁止预约状态的房间会被重置为正常状态，<br/>正常状态的房间会被重置为禁止预约状态
-        </div>
-      </el-tooltip>
-      <el-tooltip effect="light" placement="bottom-end">
-        <el-button @click="handleBatchDisableRoom" v-waves type="danger" icon="el-icon-delete">
-          批量禁用
-        </el-button>
-        <div slot="content">
-          是禁用状态的房间会被重置为正常状态，<br/>正常状态的房间会被重置为禁止状态
-        </div>
-      </el-tooltip>
-      <el-link :href="constants.roomExcelHref" v-permission="['super-admin']" style="margin-left: 10px;" :underline="false" type="primary">房间信息导入模板下载</el-link>
-      <span style="margin-left: 10px;font-size: 12px;color: #909399;">(注意不可以同时设置为禁止预约状态和禁用状态)</span>
-      <span style="margin-left: 10px;font-size: 12px;color: #909399;">(条件均为空时点击搜索查看的是全部数据)</span>
+        <el-link :href="constants.roomExcelHref" v-permission="['super-admin']" style="margin-left: 15px;"
+                 :underline="false" type="primary">
+          导入模板下载 <i class="el-icon-download"></i>
+        </el-link>
+      </div>
     </div>
     <div>
       <el-table
@@ -77,6 +85,7 @@
         :data="roomList"
         border
         fit
+        empty-text="暂无您负责的房间"
         @selection-change="handleSelectionChange"
         highlight-current-row
         style="width: 100%;">
@@ -97,7 +106,9 @@
         </el-table-column>
         <el-table-column label="房间名" align="center">
           <template slot-scope="{row}">
-            <span @click="handleCopy(constants.qrCodeUrlPrefix + row.id, $event)" class="link-type">{{ row.roomName }}</span>
+            <span @click="handleCopy(constants.qrCodeUrlPrefix + row.id, $event)" class="link-type">{{
+                row.roomName
+              }}</span>
           </template>
         </el-table-column>
         <el-table-column label="设备信息" align="center">
@@ -122,12 +133,20 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" width="180" align="center">
+        <el-table-column label="创建时间" width="150" align="center">
           <template slot-scope="{row}">
             <span>{{ row.createTime | parseTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="负责人" align="center" width="80">
+        <el-table-column align="center" width="100">
+          <template slot="header">
+            <div id="room-list-my-charge">
+              <span style="margin-right: 4px;">负责人</span>
+              <el-tooltip effect="light" :content="eyeIcon === 'eye' ? '点击查看所有房间' : '点击查看您负责的房间'" placement="top">
+                <svg-icon @click.stop="getMyChargeRoom" class="link-type" :icon-class="eyeIcon"/>
+              </el-tooltip>
+            </div>
+          </template>
           <template slot-scope="{row}">
             <span>{{ row.chargePerson }}</span>
           </template>
@@ -144,7 +163,8 @@
                        size="mini">
               足迹详情
             </el-button>
-            <el-button v-if="currentUserId === row.chargePersonId || isSuperAdmin" @click="handleRoomUpdateClick(row, $index)" v-waves
+            <el-button v-if="currentUserId === row.chargePersonId || isSuperAdmin"
+                       @click="handleRoomUpdateClick(row, $index)" v-waves
                        style="margin: 3px;" type="info" size="mini">
               修改
             </el-button>
@@ -171,7 +191,7 @@
       title="批量生成房间二维码预览"
       :fullscreen="true"
       :visible.sync="generateQRCodeDialog">
-      <room-qr-code-generate :room-list="roomSelectedList" />
+      <room-qr-code-generate :room-list="roomSelectedList"/>
     </el-dialog>
 
     <!-- 查看预约详情 -->
@@ -229,7 +249,7 @@ import RoomQrCodeGenerate from "@/views/room/list/component/room-qr-code-generat
 
 import clip from '@/utils/clipboard' // use clipboard directly
 import clipboard from '@/directive/clipboard/index.js'
-import {mapGetters} from "vuex"; // use clipboard by v-directive
+import {mapState} from "vuex"; // use clipboard by v-directive
 import constants from "@/common/CommonCantans";
 
 export default {
@@ -238,10 +258,11 @@ export default {
     clipboard
   },
   computed: {
-    ...mapGetters([
-      'userInfo',
-      'roles'
-    ]),
+    ...mapState({
+      userInfo: state => state.user.userInfo,
+      roles: state => state.user.roles,
+      fixedHeader: state => state.settings.fixedHeader
+    }),
     constants() {
       return constants;
     }
@@ -275,7 +296,8 @@ export default {
         teachBuilding: '',
         school: '',
         category: '',
-        roomName: ''
+        roomName: '',
+        chargeUserId: null
       },
       listLoading: false,
       detailListLoading: false,
@@ -296,11 +318,13 @@ export default {
       currentUserId: '',
       isSuperAdmin: false,
       roomSelectedList: [],
-      generateQRCodeDialog: false
+      generateQRCodeDialog: false,
+      eyeIcon: 'eye'
     }
   },
   created() {
     this.currentUserId = this.userInfo.id
+    this.query.chargeUserId = this.userInfo.id
     this.isSuperAdmin = this.roles.some(v => v === 'super-admin')
     this.getRoomList()
     this.getRoomClassifyInfo()
@@ -383,8 +407,20 @@ export default {
         this.$message.error('未选择要禁止预约的房间')
         return
       }
+      // 当前房间是不是我负责的，我是不是超级管理员
+      // 超级管理员不做限制
+      if (!this.isSuperAdmin) {
+        // 当前房间是不是我负责的，否则没有操作权限
+        for (let i = 0; i < this.roomSelectedList.length; i++) {
+          if (this.roomSelectedList[i].chargePersonId !== this.userInfo.id) {
+            // 这个房间不是我负责的
+            this.$message.error(this.roomSelectedList[i].roomName + '等，不是您负责的房间，无法完成操作！')
+            return
+          }
+        }
+      }
       this.$message.info('正在进行批量操作，请稍等')
-      for(let room of this.roomSelectedList) {
+      for (let room of this.roomSelectedList) {
         await this.doDisableReserveRoom(room)
       }
     },
@@ -410,8 +446,18 @@ export default {
         this.$message.error('未选择要禁用的房间')
         return
       }
+      if (!this.isSuperAdmin) {
+        // 当前房间是不是我负责的，否则没有操作权限
+        for (let i = 0; i < this.roomSelectedList.length; i++) {
+          if (this.roomSelectedList[i].chargePersonId !== this.userInfo.id) {
+            // 这个房间不是我负责的
+            this.$message.error(this.roomSelectedList[i].roomName + '等，不是您负责的房间，无法完成操作！')
+            return
+          }
+        }
+      }
       this.$message.info('正在进行批量操作，请稍等')
-      for(let room of this.roomSelectedList) {
+      for (let room of this.roomSelectedList) {
         await this.doDisableRoom(room)
       }
     },
@@ -431,6 +477,17 @@ export default {
           resolve()
         })
       })
+    },
+    getMyChargeRoom() {
+      if (this.query.chargeUserId === null) {
+        this.query.chargeUserId = this.userInfo.id
+        this.eyeIcon = 'eye'
+      } else {
+        this.query.chargeUserId = null
+        this.eyeIcon = 'eye-open'
+      }
+      this.query.page = 1
+      this.getRoomList()
     }
   }
 }

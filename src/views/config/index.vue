@@ -1,7 +1,8 @@
 <template>
-  <div class="" style="margin: 5px;">
-    <div style="margin-bottom: 5px;text-align: right;">
-      <el-button v-permission="['super-admin']" v-waves icon="el-icon-plus" @click="showAdd = true" type="primary">
+  <div class="app-container">
+    <div :style="fixedHeader ? 'margin-top: 35px;' : ''" class="filter-container"
+         style="text-align: left;margin-bottom: 10px;">
+      <el-button id="config-list-add" v-permission="['super-admin']" v-waves icon="el-icon-plus" @click="showAdd = true" type="primary">
         添加配置
       </el-button>
     </div>
@@ -49,7 +50,8 @@
         </el-table-column>
         <el-table-column width="150" label="操作" align="center">
           <template slot-scope="{row, $index}">
-            <el-button v-permission="['super-admin']" :disabled="row.state !== 1" @click="handleUpdateConfigClick(row, $index)" v-waves
+            <el-button v-permission="['super-admin']" :disabled="row.state !== 1"
+                       @click="handleUpdateConfigClick(row, $index)" v-waves
                        style="margin: 3px;" type="primary" size="mini">
               修改
             </el-button>
@@ -120,12 +122,18 @@ import JsonEditor from '@/components/JsonEditor'
 import Pagination from "@/components/Pagination";
 
 import configApi from '@/api/config'
+import {mapState} from "vuex";
 
 export default {
   name: 'JsonEditorDemo',
   components: {
     JsonEditor,
     Pagination
+  },
+  computed: {
+    ...mapState({
+      fixedHeader: state => state.settings.fixedHeader
+    })
   },
   data() {
     return {
