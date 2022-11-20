@@ -7,7 +7,7 @@
     <div class="main">
       <div style="margin: 10px;text-align: center;" :id="'image-' + index" v-for="(item, index) in roomList" :key="item.id">
         <div style="color: #303133;font-size: 16px;margin-bottom: 8px;">{{item.roomName}}</div>
-        <vue-qr :callback="generateQRCodeCallBack" :margin="10" :size="227" :logo-src="constants.logo" :text="constants.qrCodeUrlPrefix + item.id"></vue-qr>
+        <vue-qr :callback="generateQRCodeCallBack" :margin="10" :size="227" :logo-src="config.logo" :text="config.qrCodeUrlPrefix + item.id"></vue-qr>
       </div>
     </div>
   </div>
@@ -18,7 +18,7 @@ import { saveAs } from 'file-saver'
 import html2canvas from 'html2canvas'
 import JSZip from 'jszip'
 
-import constants from "@/common/CommonCantans";
+import config from "@/common/sys-config";
 export default {
   name: "room-qr-code-generate",
   props: {
@@ -30,8 +30,8 @@ export default {
     }
   },
   computed: {
-    constants() {
-      return constants;
+    config() {
+      return config;
     }
   },
   data() {

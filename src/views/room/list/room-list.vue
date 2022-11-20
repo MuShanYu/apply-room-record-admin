@@ -72,7 +72,7 @@
                    v-waves type="primary" icon="el-icon-upload2">
           导入
         </el-button>
-        <el-link :href="constants.roomExcelHref" v-permission="['super-admin']" style="margin-left: 15px;"
+        <el-link :href="config.roomExcelHref" v-permission="['super-admin']" style="margin-left: 15px;"
                  :underline="false" type="primary">
           导入模板下载 <i class="el-icon-download"></i>
         </el-link>
@@ -106,7 +106,7 @@
         </el-table-column>
         <el-table-column label="房间名" align="center">
           <template slot-scope="{row}">
-            <span @click="handleCopy(constants.qrCodeUrlPrefix + row.id, $event)" class="link-type">{{
+            <span @click="handleCopy(config.qrCodeUrlPrefix + row.id, $event)" class="link-type">{{
                 row.roomName
               }}</span>
           </template>
@@ -250,7 +250,7 @@ import RoomQrCodeGenerate from "@/views/room/list/component/room-qr-code-generat
 import clip from '@/utils/clipboard' // use clipboard directly
 import clipboard from '@/directive/clipboard/index.js'
 import {mapState} from "vuex"; // use clipboard by v-directive
-import constants from "@/common/CommonCantans";
+import config from "@/common/sys-config";
 
 export default {
   name: "RoomList",
@@ -263,8 +263,8 @@ export default {
       roles: state => state.user.roles,
       fixedHeader: state => state.settings.fixedHeader
     }),
-    constants() {
-      return constants;
+    config() {
+      return config;
     }
   },
   filters: {

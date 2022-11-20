@@ -4,7 +4,7 @@ import store from '@/store'
 import router from '@/router'
 import { getToken } from '@/utils/auth'
 
-import constants from "@/common/CommonCantans";
+import constants from "@/common/sys-config";
 
 // create an axios instance
 const service = axios.create({

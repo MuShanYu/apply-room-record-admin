@@ -2,11 +2,11 @@
   <div class="sidebar-logo-container" :class="{'collapse':collapse}">
     <transition name="sidebarLogoFade">
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
-        <img alt="logo" v-if="constants.logo" :src="constants.logo" class="sidebar-logo">
+        <img alt="logo" v-if="config.logo" :src="config.logo" class="sidebar-logo">
         <h1 v-else class="sidebar-title">{{ '欢迎您，' + userInfo.name }} </h1>
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
-        <img alt="logo" v-if="constants.logo" :src="constants.logo" class="sidebar-logo">
+        <img alt="logo" v-if="config.logo" :src="config.logo" class="sidebar-logo">
         <h1 class="sidebar-title">{{ '欢迎您，' + userInfo.name }} </h1>
       </router-link>
     </transition>
@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import constants from "@/common/CommonCantans";
+import config from "@/common/sys-config";
 import {mapState} from "vuex";
 export default {
   name: 'SidebarLogo',
@@ -25,8 +25,8 @@ export default {
     }
   },
   computed: {
-    constants() {
-      return constants
+    config() {
+      return config
     },
     ...mapState({
       userInfo: state => state.user.userInfo

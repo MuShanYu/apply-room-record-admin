@@ -48,14 +48,14 @@
 import UploadExcelComponent from '@/components/UploadExcel/index.vue'
 import userApi from '@/api/user'
 
-import constants from "@/common/CommonCantans";
+import config from "@/common/sys-config";
 
 export default {
   name: 'UploadExcel',
   components: {UploadExcelComponent},
   computed: {
-    constants() {
-      return constants;
+    config() {
+      return config;
     }
   },
   data() {

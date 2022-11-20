@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="listLoading" class="app-container" id="room-approve-container">
+  <div class="app-container" id="room-approve-container">
     <div style="text-align: center; border: 1px solid #dcdfe6;padding-top: 10px;box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);" :style="fixedHeader ? 'margin-top: 35px;' : ''"
          class="filter-container">
       <el-select clearable @change="getRoomReservationReviewedList" style="margin-right: 30px;width: 250px;"
@@ -29,9 +29,12 @@
           :value="item">
         </el-option>
       </el-select>
+      <el-tooltip effect="light" content="刷新数据" placement="top-start">
+        <el-button @click="refreshData" type="text" style="margin-left: 15px;"><i class="el-icon-refresh"></i></el-button>
+      </el-tooltip>
     </div>
-    <div style="display: flex;flex-wrap: wrap;justify-content: space-around;">
-      <el-empty v-if="roomList.length === 0" :image-size="320" :image="constants.emptyImg" description="您暂无待审批申请"></el-empty>
+    <div v-loading="listLoading" style="display: flex;flex-wrap: wrap;justify-content: space-around;">
+      <el-empty v-if="roomList.length === 0" :image-size="320" :image="config.emptyImg" description="您暂无待审批申请"></el-empty>
       <div v-else v-for="(item, index) in roomList" :key="item.id" class="card-container">
         <!-- tag -->
         <div class="card-tag-position">
@@ -39,7 +42,7 @@
         </div>
         <!--header-->
         <div class="card-title">
-          {{ item.createTime | parseTime }} {{ item.name }}的{{ item.roomName }}预约申请
+          {{ item.name }}的{{ item.roomName }}预约申请({{ item.createTime | parseTime }})
         </div>
         <!--body-->
         <div style="margin-bottom: 15px;">
@@ -76,6 +79,10 @@
         </div>
       </div>
     </div>
+    <div>
+      <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.size"
+                  @pagination="getRoomReservationReviewedList"/>
+    </div>
   </div>
 </template>
 
@@ -85,7 +92,7 @@ import dataStatistics from "@/api/data-statistics";
 
 import Pagination from "@/components/Pagination";
 import {mapState} from "vuex";
-import constants from "@/common/CommonCantans";
+import config from "@/common/sys-config";
 
 const statusMap = {
   notReviewed: {
@@ -118,8 +125,8 @@ export default {
     ...mapState({
       fixedHeader: state => state.settings.fixedHeader
     }),
-    constants() {
-      return constants
+    config() {
+      return config
     }
   },
   filters: {
@@ -235,6 +242,10 @@ export default {
       }).catch((e) => {
         this.listLoading = false
       })
+    },
+    refreshData() {
+      this.query.page = 1
+      this.getRoomReservationReviewedList()
     }
   }
 }
@@ -251,7 +262,7 @@ export default {
 .card-container {
   border: 1px solid #dcdfe6;
   margin: 15px;
-  width: 480px;
+  width: 500px;
   padding: 15px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   position: relative;

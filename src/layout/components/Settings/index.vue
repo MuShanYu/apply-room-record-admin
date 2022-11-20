@@ -9,12 +9,12 @@
       </div>
 
       <div class="drawer-item">
-        <span>固定导航栏</span>
+        <span>固定顶部导航栏</span>
         <el-switch v-model="fixedHeader" class="drawer-switch"/>
       </div>
 
       <div class="drawer-item">
-        <span>显示系统logo</span>
+        <span>显示logo与欢迎语</span>
         <el-switch v-model="sidebarLogo" class="drawer-switch"/>
       </div>
 

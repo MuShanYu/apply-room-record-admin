@@ -23,7 +23,7 @@
                  type="primary" icon="el-icon-upload2">
         导入
       </el-button>
-      <el-link :href="constants.userExcelHref" v-permission="['super-admin']" style="margin-left: 18px;"
+      <el-link :href="config.userExcelHref" v-permission="['super-admin']" style="margin-left: 18px;"
                :underline="false" type="primary">
         导入模板下载 <i class="el-icon-download"></i>
       </el-link>
@@ -143,7 +143,7 @@ import UserRoomReserve from "@/views/user/component/user-room-reserve";
 import UserAccessRecord from "@/views/user/component/user-access-record";
 import Pagination from "@/components/Pagination";
 
-import constants from '@/common/CommonCantans'
+import config from '@/common/sys-config'
 import {mapState} from "vuex";
 
 export default {
@@ -154,8 +154,8 @@ export default {
     UserAccessRecord
   },
   computed: {
-    constants() {
-      return constants;
+    config() {
+      return config;
     },
     ...mapState({
       token: state => state.user.token,

@@ -8,7 +8,7 @@
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
 <!--          <span v-if="userInfo" style="font-size: 13px;">{{userInfo.nickname}}</span>-->
-          <img :src="constants.avatar" class="user-avatar">
+          <img :src="config.avatar" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -25,7 +25,7 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import constants from "@/common/CommonCantans";
+import config from "@/common/sys-config";
 export default {
   components: {
     Breadcrumb,
@@ -36,8 +36,8 @@ export default {
       'sidebar',
       'userInfo'
     ]),
-    constants() {
-      return constants
+    config() {
+      return config
     }
   },
   methods: {
