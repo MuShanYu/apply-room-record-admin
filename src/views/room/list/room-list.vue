@@ -85,7 +85,7 @@
         :data="roomList"
         border
         fit
-        empty-text="暂无您负责的房间"
+        empty-text="暂无您负责的房间(点击负责人列右方图标查看所有房间)"
         @selection-change="handleSelectionChange"
         highlight-current-row
         style="width: 100%;">
