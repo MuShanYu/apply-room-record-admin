@@ -90,6 +90,16 @@ export const constantRoutes = [
     }]
   },
   {
+    path: 'h5-client',
+    component: Layout,
+    children: [
+      {
+        path: 'https://www.mushanyu.xyz:8800/#/',
+        meta: {title: 'H5客户端', icon: 'link'}
+      }
+    ]
+  },
+  {
     path: 'qrcode-link',
     component: Layout,
     children: [
