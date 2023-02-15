@@ -38,7 +38,7 @@
       <div v-else v-for="(item, index) in roomList" :key="item.id" class="card-container">
         <!-- tag -->
         <div class="card-tag-position">
-          <div class="card-tag">{{ item.state | msgFilter }}</div>
+          <el-tag effect="plain" :type="item.state | colorFilter">{{ item.state | msgFilter }}</el-tag>
         </div>
         <!--header-->
         <div class="card-title">
@@ -64,7 +64,7 @@
         <!--footer-->
         <div class="card-time">
           <div>
-            预约起始时间：{{ item.reserveEndTime | parseTime }}
+            预约起始时间：{{ item.reserveStartTime | parseTime }}
           </div>
           <div>
             预约结束时间：{{ item.reserveEndTime | parseTime }}
@@ -96,7 +96,7 @@ import config from "@/common/sys-config";
 
 const statusMap = {
   notReviewed: {
-    status: 'warning',
+    status: '',
     msg: '待审批'
   },
   ban: {
@@ -112,7 +112,7 @@ const statusMap = {
     msg: '用户取消'
   },
   timeOut: {
-    status: 'info',
+    status: 'warning',
     msg: '超时未处理'
   }
 }
@@ -142,6 +142,20 @@ export default {
           return statusMap.reviewed.msg
         case 6:
           return statusMap.timeOut.msg
+      }
+    },
+    colorFilter(status) {
+      switch (status) {
+        case 4:
+          return statusMap.ban.status
+        case 0:
+          return statusMap.notReviewed.status
+        case 3:
+          return statusMap.userCanceled.status
+        case 2:
+          return statusMap.reviewed.status
+        case 6:
+          return statusMap.timeOut.status
       }
     },
   },
@@ -183,7 +197,7 @@ export default {
         this.total = data.totalSize
         this.listLoading = false
         this.roomList.forEach(item => this.$set(item, "detailBtnLoading", false))
-        // console.log(this.roomList);
+        console.log(this.roomList);
       }).catch(e => {
         this.listLoading = false
       })
@@ -252,12 +266,6 @@ export default {
 </script>
 
 <style scoped>
-#room-approve-container {
-  /*padding: 32px;*/
-  /*background-color: #f1f1f1;*/
-  /*position: relative;*/
-  /*height: 100vh;*/
-}
 
 .card-container {
   border: 1px solid #dcdfe6;
@@ -269,7 +277,8 @@ export default {
 }
 
 .card-title {
-  margin-top: 12px;
+  word-break: break-all;
+  margin-top: 20px;
   font-size: 16px;
   color: #303133;
   margin-bottom: 15px;
@@ -307,8 +316,8 @@ export default {
 }
 
 .card-tag {
+  border: 1px;
   font-size: 13px;
-  border: 1px solid #409EFF;
   padding: 2px;
   border-radius: 4px;
 }
