@@ -1,6 +1,6 @@
 <template>
   <div class="app-container" id="room-approve-container">
-    <div style="text-align: center; border: 1px solid #dcdfe6;padding-top: 10px;box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);" :style="fixedHeader ? 'margin-top: 35px;' : ''"
+    <div :style="fixedHeader ? 'margin-top: 35px;' : ''"
          class="filter-container">
       <el-select clearable @change="getRoomReservationReviewedList" style="margin-right: 30px;width: 250px;"
                  v-model="query.school" placeholder="请选择校区">
@@ -30,55 +30,70 @@
         </el-option>
       </el-select>
       <el-tooltip effect="light" content="刷新数据" placement="top-start">
-        <el-button @click="refreshData" type="text" style="margin-left: 15px;"><i class="el-icon-refresh"></i></el-button>
+        <el-button @click="refreshData" type="text" style="margin-left: 15px;"><i class="el-icon-refresh"></i>
+        </el-button>
       </el-tooltip>
     </div>
-    <div v-loading="listLoading" style="display: flex;flex-wrap: wrap;justify-content: space-around;">
-      <el-empty v-if="roomList.length === 0" :image-size="320" :image="config.emptyImg" description="您暂无待审批申请"></el-empty>
-      <div v-else v-for="(item, index) in roomList" :key="item.id" class="card-container">
-        <!-- tag -->
-        <div class="card-tag-position">
-          <el-tag effect="plain" :type="item.state | colorFilter">{{ item.state | msgFilter }}</el-tag>
-        </div>
-        <!--header-->
-        <div class="card-title">
-          {{ item.name }}的{{ item.roomName }}预约申请({{ item.createTime | parseTime }})
-        </div>
-        <!--body-->
-        <div style="margin-bottom: 15px;">
-          <div class="card-tip">
-            <div>
-              {{ item.school }}
-            </div>
-            <div>
-              {{ item.teachBuilding }}
-            </div>
-            <div>
-              {{ item.category }}
-            </div>
+    <div>
+      <el-tabs v-model="activeState" @tab-click="handleTabClick">
+        <el-tab-pane v-loading="tabReviewLoading" label="待审批" name="0">
+          <div style="display: flex;flex-wrap: wrap;justify-content: space-around;">
+            <el-empty v-if="roomReviewList.length === 0" :image-size="320" :image="config.emptyImg"
+                      description="暂无待审批申请"></el-empty>
+            <approve-card :current-time="currentTime" id="review" v-else v-for="(item, index) in roomReviewList"
+                          @roomReservationPassClick="handleRoomReservationPassClick(item, index)"
+                          @roomUpdateRejectClick="handleRoomUpdateRejectClick(item, index)"
+                          @roomRecordDelClick="handleRoomRecordDel(item, index)"
+                          :room="item" :key="item.id"/>
           </div>
-          <div class="card-reason">
-            申请理由：{{ item.roomUsage }}
+        </el-tab-pane>
+        <el-tab-pane v-loading="tabReviewedLoading" label="已审批" name="2">
+          <div style="display: flex;flex-wrap: wrap;justify-content: space-around;">
+            <el-empty v-if="roomReviewedList.length === 0" :image-size="320" :image="config.emptyImg"
+                      description="暂无已审批申请"></el-empty>
+            <approve-card :current-time="currentTime" id="reviewed" v-else v-for="(item, index) in roomReviewedList"
+                          @roomReservationPassClick="handleRoomReservationPassClick(item, index)"
+                          @roomUpdateRejectClick="handleRoomUpdateRejectClick(item, index)"
+                          @roomRecordDelClick="handleRoomRecordDel(item, index)"
+                          :room="item" :key="item.id"/>
           </div>
-        </div>
-        <!--footer-->
-        <div class="card-time">
-          <div>
-            预约起始时间：{{ item.reserveStartTime | parseTime }}
+        </el-tab-pane>
+        <el-tab-pane v-loading="tabRejectLoading" label="已驳回" name="4">
+          <div style="display: flex;flex-wrap: wrap;justify-content: space-around;">
+            <el-empty v-if="roomRejectList.length === 0" :image-size="320" :image="config.emptyImg"
+                      description="暂无已驳回申请"></el-empty>
+            <approve-card :current-time="currentTime" id="reject" v-else v-for="(item, index) in roomRejectList"
+                          @roomReservationPassClick="handleRoomReservationPassClick(item, index)"
+                          @roomUpdateRejectClick="handleRoomUpdateRejectClick(item, index)"
+                          @roomRecordDelClick="handleRoomRecordDel(item, index)"
+                          :room="item" :key="item.id"/>
           </div>
-          <div>
-            预约结束时间：{{ item.reserveEndTime | parseTime }}
+        </el-tab-pane>
+        <el-tab-pane v-loading="tabCancelLoading" label="用户已取消" name="3">
+          <div style="display: flex;flex-wrap: wrap;justify-content: space-around;">
+            <el-empty v-if="roomCancelList.length === 0" :image-size="320" :image="config.emptyImg"
+                      description="暂无已驳回申请"></el-empty>
+            <approve-card :current-time="currentTime" id="cancel" v-else v-for="(item, index) in roomCancelList"
+                          @roomReservationPassClick="handleRoomReservationPassClick(item, index)"
+                          @roomUpdateRejectClick="handleRoomUpdateRejectClick(item, index)"
+                          @roomRecordDelClick="handleRoomRecordDel(item, index)"
+                          :room="item" :key="item.id"/>
           </div>
-        </div>
-        <div style="margin-top: 15px;text-align: right;">
-          <el-button @click="handleRoomReservationPassClick(item, index)" :disabled="item.state === 2 || item.state === 3 || item.state === 6"
-                     style="margin-right: 5px;" type="primary" size="mini">通过</el-button>
-          <el-button style="margin-right: 5px;" @click="handleRoomUpdateRejectClick(item, index)" :disabled="item.state === 4 || item.state === 3 || item.state === 6"
-                     type="danger" size="mini">拒绝</el-button>
-          <el-button @click="handleRoomRecordDel(item.id, index)" icon="el-icon-delete" type="text"></el-button>
-        </div>
-      </div>
+        </el-tab-pane>
+        <el-tab-pane v-loading="tabTimeoutLoading" label="超时未处理" name="6">
+          <div style="display: flex;flex-wrap: wrap;justify-content: space-around;">
+            <el-empty v-if="roomTimeoutList.length === 0" :image-size="320" :image="config.emptyImg"
+                      description="暂无已驳回申请"></el-empty>
+            <approve-card :current-time="currentTime" id="timeout" v-else v-for="(item, index) in roomTimeoutList"
+                          @roomReservationPassClick="handleRoomReservationPassClick(item, index)"
+                          @roomUpdateRejectClick="handleRoomUpdateRejectClick(item, index)"
+                          @roomRecordDelClick="handleRoomRecordDel(item, index)"
+                          :room="item" :key="item.id"/>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
     </div>
+
     <div>
       <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.size"
                   @pagination="getRoomReservationReviewedList"/>
@@ -91,35 +106,15 @@ import roomApi from '@/api/room'
 import dataStatistics from "@/api/data-statistics";
 
 import Pagination from "@/components/Pagination";
+import ApproveCard from "./component/approve-card.vue";
 import {mapState} from "vuex";
 import config from "@/common/sys-config";
 
-const statusMap = {
-  notReviewed: {
-    status: '',
-    msg: '待审批'
-  },
-  ban: {
-    status: 'danger',
-    msg: '驳回'
-  },
-  reviewed: {
-    status: 'success',
-    msg: '已审批'
-  },
-  userCanceled: {
-    status: 'info',
-    msg: '用户取消'
-  },
-  timeOut: {
-    status: 'warning',
-    msg: '超时未处理'
-  }
-}
 export default {
   name: "RoomApprove",
   components: {
-    Pagination
+    Pagination,
+    ApproveCard
   },
   computed: {
     ...mapState({
@@ -129,36 +124,6 @@ export default {
       return config
     }
   },
-  filters: {
-    msgFilter(status) {
-      switch (status) {
-        case 4:
-          return statusMap.ban.msg
-        case 0:
-          return statusMap.notReviewed.msg
-        case 3:
-          return statusMap.userCanceled.msg
-        case 2:
-          return statusMap.reviewed.msg
-        case 6:
-          return statusMap.timeOut.msg
-      }
-    },
-    colorFilter(status) {
-      switch (status) {
-        case 4:
-          return statusMap.ban.status
-        case 0:
-          return statusMap.notReviewed.status
-        case 3:
-          return statusMap.userCanceled.status
-        case 2:
-          return statusMap.reviewed.status
-        case 6:
-          return statusMap.timeOut.status
-      }
-    },
-  },
   data() {
     return {
       // 查询相关参数
@@ -167,39 +132,51 @@ export default {
         size: 10,
         teachBuilding: '',
         school: '',
-        category: ''
+        category: '',
+        state: '0'
       },
-      listLoading: false,
-      roomList: [],
+      tabReviewLoading: false,
+      tabReviewedLoading: false,
+      tabRejectLoading: false,
+      tabCancelLoading: false,
+      tabTimeoutLoading: false,
+      roomReviewList: [],
+      roomReviewedList: [],
+      roomRejectList: [],
+      roomCancelList: [],
+      roomTimeoutList: [],
       total: 0,
       teachBuilding: [],
       school: [],
       category: [],
       currentRoom: {},
-      filters: [
-        {text: '待审批', value: 0},
-        {text: '已审批', value: 2},
-        {text: '驳回', value: 4},
-        {text: '用户取消', value: 3},
-        {text: '超时未处理', value: 6}
-      ]
+      activeState: '0',
+      currentTime: new Date().getTime()
     }
   },
   created() {
     this.getRoomReservationReviewedList()
     this.getRoomClassifyInfo()
   },
+  mounted() {
+    this.$notify({
+      title: '提示',
+      type: 'warning',
+      dangerouslyUseHTMLString: true,
+      message: '<span style="color: red;">超过预约结束时间的申请管理员只能进行删除操作，不能进行通过或者拒绝操作。</span>',
+      duration: 8000
+    });
+  },
   methods: {
     getRoomReservationReviewedList() {
-      this.listLoading = true
+      this.tabLoading(this.query.state, true)
       roomApi.userRoomReservationReviewed(this.query).then(data => {
-        this.roomList = data.pageData
+        this.assignmentRightRoomList(data.pageData, this.query.state)
         this.total = data.totalSize
-        this.listLoading = false
-        this.roomList.forEach(item => this.$set(item, "detailBtnLoading", false))
-        console.log(this.roomList);
+        this.tabLoading(this.query.state, false)
+        // console.log(this.roomList);
       }).catch(e => {
-        this.listLoading = false
+        this.tabLoading(this.query.state, false)
       })
     },
     getRoomClassifyInfo() {
@@ -215,11 +192,12 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.listLoading = true
+        this.tabLoading(this.query.state, true)
         roomApi.passOrRejectRoomReserve(item.id, true).then(() => {
-          item.state = 2
-          this.listLoading = false
+          this.getRoomReservationReviewedList()
           this.$message.success('操作成功')
+        }).catch(() => {
+          this.tabLoading(this.query.state, false)
         })
       }).catch(() => {
 
@@ -231,11 +209,12 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.listLoading = true
+        this.tabLoading(this.query.state, true)
         roomApi.passOrRejectRoomReserve(item.id, false).then(() => {
-          item.state = 4
-          this.listLoading = false
+          this.getRoomReservationReviewedList()
           this.$message.success('操作成功')
+        }).catch(() => {
+          this.tabLoading(this.query.state, false)
         })
       }).catch(() => {
 
@@ -247,79 +226,71 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.listLoading = true
+        this.tabLoading(this.query.state, true)
         roomApi.delRoomReservationRecord(id).then(() => {
-          this.roomList.splice(index, 1)
-          this.listLoading = false
+          // 刷新
+          this.getRoomReservationReviewedList()
           this.$message.success('删除成功')
+        }).catch(() => {
+          this.tabLoading(this.query.state, false)
         })
       }).catch((e) => {
-        this.listLoading = false
+
       })
     },
     refreshData() {
       this.query.page = 1
       this.getRoomReservationReviewedList()
+    },
+    handleTabClick(tab, event) {
+      this.query.state = tab.name
+      this.currentTime = new Date().getTime()
+      this.getRoomReservationReviewedList()
+    },
+    tabLoading(state, start) {
+      let that = this
+      switch (state) {
+        case '0':
+          that.tabReviewLoading = !!start;
+          break
+        case '2':
+          that.tabReviewedLoading = !!start
+          break
+        case '3':
+          that.tabCancelLoading = !!start
+          break
+        case '4':
+          that.tabRejectLoading = !!start
+          break
+        case '6':
+          that.tabTimeoutLoading = !!start
+          break
+      }
+    },
+    assignmentRightRoomList(roomList, state) {
+      let that = this
+      switch (state) {
+        case '0':
+          that.roomReviewList = roomList
+          break
+        case '2':
+          that.roomReviewedList = roomList
+          break
+        case '3':
+          that.roomCancelList = roomList
+          break
+        case '4':
+          that.roomRejectList = roomList
+          break
+        case '6':
+          that.roomTimeoutList = roomList
+          break
+      }
     }
   }
 }
 </script>
 
 <style scoped>
-
-.card-container {
-  border: 1px solid #dcdfe6;
-  margin: 15px;
-  width: 500px;
-  padding: 15px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  position: relative;
-}
-
-.card-title {
-  word-break: break-all;
-  margin-top: 20px;
-  font-size: 16px;
-  color: #303133;
-  margin-bottom: 15px;
-  text-align: center;
-}
-
-.card-tip {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  color: #909399;
-}
-
-.card-reason {
-  margin-top: 15px;
-  word-break: break-all;
-  font-size: 14px;
-  color: #606266;
-}
-
-.card-tag-position {
-  position: absolute;
-  right: 0;
-  top: 0;
-  padding: 3px;
-  font-size: 13px;
-  color: #606266;
-}
-
-.card-time {
-  font-size: 12px;
-  color: #909399;
-  display: flex;
-  justify-content: space-between;
-}
-
-.card-tag {
-  border: 1px;
-  font-size: 13px;
-  padding: 2px;
-  border-radius: 4px;
-}
 
 </style>
