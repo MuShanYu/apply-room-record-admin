@@ -41,13 +41,13 @@ export const constantRoutes = [
         path: 'list',
         name: 'RoomList',
         component: () => import('@/views/room/list/room-list'),
-        meta: {title: '房间列表'}
+        meta: {title: '房间列表', noCache: true}
       },
       {
         path: 'approve',
         name: 'RoomApprove',
         component: () => import('@/views/room/approve/room-approve'),
-        meta: {title: '预约申请审批'}
+        meta: {title: '预约申请审批', noCache: true}
       },
       {
         path: 'import',
@@ -73,8 +73,22 @@ export const constantRoutes = [
         path: 'import',
         name: 'UserImport',
         component: () => import('@/views/user/import/import-user'),
-        meta: { title: '导入用户数据', activeMenu: '/user/index' },
+        meta: {title: '导入用户数据', activeMenu: '/user/index'},
         hidden: true
+      }
+    ]
+  },
+  {
+    path: '/profile',
+    component: Layout,
+    redirect: '/profile/index',
+    hidden: true,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/profile/index'),
+        name: 'Profile',
+        meta: {title: '个人信息', noCache: true}
       }
     ]
   },

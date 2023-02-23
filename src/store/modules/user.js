@@ -91,6 +91,9 @@ const actions = {
   },
   logout({ commit }) {
     commit('LOGOUT')
+  },
+  updateUserInfo({ commit }, newUserInfo) {
+    commit('SET_USER_INFO', newUserInfo)
   }
 }
 

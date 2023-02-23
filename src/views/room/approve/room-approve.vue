@@ -195,7 +195,7 @@ export default {
         this.tabLoading(this.query.state, true)
         roomApi.passOrRejectRoomReserve(item.id, true).then(() => {
           this.getRoomReservationReviewedList()
-          this.$message.success('操作成功')
+          this.$message.success('审核成功结果已用邮件方式通知申请人')
         }).catch(() => {
           this.tabLoading(this.query.state, false)
         })
@@ -212,7 +212,7 @@ export default {
         this.tabLoading(this.query.state, true)
         roomApi.passOrRejectRoomReserve(item.id, false).then(() => {
           this.getRoomReservationReviewedList()
-          this.$message.success('操作成功')
+          this.$message.success('审核驳回结果已用邮件方式通知申请人')
         }).catch(() => {
           this.tabLoading(this.query.state, false)
         })

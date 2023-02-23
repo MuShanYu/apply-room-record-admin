@@ -3,11 +3,11 @@
     <transition name="sidebarLogoFade">
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
         <img alt="logo" v-if="config.logo" :src="config.logo" class="sidebar-logo">
-        <h1 v-else class="sidebar-title">{{ '欢迎您，' + userInfo.name }} </h1>
+        <h1 v-else class="sidebar-title">{{ userInfo ? '请登录' : '欢迎您，' + userInfo.name }} </h1>
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
         <img alt="logo" v-if="config.logo" :src="config.logo" class="sidebar-logo">
-        <h1 class="sidebar-title">{{ '欢迎您，' + userInfo.name }} </h1>
+        <h1 class="sidebar-title">{{ userInfo ? '请登录' : '欢迎您，' + userInfo.name }} </h1>
       </router-link>
     </transition>
   </div>
@@ -16,6 +16,7 @@
 <script>
 import config from "@/common/sys-config";
 import {mapState} from "vuex";
+
 export default {
   name: 'SidebarLogo',
   props: {

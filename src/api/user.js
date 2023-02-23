@@ -57,5 +57,12 @@ export default {
       method: 'post',
       data: userUpdateNameDTO
     })
+  },
+  updateUserInfo(userUpdateDTO) {
+    return request({
+      url:'/user/update/userInfo',
+      method:'post',
+      data: userUpdateDTO
+    })
   }
 }
