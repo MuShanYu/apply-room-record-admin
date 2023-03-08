@@ -93,7 +93,19 @@
         </el-tab-pane>
       </el-tabs>
     </div>
-
+    <el-dialog title="确定要驳回该条预约申请吗?" :visible.sync="rejectDialog">
+      <div>
+        <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="demo-ruleForm">
+          <el-form-item label="驳回原因" prop="rejectReason">
+            <el-input autosize placeholder="请填写驳回原因" type="textarea" v-model="form.rejectReason"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="rejectDialog = false">取 消</el-button>
+        <el-button :loading="rejectBtnLoading" type="primary" @click="confirmReject">确 定</el-button>
+      </div>
+    </el-dialog>
     <div>
       <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.size"
                   @pagination="getRoomReservationReviewedList"/>
@@ -151,7 +163,18 @@ export default {
       category: [],
       currentRoom: {},
       activeState: '0',
-      currentTime: new Date().getTime()
+      currentTime: new Date().getTime(),
+      rejectDialog: false,
+      currentRejectItem: {},
+      rejectBtnLoading: false,
+      form: {
+        rejectReason: ''
+      },
+      rules: {
+        rejectReason: [
+          { required: true, message: '请填写驳回原因', trigger: 'blur' }
+        ]
+      }
     }
   },
   created() {
@@ -204,21 +227,28 @@ export default {
       })
     },
     handleRoomUpdateRejectClick(item, index) {
-      this.$confirm('确定要驳回该房间预约吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.tabLoading(this.query.state, true)
-        roomApi.passOrRejectRoomReserve(item.id, false).then(() => {
-          this.getRoomReservationReviewedList()
-          this.$message.success('审核驳回结果已用邮件方式通知申请人')
-        }).catch(() => {
-          this.tabLoading(this.query.state, false)
-        })
-      }).catch(() => {
-
-      })
+      this.rejectDialog = true
+      this.currentRejectItem = Object.assign({}, item)
+    },
+    confirmReject() {
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          this.rejectBtnLoading = true
+          roomApi.passOrRejectRoomReserve(this.currentRejectItem.id, false, this.form.rejectReason).then(() => {
+            this.getRoomReservationReviewedList()
+            this.form.rejectReason = ''
+            this.$refs.form.resetFields()
+            this.rejectBtnLoading = false
+            this.rejectDialog = false
+            this.$message.success('审核驳回结果已用邮件方式通知申请人')
+          }).catch(() => {
+            this.tabLoading(this.query.state, false)
+          })
+        } else {
+          this.$message.error('请填写驳回原因后点击确定')
+          return false;
+        }
+      });
     },
     handleRoomRecordDel(id, index) {
       this.$confirm('确定要永久删除该房间预约记录吗?这会导致对应的预约人查看不到自己的该条预约记录。', '提示', {

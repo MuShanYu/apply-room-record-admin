@@ -149,7 +149,7 @@ export default {
 .card-container {
   border: 1px solid #dcdfe6;
   margin: 15px;
-  width: 550px;
+  width: 480px;
   padding: 15px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   position: relative;

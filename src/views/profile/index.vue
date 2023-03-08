@@ -195,8 +195,5 @@ export default {
 .user-info {
   color: #909399;
   font-size: 14px;
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
 }
 </style>
