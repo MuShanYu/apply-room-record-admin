@@ -359,6 +359,7 @@ export default {
     updateRoomSuccessHandler(room) {
       let roomIndex = this.roomList.findIndex(item => item.id === room.id)
       this.roomList.splice(roomIndex, 1, room);
+      this.updateRoomDrawer = false
     },
     handleDisableClick(room) {
       let text = room.state === 1 ? '确定要禁用该房间吗?' : '确定要解除禁用该房间吗?'
