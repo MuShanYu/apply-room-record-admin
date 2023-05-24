@@ -11,14 +11,14 @@
       <div id="room-list-operate-apply" style="margin-right: 10px;">
         <el-button @click="handleBatchDisableReserve" v-waves type="info"
                    icon="el-icon-document-delete">
-          禁止预约
+          禁止预约/解除
         </el-button>
       </div>
       <div id="room-list-operate-ban" >
         <el-button @click="handleBatchDisableRoom" v-waves
                    type="danger"
                    icon="el-icon-circle-close">
-          禁用
+          批量禁用
         </el-button>
       </div>
       <div id="room-list-select-filter" style="display: flex;margin-right: 10px;margin-left: 10px;">
