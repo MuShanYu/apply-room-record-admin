@@ -11,14 +11,14 @@
       <div id="room-list-operate-apply" style="margin-right: 10px;">
         <el-button @click="handleBatchDisableReserve" v-waves type="info"
                    icon="el-icon-document-delete">
-          禁止预约
+          禁止预约/解除
         </el-button>
       </div>
       <div id="room-list-operate-ban" >
         <el-button @click="handleBatchDisableRoom" v-waves
                    type="danger"
                    icon="el-icon-circle-close">
-          禁用
+          批量禁用
         </el-button>
       </div>
       <div id="room-list-select-filter" style="display: flex;margin-right: 10px;margin-left: 10px;">
@@ -128,7 +128,7 @@
         </el-table-column>
         <el-table-column label="状态" width="93" align="center">
           <template slot-scope="{row}">
-            <el-tag :type="row.state === 1 || row.state === 5 ? 'primary' : 'danger'">
+            <el-tag :type="row.state | stateTagFilter">
               {{ row.state | roomStateFilter }}
             </el-tag>
           </template>
@@ -142,7 +142,7 @@
           <template slot="header">
             <div id="room-list-my-charge">
               <span style="margin-right: 4px;">负责人</span>
-              <el-tooltip effect="light" :content="eyeIcon === 'eye' ? '点击查看所有房间' : '点击查看您负责的房间'" placement="top">
+              <el-tooltip v-if="isSuperAdmin" effect="light" :content="eyeIcon === 'eye' ? '点击查看所有房间' : '点击查看您负责的房间'" placement="top">
                 <svg-icon @click.stop="getMyChargeRoom" class="link-type" :icon-class="eyeIcon"/>
               </el-tooltip>
             </div>
@@ -273,9 +273,19 @@ export default {
         case -1:
           return '禁用'
         case 1:
-          return '正常'
+          return '可预约'
         case 5:
           return '禁止预约'
+      }
+    },
+    stateTagFilter(state) {
+      switch (state) {
+        case -1:
+          return 'danger'
+        case 1:
+          return 'success'
+        case 5:
+          return 'info'
       }
     }
   },
@@ -359,8 +369,10 @@ export default {
     updateRoomSuccessHandler(room) {
       let roomIndex = this.roomList.findIndex(item => item.id === room.id)
       this.roomList.splice(roomIndex, 1, room);
+      this.updateRoomDrawer = false
     },
     handleDisableClick(room) {
+      console.log(room);
       let text = room.state === 1 ? '确定要禁用该房间吗?' : '确定要解除禁用该房间吗?'
       this.$confirm(text, '提示', {
         confirmButtonText: '确定',

@@ -95,7 +95,8 @@ export const constantRoutes = [
   {
     path: '/config',
     component: Layout,
-    redirect: '/config/index',
+    name: 'ConfigM',
+    meta: {title: '配置'},
     children: [{
       path: 'index',
       name: 'Config',
