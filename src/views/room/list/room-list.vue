@@ -151,12 +151,17 @@
             <span>{{ row.chargePerson }}</span>
           </template>
         </el-table-column>
-        <el-table-column width="200" label="操作" align="center">
+        <el-table-column width="250" label="操作" align="center">
           <template slot-scope="{row, $index}">
             <el-button @click="handleRoomReservationClick(row, $index)" v-waves
                        style="margin: 3px;" type="primary"
                        size="mini">
               预约详情
+            </el-button>
+            <el-button @click="handleRoomAttendanceClick(row, $index)" v-waves
+                       style="margin: 3px;" type="primary"
+                       size="mini">
+              签到详情
             </el-button>
             <el-button @click="handleAccessRecordClick(row, $index)" v-waves
                        style="margin-left: 3px;" type="primary"
@@ -233,6 +238,16 @@
       direction="rtl">
       <room-access-record-list :room-id="currentRoomId"/>
     </el-drawer>
+
+    <el-drawer
+      size="65%"
+      title="签到详情"
+      :show-close="false"
+      :visible.sync="accessAttendanceDrawer"
+      direction="rtl">
+      <room-attendance-list :room-id="currentRoomId"/>
+    </el-drawer>
+
   </div>
 </template>
 
@@ -246,6 +261,7 @@ import RoomUpdate from "@/views/room/list/component/room-update";
 import RoomAdd from "@/views/room/list/component/room-add";
 import RoomAccessRecordList from "@/views/room/list/component/room-access-record-list";
 import RoomQrCodeGenerate from "@/views/room/list/component/room-qr-code-generate";
+import RoomAttendanceList from "@/views/room/list/component/room-attendance-list";
 
 import clip from '@/utils/clipboard' // use clipboard directly
 import clipboard from '@/directive/clipboard/index.js'
@@ -294,6 +310,7 @@ export default {
     RoomReservationList,
     RoomUpdate,
     RoomAdd,
+    RoomAttendanceList,
     RoomAccessRecordList,
     RoomQrCodeGenerate
   },
@@ -325,6 +342,7 @@ export default {
       addRoomDrawer: false,
       currentRoomId: '',
       accessRecordDrawer: false,
+      accessAttendanceDrawer:false,
       currentUserId: '',
       isSuperAdmin: false,
       roomSelectedList: [],
@@ -403,6 +421,10 @@ export default {
     handleAccessRecordClick(row, index) {
       this.currentRoomId = row.id
       this.accessRecordDrawer = true
+    },
+    handleRoomAttendanceClick(row, index){
+      this.currentRoomId = row.id
+      this.accessAttendanceDrawer = true
     },
     handleSelectionChange(selectedVal) {
       this.roomSelectedList = selectedVal;

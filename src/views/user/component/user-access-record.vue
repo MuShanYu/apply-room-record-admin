@@ -86,11 +86,6 @@
             <span>{{ row.category }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="签到时长(近一周)" align="center">
-          <template slot-scope="{row}">
-            <span>{{ allTime }}</span>
-          </template>
-        </el-table-column>
         <el-table-column label="扫码进入次数" align="center">
           <template slot-scope="{row}">
             <span>{{ row.entryTimes }}</span>
@@ -146,7 +141,6 @@
         countTotal: 0,
         countLoading: false,
         btnLoading: false,
-        allTime: 0
       }
     },
     created() {
@@ -174,26 +168,6 @@
           this.recordList = res.pageData
           this.total = res.totalSize
           this.listLoading = false
-          res.pageData.forEach(element => {
-            const currentTimeMillis = Date.now();
-            const oneWeekMillis = 7 * 24 * 60 * 60 * 1000;
-            const oneWeekAgoMillis = currentTimeMillis - oneWeekMillis;
-            const twoHour = 1440000;
-            if (element.entryTime >= currentTimeMillis) {
-              if (element.outTime != null) {
-                this.allTime += (element.outTime - element.entryTime)
-              } else if (currentTimeMillis - element.entryTime < twoHour) {
-                this.allTime += (currentTimeMillis - currentTimeMillis)
-              } else {
-                this.allTime += 1440000
-              }
-            } else if (element.outTime != null & element.outTime > oneWeekAgoMillis) {
-              this.allTime += (element.outTime - oneWeekAgoMillis)
-            } else if (element.outTime == null & oneWeekAgoMillis - element.entryTime < twoHour) {
-              this.allTime += (element.entryTime + twoHour - oneWeekAgoMillis)
-            }
-          });
-          this.allTime = (this.allTime / 1000 / 3600).toFixed(1)
           // console.log(this.recordList);
         }).catch(e => {
           this.listLoading = false
