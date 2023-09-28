@@ -130,6 +130,8 @@ import LineMarker from "@/components/Charts/LineMarker";
 import PieChart from "@/components/Charts/PieChart";
 import BarChart from "@/components/Charts/BarChart";
 import LineChart from "@/components/Charts/LineChart";
+import configApi from "@/api/config";
+import Cookies from "js-cookie";
 
 export default {
   name: 'Dashboard',

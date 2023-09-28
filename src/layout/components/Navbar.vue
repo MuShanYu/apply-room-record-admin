@@ -1,15 +1,21 @@
 <template>
   <div class="navbar">
-    <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+    <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar"/>
 
-    <breadcrumb class="breadcrumb-container" />
+    <breadcrumb class="breadcrumb-container"/>
 
     <div class="right-menu">
+      <template v-if="device !== 'mobile'">
+        <div @click="handleUpdateWeb" class="right-menu-item hover-effect">
+          更新<svg-icon icon-class="fullscreen" />
+        </div>
+      </template>
+
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-<!--          <span v-if="userInfo" style="font-size: 13px;">{{userInfo.nickname}}</span>-->
+          <!--          <span v-if="userInfo" style="font-size: 13px;">{{userInfo.nickname}}</span>-->
           <img :src="config.avatar" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
+          <i class="el-icon-caret-bottom"/>
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/profile/index">
@@ -25,10 +31,15 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import {mapGetters} from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import config from "@/common/sys-config";
+
+import configApi from '@/api/config'
+
+import Cookies from 'js-cookie'
+
 export default {
   components: {
     Breadcrumb,
@@ -37,7 +48,8 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
-      'userInfo'
+      'userInfo',
+      'device'
     ]),
     config() {
       return config
@@ -59,6 +71,43 @@ export default {
       }).catch(() => {
 
       })
+    },
+    handleUpdateWeb() {
+      let key = "webVersion"
+      configApi.querySysConfigByKeyApi(key).then(res => {
+        let configValue = JSON.parse(res.configValue)
+        let localKey = "version";
+        let storedVersion = Cookies.get(localKey)
+        let currentVersion = configValue.currentVersion
+        if (storedVersion) {
+          // 比较版本
+          if (storedVersion !== currentVersion) {
+            this.$message.success({
+              message: '发现新版本，已将版本从' + storedVersion + '更新至' + currentVersion,
+              duration: 3000
+            });
+            setTimeout(() => {
+              window.location.reload();
+              Cookies.set(localKey, currentVersion);
+            }, 3000)
+          } else {
+            this.$message.info({
+              message: '已经是最新版本，无需更新',
+              duration: 3000
+            });
+          }
+        } else {
+          // 存储版本
+          this.$message.success({
+            message: '更新至最新版本' + currentVersion,
+            duration: 3000
+          });
+          setTimeout(() => {
+            Cookies.set(localKey, currentVersion);
+            window.location.reload();
+          }, 3000)
+        }
+      })
     }
   }
 }
@@ -70,7 +119,7 @@ export default {
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
 
   .hamburger-container {
     line-height: 46px;
@@ -78,7 +127,7 @@ export default {
     float: left;
     cursor: pointer;
     transition: background .3s;
-    -webkit-tap-highlight-color:transparent;
+    -webkit-tap-highlight-color: transparent;
 
     &:hover {
       background: rgba(0, 0, 0, .025)
@@ -97,6 +146,7 @@ export default {
     &:focus {
       outline: none;
     }
+
 
     .right-menu-item {
       display: inline-block;
