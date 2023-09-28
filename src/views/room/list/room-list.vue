@@ -168,6 +168,11 @@
                        size="mini">
               足迹详情
             </el-button>
+            <el-button v-waves
+                       style="margin: 3px;" type="primary"
+                       size="mini">
+              签到详情
+            </el-button>
             <el-button v-if="currentUserId === row.chargePersonId || isSuperAdmin"
                        @click="handleRoomUpdateClick(row, $index)" v-waves
                        style="margin: 3px;" type="info" size="mini">
