@@ -31,6 +31,19 @@ export const constantRoutes = [
     }]
   },
   {
+    path: '/notice',
+    component: Layout,
+    redirect: '/notice/index',
+    children: [
+      {
+        path: 'index',
+        name: 'NoticeManager',
+        component: () => import('@/views/notice/notice'),
+        meta: {title: '公告管理', icon: 'notice', noCache: true}
+      }
+    ]
+  },
+  {
     path: '/room',
     component: Layout,
     name: 'Room',

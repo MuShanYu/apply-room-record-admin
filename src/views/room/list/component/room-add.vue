@@ -1,6 +1,6 @@
 <template>
   <div style="margin: 10px;">
-    <el-form :model="room" :rules="rules" ref="ruleForm" label-width="100px">
+    <el-form :model="room" :rules="rules" ref="ruleForm" label-width="130px">
       <el-form-item label="校区" prop="school">
         <el-select style="width: 100%;" v-model="room.school" placeholder="请选择校区(例如:花江校区)">
           <el-option :key="index" v-for="(item, index) in schools" :label="item" :value="item"></el-option>
@@ -23,8 +23,8 @@
       <el-form-item label="负责人姓名" prop="chargePerson">
         <el-input placeholder="请输入该房间的负责人姓名" v-model="room.chargePerson"></el-input>
       </el-form-item>
-      <el-form-item label="负责人电话" prop="chargePersonTel">
-        <el-input placeholder="请输入该房间的负责人电话" v-model="room.chargePersonTel"></el-input>
+      <el-form-item label="负责人工号/学号" prop="stuNum">
+        <el-input placeholder="请输入该房间的负责人工号或学号" v-model="room.stuNum"></el-input>
       </el-form-item>
       <el-form-item label="设备信息" prop="equipmentInfo">
         <el-input placeholder="请输入设备信息(当前房间拥有的设备信息,如电脑、投影仪等)" :rows="4" type="textarea" v-model="room.equipmentInfo"></el-input>
@@ -53,7 +53,7 @@ export default {
         equipmentInfo: '',
         capacity: '',
         chargePerson: '',
-        chargePersonTel: ''
+        stuNum: ''
       },
       btnLoading: false,
       rules: {
@@ -79,9 +79,9 @@ export default {
           {required: true, message: '请填写负责人姓名', trigger: 'blur'},
           {min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur'}
         ],
-        chargePersonTel: [
-          {required: true, message: '请填写房间负责人联系方式', trigger: 'blur'},
-          {min: 11, max: 11, message: '请输入11位联系方式', trigger: 'blur'}
+        stuNum: [
+          {required: true, message: '请填写房间负责人工号或学号', trigger: 'blur'},
+          {min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur'}
         ],
         equipmentInfo: [
           {required: true, message: '请填写设备信息', trigger: 'blur'},

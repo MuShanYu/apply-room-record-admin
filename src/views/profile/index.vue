@@ -18,11 +18,6 @@
               <div style="padding-top: 15px;padding-bottom: 15px;">
                 <span><i style="margin-right: 5px;" class="el-icon-school"></i>学院：{{ userInfo.institute }}</span>
               </div>
-              <div style="padding-bottom: 15px;">
-                <span>
-                  <i style="margin-right: 5px;" class="el-icon-phone-outline"></i>电话：{{ userInfo.tel }}
-                </span>
-              </div>
               <div>
                 <span><i style="margin-right: 5px;" class="el-icon-message"></i>邮箱：{{
                     userInfo.mail === null ? '未填写邮箱' : userInfo.mail
@@ -49,9 +44,6 @@
                       <el-option :key="index" v-for="(item, index) in institutes" :label="item"
                                  :value="item"></el-option>
                     </el-select>
-                  </el-form-item>
-                  <el-form-item label="电话" prop="tel">
-                    <el-input v-model="ruleForm.tel"></el-input>
                   </el-form-item>
                   <el-form-item label="邮箱" prop="mail">
                     <el-input v-model="ruleForm.mail"></el-input>
@@ -90,13 +82,6 @@ import userApi from '@/api/user'
 export default {
   name: "UserProfile",
   data() {
-    const validateTel = (rule, value, callback) => {
-      if (!/^1[3-9]\d{9}$/.test(value)) {
-        callback(new Error('请输入正确的手机号'))
-      } else {
-        callback()
-      }
-    }
     const validateMail = (rule, value, callback) => {
       // 用户填写了邮箱
       if (value !== null && value.length > 0) {
@@ -116,7 +101,6 @@ export default {
         name: '',
         stuNum: '',
         institute: '',
-        tel: '',
         mail: ''
       },
       rules: {
@@ -128,7 +112,6 @@ export default {
           {required: true, message: '请输入您的学号/工号', trigger: 'blur'},
           {min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur'}
         ],
-        tel: [{required: true, trigger: 'blur', validator: validateTel}],
         mail: [{required: false, trigger: 'blur', validator: validateMail}],
         institute: [
           {required: true, message: '请选择学院', trigger: 'change'}
@@ -154,7 +137,6 @@ export default {
       this.ruleForm.name = this.userInfo.name
       this.ruleForm.stuNum = this.userInfo.stuNum
       this.ruleForm.institute = this.userInfo.institute
-      this.ruleForm.tel = this.userInfo.tel
       this.ruleForm.mail = this.userInfo.mail
       this.ruleForm.id = this.userInfo.id
       this.loading = false
@@ -173,7 +155,6 @@ export default {
             newUserInfo.name = this.ruleForm.name
             newUserInfo.stuNum = this.ruleForm.stuNum
             newUserInfo.institute = this.ruleForm.institute
-            newUserInfo.tel = this.ruleForm.tel
             newUserInfo.mail = this.ruleForm.mail
             this.$store.dispatch('user/updateUserInfo', newUserInfo).then(() => {
               this.$message.success('信息修改成功')

@@ -44,12 +44,12 @@
       :modal-append-to-body="true"
       :visible.sync="updateCharger">
       <div style="margin: 10px;">
-        <el-form :model="charger" :rules="chargerRules" ref="chargerRuleForm" label-width="100px">
+        <el-form :model="charger" :rules="chargerRules" ref="chargerRuleForm" label-width="130px">
           <el-form-item label="负责人姓名" prop="chargePerson">
             <el-input placeholder="请输入该房间的负责人姓名" v-model="charger.chargePerson"></el-input>
           </el-form-item>
-          <el-form-item label="负责人电话" prop="chargePersonTel">
-            <el-input placeholder="请输入该房间的负责人电话" v-model="charger.chargePersonTel"></el-input>
+          <el-form-item label="负责人学号/工号" prop="chargePersonStNum">
+            <el-input placeholder="请输入该房间的负责人学号或工号" v-model="charger.chargePersonStNum"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button :loading="updateChargerLoading" @click="handleUpdateCharger" type="primary">修改</el-button>
@@ -118,16 +118,16 @@ export default {
           {required: true, message: '请填写负责人姓名', trigger: 'blur'},
           {min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur'}
         ],
-        chargePersonTel: [
-          {required: true, message: '请填写房间负责人联系方式', trigger: 'blur'},
-          {min: 11, max: 11, message: '请输入11位联系方式', trigger: 'blur'}
+        chargePersonStNum: [
+          {required: true, message: '请填写房间负责人工号或学号', trigger: 'blur'},
+          {min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur'}
         ],
       },
       updateCharger: false,
       charger: {
         id: '',
         chargePerson: '',
-        chargePersonTel: ''
+        chargePersonStNum: ''
       },
       updateChargerLoading: false
     };
@@ -180,7 +180,7 @@ export default {
             this.updateCharger = false // 关闭表单
             this.charger = {
               chargePerson: '',
-              chargePersonTel: ''
+              chargePersonStNum: ''
             }
             this.$message.success("修改成功")
             // 发送修改成功的对象

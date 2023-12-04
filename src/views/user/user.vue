@@ -58,11 +58,6 @@
             <span>{{ row.institute }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="联系电话" align="center">
-          <template slot-scope="{row}">
-            <span @click="handleUpdateUserTelClick(row)" class="link-type">{{ row.tel }}</span>
-          </template>
-        </el-table-column>
         <el-table-column label="注册日期" align="center">
           <template slot-scope="{row}">
             <span>{{ row.createTime | parseTime }}</span>
@@ -76,7 +71,7 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column width="200" label="操作" align="center">
+        <el-table-column width="300" label="操作" align="center">
           <template slot-scope="{row, $index}">
             <el-button @click="handleUserAccessRecordClick(row, $index)" v-waves style="margin: 3px;" type="primary"
                        size="mini">
@@ -264,30 +259,6 @@ export default {
     handleUserAccessRecordClick(row, index) {
       this.recordUserId = row.id
       this.accessRecordDrawer = true
-    },
-    handleUpdateUserTelClick(row) {
-      if (!this.isSuperAdmin) {
-        this.$message.error('您的权限不足，该修改操作需要超级管理员权限')
-        return
-      }
-      this.$prompt('请输入要更改的新手机号', '更改用户手机号', {
-        confirmButtonText: '更改',
-        cancelButtonText: '取消',
-        inputPattern: /^1[3-9]\d{9}$/,
-        inputErrorMessage: '请输入正确的手机号'
-      }).then(({value}) => {
-        this.$message.info('正在完成操作，请稍等')
-        let obj = {
-          userId: row.id,
-          tel: value
-        }
-        userApi.updateUserTel(obj).then(() => {
-          row.tel = value.replace(/^(\d{3})\d{4}(\d+)/, '$1****$2');
-          this.$message.success('修改成功')
-        })
-      }).catch(() => {
-
-      });
     },
     handleUpdateUserNameClick(row) {
       if (!this.isSuperAdmin) {

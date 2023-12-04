@@ -55,10 +55,10 @@ const mutations = {
 const actions = {
   // user login
   login({ commit }, userInfo) {
-    const { tel, pwd } = userInfo
+    const { stuNum, pwd } = userInfo
     return new Promise((resolve, reject) => {
       let userLoginDTO = {
-        tel: tel.trim(),
+        stuNum: stuNum.trim(),
         pwd: pwd
       }
       userApi.login(userLoginDTO).then(data => {
