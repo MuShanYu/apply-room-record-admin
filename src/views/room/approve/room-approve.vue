@@ -405,6 +405,7 @@ export default {
             .passOrRejectRoomReserve(item.id, true)
             .then(() => {
               this.getRoomReservationReviewedList();
+              this.handleDayChange();
               this.$message.success("审核成功结果已用邮件方式通知申请人");
             })
             .catch(() => {
@@ -429,6 +430,7 @@ export default {
             )
             .then(() => {
               this.getRoomReservationReviewedList();
+              this.handleDayChange();
               this.form.rejectReason = "";
               this.$refs.form.resetFields();
               this.rejectBtnLoading = false;
@@ -461,6 +463,7 @@ export default {
             .then(() => {
               // 刷新
               this.getRoomReservationReviewedList();
+              this.handleDayChange();
               this.$message.success("删除成功");
             })
             .catch(() => {
@@ -481,6 +484,8 @@ export default {
       if (tab.name != 2) {
         this.overtime = false;
       }
+      this.reviewDate = [];
+      this.reviewedDate = [];
       this.currentTime = new Date().getTime();
       this.getRoomReservationReviewedList();
     },
