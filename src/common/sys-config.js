@@ -13,7 +13,7 @@ const CONFIG = {
     logo: 'https://www.mushanyu.xyz/logo.png',
     avatar: 'https://www.mushanyu.xyz/header1.gif',
     emptyImg: 'https://www.mushanyu.xyz/empty.png',
-    qrCodeUrlPrefix: 'https://www.mushanyu.xyz:8800?target=',
+    qrCodeUrlPrefix: 'http://101.42.135.147:8800?target=',
     roomExcelHref: 'https://mushanyu-file-save.oss-cn-beijing.aliyuncs.com/project/apply-room-record/%E6%88%BF%E9%97%B4%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF.xlsx',
     userExcelHref: 'https://mushanyu-file-save.oss-cn-beijing.aliyuncs.com/project/apply-room-record/%E4%BA%BA%E5%91%98%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF.xlsx'
   }
