@@ -60,6 +60,15 @@
       <div class="tips">
         <span>密码和基础信息修改请在H5客户端进行！</span>
       </div>
+
+      <div style="padding: 25px;display: flex;align-items: center;justify-content: center;margin-top: 150px;">
+        <el-image
+          style="width: 20px; height: 20px;margin-right: 5px;"
+          src="https://beian.mps.gov.cn/img/logo01.dd7ff50e.png"
+          fit="cover"></el-image>
+        <a style="color: #909399;" href="https://beian.miit.gov.cn/" target="_blank">皖公网安备34162102000332号</a>
+      </div>
+
     </el-form>
   </div>
 </template>
