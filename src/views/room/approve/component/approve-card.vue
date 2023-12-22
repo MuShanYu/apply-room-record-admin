@@ -54,7 +54,7 @@ const statusMap = {
     status: '',
     msg: '待审批'
   },
-  ban: {
+  rejected: {
     status: 'danger',
     msg: '驳回'
   },
@@ -91,42 +91,42 @@ export default {
       if (this.currentTime > this.room.reserveEndTime) {
         isTimeout = true
       }
-      return this.room.state === 2 || this.room.state === 3 || this.room.state === 6 || isTimeout
+      return this.room.state === 1 || this.room.state === 2 || this.room.state === 4 || isTimeout
     },
     rejectBtn() {
       let isTimeout = false
       if (this.currentTime > this.room.reserveEndTime) {
         isTimeout = true
       }
-      return this.room.state === 3 || this.room.state === 4 || this.room.state === 6 || isTimeout
+      return this.room.state === 2 || this.room.state === 3 || this.room.state === 4 || isTimeout
     }
   },
   filters: {
     msgFilter(status) {
       switch (status) {
-        case 4:
-          return statusMap.ban.msg
+        case 3:
+          return statusMap.rejected.msg
         case 0:
           return statusMap.notReviewed.msg
-        case 3:
-          return statusMap.userCanceled.msg
         case 2:
+          return statusMap.userCanceled.msg
+        case 1:
           return statusMap.reviewed.msg
-        case 6:
+        case 4:
           return statusMap.timeOut.msg
       }
     },
     colorFilter(status) {
       switch (status) {
-        case 4:
-          return statusMap.ban.status
+        case 3:
+          return statusMap.rejected.status
         case 0:
           return statusMap.notReviewed.status
-        case 3:
-          return statusMap.userCanceled.status
         case 2:
+          return statusMap.userCanceled.status
+        case 1:
           return statusMap.reviewed.status
-        case 6:
+        case 4:
           return statusMap.timeOut.status
       }
     },

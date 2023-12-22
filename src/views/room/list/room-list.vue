@@ -177,7 +177,7 @@
             <el-tooltip effect="light" placement="bottom-start">
               <el-button v-if="row.chargePersonId === currentUserId || isSuperAdmin" type="danger" v-waves plain
                          @click="handleDisableClick(row)" style="margin: 3px;" size="mini">
-                {{ row.state === -1 ? '解除' : '禁用' }}
+                {{ row.state === 2 ? '解除' : '禁用' }}
               </el-button>
               <div slot="content">
                 禁用是指该房间相关数据将不会再被统计，<br/>但是不影响旧数据的查看与统计
@@ -286,22 +286,22 @@ export default {
   filters: {
     roomStateFilter(state) {
       switch (state) {
-        case -1:
-          return '禁用'
+        case 0:
+          return '禁止预约'
         case 1:
           return '可预约'
-        case 5:
-          return '禁止预约'
+        case 2:
+          return '禁用'
       }
     },
     stateTagFilter(state) {
       switch (state) {
-        case -1:
-          return 'danger'
+        case 0:
+          return 'info'
         case 1:
           return 'success'
-        case 5:
-          return 'info'
+        case 2:
+          return 'danger'
       }
     }
   },
@@ -324,7 +324,7 @@ export default {
         school: '',
         category: '',
         roomName: '',
-        chargeUserId: null
+        chargePersonId: null
       },
       listLoading: false,
       detailListLoading: false,
@@ -352,7 +352,7 @@ export default {
   },
   created() {
     this.currentUserId = this.userInfo.id
-    this.query.chargeUserId = this.userInfo.id
+    this.query.chargePersonId = this.userInfo.id
     this.isSuperAdmin = this.roles.some(v => v === 'super-admin')
     this.getRoomList()
     this.getRoomClassifyInfo()
@@ -399,11 +399,11 @@ export default {
       }).then(() => {
         this.$message.info('正在完成操作，请您耐心等待')
         roomApi.disableRoom(room.id).then(() => {
-          if (room.state === -1) {
+          if (room.state === 2) {
             room.state = 1
             this.$message.success("解除禁用成功")
           } else {
-            room.state = -1
+            room.state = 2
             this.$message.success("禁用成功")
           }
         })
@@ -461,11 +461,11 @@ export default {
     doDisableReserveRoom(room) {
       return new Promise((resolve, reject) => {
         roomApi.disableReserveRoom(room.id).then(() => {
-          if (room.state === 5) {
+          if (room.state === 0) {
             room.state = 1
             this.$message.success('已解除' + room.roomName + '的禁止预约')
           } else {
-            room.state = 5
+            room.state = 0
             this.$message.success('已禁止预约房间' + room.roomName)
           }
           resolve()
@@ -513,11 +513,11 @@ export default {
       })
     },
     getMyChargeRoom() {
-      if (this.query.chargeUserId === null) {
-        this.query.chargeUserId = this.userInfo.id
+      if (this.query.chargePersonId === null) {
+        this.query.chargePersonId = this.userInfo.id
         this.eyeIcon = 'eye'
       } else {
-        this.query.chargeUserId = null
+        this.query.chargePersonId = null
         this.eyeIcon = 'eye-open'
       }
       this.query.page = 1

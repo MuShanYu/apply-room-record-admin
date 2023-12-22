@@ -1,5 +1,6 @@
 const CONFIG = {
   development: {
+    // baseUrl: 'https://apply-room-record-83857-6-1322981911.sh.run.tcloudbase.com',
     baseUrl: 'http://localhost:8500',
     logo: 'http://localhost:9528/logo.png',
     avatar: 'http://localhost:9528/header1.gif',

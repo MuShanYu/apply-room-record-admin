@@ -99,7 +99,7 @@
             />
           </div>
         </el-tab-pane>
-        <el-tab-pane v-loading="tabReviewedLoading" label="已审批" name="2">
+        <el-tab-pane v-loading="tabReviewedLoading" label="已审批" name="1">
           <div
             style="
               margin-top: 10px;
@@ -155,7 +155,7 @@
             />
           </div>
         </el-tab-pane>
-        <el-tab-pane v-loading="tabRejectLoading" label="已驳回" name="4">
+        <el-tab-pane v-loading="tabRejectLoading" label="已驳回" name="3">
           <div
             style="
               display: flex;
@@ -184,7 +184,7 @@
             />
           </div>
         </el-tab-pane>
-        <el-tab-pane v-loading="tabCancelLoading" label="用户已取消" name="3">
+        <el-tab-pane v-loading="tabCancelLoading" label="用户已取消" name="2">
           <div
             style="
               display: flex;
@@ -213,7 +213,7 @@
             />
           </div>
         </el-tab-pane>
-        <el-tab-pane v-loading="tabTimeoutLoading" label="超时未处理" name="6">
+        <el-tab-pane v-loading="tabTimeoutLoading" label="超时未处理" name="4">
           <div
             style="
               display: flex;
@@ -405,7 +405,7 @@ export default {
             .passOrRejectRoomReserve(item.id, true)
             .then(() => {
               this.getRoomReservationReviewedList();
-              this.handleDayChange();
+              // this.handleDayChange();
               this.$message.success("审核成功结果已用邮件方式通知申请人");
             })
             .catch(() => {
@@ -429,8 +429,9 @@ export default {
               this.form.rejectReason
             )
             .then(() => {
+              console.log('aaaaa');
               this.getRoomReservationReviewedList();
-              this.handleDayChange();
+              // this.handleDayChange();
               this.form.rejectReason = "";
               this.$refs.form.resetFields();
               this.rejectBtnLoading = false;
@@ -438,6 +439,7 @@ export default {
               this.$message.success("审核驳回结果已用邮件方式通知申请人");
             })
             .catch(() => {
+              console.log('bbbb');
               this.tabLoading(this.query.state, false);
             });
         } else {
@@ -507,7 +509,7 @@ export default {
 
       //时间筛选
       let dayRoomList = null;
-      if (date && date.length == 1) {
+      if (date && date.length === 1) {
         const now = new Date();
         now.setHours(0, 0, 0, 0);
         now.setDate(now.getDate() + (date[0] - 1));
@@ -524,7 +526,7 @@ export default {
       }
 
       //时间筛选为空，不需要超时筛选
-      if (dayRoomList == []) {
+      if (dayRoomList === []) {
         return this.assignmentRightRoomList(dayRoomList, this.query.state);
       }
 
@@ -547,16 +549,16 @@ export default {
         case "0":
           that.tabReviewLoading = !!start;
           break;
-        case "2":
+        case "1":
           that.tabReviewedLoading = !!start;
           break;
-        case "3":
+        case "2":
           that.tabCancelLoading = !!start;
           break;
-        case "4":
+        case "3":
           that.tabRejectLoading = !!start;
           break;
-        case "6":
+        case "4":
           that.tabTimeoutLoading = !!start;
           break;
       }
@@ -567,16 +569,16 @@ export default {
         case "0":
           that.roomReviewList = roomList;
           break;
-        case "2":
+        case "1":
           that.roomReviewedList = roomList;
           break;
-        case "3":
+        case "2":
           that.roomCancelList = roomList;
           break;
-        case "4":
+        case "3":
           that.roomRejectList = roomList;
           break;
-        case "6":
+        case "4":
           that.roomTimeoutList = roomList;
           break;
       }
