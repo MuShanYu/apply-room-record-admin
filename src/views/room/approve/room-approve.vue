@@ -465,7 +465,7 @@ export default {
             .then(() => {
               // 刷新
               this.getRoomReservationReviewedList();
-              this.handleDayChange();
+              // this.handleDayChange();
               this.$message.success("删除成功");
             })
             .catch(() => {
