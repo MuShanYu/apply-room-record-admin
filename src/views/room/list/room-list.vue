@@ -18,7 +18,7 @@
         <el-button @click="handleBatchDisableRoom" v-waves
                    type="danger"
                    icon="el-icon-circle-close">
-          批量禁用
+          批量禁用/解除
         </el-button>
       </div>
       <div id="room-list-select-filter" style="display: flex;margin-right: 10px;margin-left: 10px;">
@@ -390,7 +390,6 @@ export default {
       this.updateRoomDrawer = false
     },
     handleDisableClick(room) {
-      console.log(room);
       let text = room.state === 1 ? '确定要禁用该房间吗?' : '确定要解除禁用该房间吗?'
       this.$confirm(text, '提示', {
         confirmButtonText: '确定',
@@ -498,11 +497,11 @@ export default {
     doDisableRoom(room) {
       return new Promise((resolve, reject) => {
         roomApi.disableRoom(room.id).then(() => {
-          if (room.state === -1) {
+          if (room.state === 2) {
             room.state = 1
             this.$message.success(room.roomName + "解除禁用成功")
           } else {
-            room.state = -1
+            room.state = 2
             this.$message.success(room.roomName + "禁用成功")
           }
           resolve()

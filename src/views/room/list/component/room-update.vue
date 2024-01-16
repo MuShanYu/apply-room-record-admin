@@ -127,7 +127,8 @@ export default {
       charger: {
         id: '',
         chargePerson: '',
-        chargePersonStNum: ''
+        chargePersonStNum: '',
+        originChargePersonId: ''
       },
       updateChargerLoading: false
     };
@@ -174,6 +175,7 @@ export default {
           }
           this.updateChargerLoading = true
           this.charger.id = this.currentRoom.id
+          this.charger.originChargePersonId = this.currentRoom.chargePersonId
           roomApi.updateRoomCharger(this.charger).then(() => {
             this.updateChargerLoading = false
             this.currentRoom.chargePerson = this.charger.chargePerson

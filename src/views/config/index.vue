@@ -73,7 +73,7 @@
       :direction="'rtl'">
       <template v-slot:default>
         <div style="display: flex;justify-content: space-between;padding: 10px;background-color: #f7f7f7">
-          <el-input show-word-limit maxlength="32" v-model="currentConfig.configKey" style="width: 45%;"
+          <el-input :disabled="true" show-word-limit maxlength="32" v-model="currentConfig.configKey" style="width: 45%;"
                     placeholder="请输入配置名称"></el-input>
           <el-input show-word-limit maxlength="64" v-model="currentConfig.configDesc"
                     style="width: 55%;margin-left: 5px;margin-right: 5px;"

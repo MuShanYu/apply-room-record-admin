@@ -22,7 +22,7 @@
         fit
         highlight-current-row
         style="width: 100%;">
-        <el-table-column label="预约人" align="center">
+        <el-table-column label="预约人" align="center" width="100">
           <template slot-scope="{row}">
             <span>{{ row.name }}</span>
           </template>
@@ -71,7 +71,7 @@ import Pagination from "@/components/Pagination";
 import roomApi from "@/api/room";
 const statusMap = {
   notReviewed: {
-    status: 'warning',
+    status: 'primary',
     msg: '待审批'
   },
   ban: {
@@ -87,7 +87,7 @@ const statusMap = {
     msg: '用户取消'
   },
   timeOut: {
-    status: 'info',
+    status: 'warning',
     msg: '超时未处理'
   }
 }
@@ -96,33 +96,29 @@ export default {
   filters: {
     statusFilter(status) {
       switch (status) {
-        case 1:
-          return 'primary'
-        case -1:
-          return 'info'
-        case 4:
-          return statusMap.ban.status
         case 0:
           return statusMap.notReviewed.status
-        case 3:
-          return statusMap.userCanceled.status
-        case 2:
+        case 1:
           return statusMap.reviewed.status
-        case 6:
+        case 2:
+          return statusMap.userCanceled.status
+        case 3:
+          return statusMap.ban.status
+        case 4:
           return statusMap.timeOut.status
       }
     },
     msgFilter(status) {
       switch (status) {
-        case 4:
-          return statusMap.ban.msg
         case 0:
           return statusMap.notReviewed.msg
-        case 3:
-          return statusMap.userCanceled.msg
-        case 2:
+        case 1:
           return statusMap.reviewed.msg
-        case 6:
+        case 2:
+          return statusMap.userCanceled.msg
+        case 3:
+          return statusMap.ban.msg
+        case 4:
           return statusMap.timeOut.msg
       }
     },

@@ -2,37 +2,41 @@
   <div class="card-container">
     <!-- tag -->
     <div class="card-tag-position">
-      <el-tag :type="room.state | colorFilter">{{ room.state | msgFilter }}</el-tag>
+      <el-tag size="small" :type="roomReservation.state | statusFilter">{{ roomReservation.state | msgFilter }}</el-tag>
     </div>
     <!--header-->
     <div class="card-title">
-      {{ room.name }}的{{ room.roomName }}预约申请({{ room.createTime | parseTime }})
+      <div style="font-weight: bold;">
+        {{ roomReservation.roomName }}
+      </div>
+      <div style="color: #909399;font-size: 14px;">
+        {{ roomReservation.createTime | parseTime('{y}年{m}月{d}日 {h}:{i}') }}
+      </div>
+    </div>
+    <div class="card-time">
+      预约时间：{{ roomReservation.reserveStartTime | parseTime('{y}年{m}月{d}日 {h}:{i}') }}~{{ roomReservation.reserveEndTime | parseTime('{h}:{i}') }}
     </div>
     <!--body-->
     <div style="margin-bottom: 15px;">
+      <div class="card-reason">
+        申请理由：{{ roomReservation.roomUsage }}
+      </div>
       <div class="card-tip">
         <div>
-          {{ room.school }}
+          <i class="el-icon-postcard"></i> {{ roomReservation.stuNum }}
         </div>
         <div>
-          {{ room.teachBuilding }}
+          <i class="el-icon-user"></i> {{ roomReservation.name }}
         </div>
         <div>
-          {{ room.category }}
+          <i class="el-icon-location-outline"></i> {{ roomReservation.teachBuilding }}
         </div>
       </div>
-      <div class="card-reason">
-        申请理由：{{ room.roomUsage }}
-      </div>
+
     </div>
     <!--footer-->
-    <div class="card-time">
-      <div>
-        预约起始时间：{{ room.reserveStartTime | parseTime }}
-      </div>
-      <div>
-        预约结束时间：{{ room.reserveEndTime | parseTime }}
-      </div>
+    <div v-if="roomReservation.state !== 0" style="font-size: 14px;color: #909399;">
+      备注： {{roomReservation.remark === '' ? '无' : roomReservation.remark}}
     </div>
     <div style="margin-top: 15px;text-align: right;">
       <el-button @click="handleRoomReservationPassClick"
@@ -51,10 +55,10 @@
 <script>
 const statusMap = {
   notReviewed: {
-    status: '',
+    status: 'primary',
     msg: '待审批'
   },
-  rejected: {
+  ban: {
     status: 'danger',
     msg: '驳回'
   },
@@ -68,13 +72,13 @@ const statusMap = {
   },
   timeOut: {
     status: 'warning',
-    msg: '未处理'
+    msg: '超时未处理'
   }
 }
 export default {
   name: "approve-card",
   props: {
-    room: {
+    roomReservation: {
       type: Object,
       default() {
         return {}
@@ -88,44 +92,44 @@ export default {
   computed: {
     passBtn() {
       let isTimeout = false
-      if (this.currentTime > this.room.reserveEndTime) {
+      if (this.currentTime > this.roomReservation.reserveEndTime) {
         isTimeout = true
       }
-      return this.room.state === 1 || this.room.state === 2 || this.room.state === 4 || isTimeout
+      return this.roomReservation.state !== 0  || isTimeout
     },
     rejectBtn() {
       let isTimeout = false
-      if (this.currentTime > this.room.reserveEndTime) {
+      if (this.currentTime > this.roomReservation.reserveEndTime) {
         isTimeout = true
       }
-      return this.room.state === 2 || this.room.state === 3 || this.room.state === 4 || isTimeout
+      return this.roomReservation.state !== 0 || isTimeout
     }
   },
   filters: {
     msgFilter(status) {
       switch (status) {
-        case 3:
-          return statusMap.rejected.msg
         case 0:
           return statusMap.notReviewed.msg
-        case 2:
-          return statusMap.userCanceled.msg
         case 1:
           return statusMap.reviewed.msg
+        case 2:
+          return statusMap.userCanceled.msg
+        case 3:
+          return statusMap.ban.msg
         case 4:
           return statusMap.timeOut.msg
       }
     },
-    colorFilter(status) {
+    statusFilter(status) {
       switch (status) {
-        case 3:
-          return statusMap.rejected.status
         case 0:
           return statusMap.notReviewed.status
-        case 2:
-          return statusMap.userCanceled.status
         case 1:
           return statusMap.reviewed.status
+        case 2:
+          return statusMap.userCanceled.status
+        case 3:
+          return statusMap.ban.status
         case 4:
           return statusMap.timeOut.status
       }
@@ -162,34 +166,37 @@ export default {
   color: #303133;
   margin-bottom: 15px;
   text-align: center;
+  display: flex;
+  justify-content: space-between;
 }
 
 .card-tip {
   display: flex;
   justify-content: space-between;
-  font-size: 12px;
+  font-size: 14px;
   color: #909399;
+  margin-top: 15px;
 }
 
 .card-reason {
   margin-top: 15px;
   word-break: break-all;
   font-size: 14px;
-  color: #606266;
+  color: #909399;
 }
 
 .card-tag-position {
   position: absolute;
   right: 0;
   top: 0;
-  padding: 3px;
   font-size: 13px;
-  color: #606266;
+  color: #909399;
 }
 
 .card-time {
-  font-size: 12px;
-  color: #909399;
+  font-size: 14px;
+  color: #303133;
+  font-weight: bold;
   display: flex;
   justify-content: space-between;
 }
