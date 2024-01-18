@@ -21,6 +21,7 @@ service.interceptors.request.use(
     if (store.getters.token) {
       config.headers['token'] = getToken()
     }
+    // console.log(config);
     return config
   },
   error => {
@@ -33,6 +34,7 @@ service.interceptors.request.use(
 // response interceptor
 service.interceptors.response.use(
   response => {
+    // console.log(response);
     // 文件下载
     if (response.config.responseType === 'blob') {
       return response
@@ -73,7 +75,7 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log('err' + error) // for debug
+    console.log(error) // for debug
     Message({
       message: error.message,
       type: 'error',
