@@ -19,7 +19,7 @@
         <el-input
           ref="stuNum"
           v-model="loginForm.stuNum"
-          placeholder="请输入学号"
+          placeholder="请输入学号/工号"
           name="stuNum"
           type="text"
           tabindex="1"
@@ -62,11 +62,7 @@
       </div>
 
       <div style="padding: 25px;display: flex;align-items: center;justify-content: center;margin-top: 150px;">
-        <el-image
-          style="width: 20px; height: 20px;margin-right: 5px;"
-          src="https://beian.mps.gov.cn/img/logo01.dd7ff50e.png"
-          fit="cover"></el-image>
-        <a style="color: #909399;" href="https://beian.miit.gov.cn/" target="_blank">皖公网安备34162102000332号</a>
+        <a style="color: #909399;" href="https://beian.miit.gov.cn/" target="_blank">皖ICP备2022007174号-3</a>
       </div>
 
     </el-form>

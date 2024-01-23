@@ -9,11 +9,7 @@
       </div>
       <app-main/>
       <div style="background-color: #ffffff;;padding: 25px;display: flex;align-items: center;justify-content: center;">
-        <el-image
-          style="width: 20px; height: 20px;margin-right: 5px;"
-          src="https://beian.mps.gov.cn/img/logo01.dd7ff50e.png"
-          fit="cover"></el-image>
-        <a style="color: #909399;" href="https://beian.miit.gov.cn/" target="_blank">皖公网安备34162102000332号</a>
+        <a style="color: #909399;" href="https://beian.miit.gov.cn/" target="_blank">皖ICP备2022007174号-3</a>
       </div>
 <!--      <right-panel ref="rightPanel" v-if="showSettings">-->
 <!--        <settings @handleShowHelpClick="handleShowHelpClick"/>-->
