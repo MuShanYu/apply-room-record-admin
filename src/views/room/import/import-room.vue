@@ -52,9 +52,9 @@
             <span>{{ row.chargePerson }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="负责人联系方式" align="center">
+        <el-table-column label="负责人工号/学号" align="center">
           <template slot-scope="{row}">
-            <span>{{ row.chargePersonTel }}</span>
+            <span>{{ row.stuNum }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -172,7 +172,7 @@ export default {
           equipmentInfo: v['设备信息'],
           capacity: v['容量'],
           chargePerson: v['负责人姓名'],
-          chargePersonTel: v['负责人联系方式']
+          stuNum: v['负责人工号/学号']
         }
         await this.insertRoom(room)
       }

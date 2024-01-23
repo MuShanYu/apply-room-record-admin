@@ -16,15 +16,15 @@
       <el-table :data="errorData" border highlight-current-row style="width: 100%;margin-top:20px;">
         <el-table-column
           prop="stuNum"
-          label="工号/学号">
+          label="学号/工号">
         </el-table-column>
         <el-table-column
           prop="name"
           label="姓名">
         </el-table-column>
         <el-table-column
-          prop="tel"
-          label="联系方式">
+          prop="mail"
+          label="邮箱">
         </el-table-column>
         <el-table-column
           prop="institute"
@@ -49,6 +49,7 @@ import UploadExcelComponent from '@/components/UploadExcel/index.vue'
 import userApi from '@/api/user'
 
 import config from "@/common/sys-config";
+import el from "element-ui/src/locale/lang/el";
 
 export default {
   name: 'UploadExcel',
@@ -71,7 +72,7 @@ export default {
       resTitle: '',
       showResult: false,
       isReUpload: false,
-      loading: false
+      loading: false,
     }
   },
   methods: {
@@ -99,27 +100,24 @@ export default {
       return false
     },
     handleSuccess({results, header}) {
-      this.$message.success('数据解析成功，请查看，确认后一键上传')
+      this.$message.success('数据解析成功，请查看确认后一键上传')
       this.tableData = results
       this.tableHeader = header
       this.showConfirm = true
     },
     handleUpload() {
-      if (!('工号/学号' in this.tableData[0])) {
-        this.$message.error("请上传正确格式的数据，请参看模板上传")
-        return
-      }
-      this.loading = true
       let users = []
       this.tableData.forEach(v => {
         let user = {
-          stuNum: v['工号/学号'],
+          stuNum: v['学号/工号'],
           name: v['姓名'],
           institute: v['学院'],
-          tel: v['联系方式']
+          mail: v['邮箱']
         }
         users.push(user)
       })
+      console.log(users);
+      this.loading = true
       userApi.batchInsertUser(users).then(data => {
         this.errorData = data.errorData
         this.errorMsg = data.errorMsg
