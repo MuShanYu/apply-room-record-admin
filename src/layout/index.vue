@@ -5,15 +5,15 @@
     <div class="main-container">
       <div :class="{'fixed-header':fixedHeader}">
         <navbar/>
-          <tags-view v-if="needTagsView"/>
+        <tags-view v-if="needTagsView"/>
       </div>
       <app-main/>
       <div style="background-color: #ffffff;;padding: 25px;display: flex;align-items: center;justify-content: center;">
         <a style="color: #909399;" href="https://beian.miit.gov.cn/" target="_blank">皖ICP备2022007174号-3</a>
       </div>
-<!--      <right-panel ref="rightPanel" v-if="showSettings">-->
-<!--        <settings @handleShowHelpClick="handleShowHelpClick"/>-->
-<!--      </right-panel>-->
+      <!--      <right-panel ref="rightPanel" v-if="showSettings">-->
+      <!--        <settings @handleShowHelpClick="handleShowHelpClick"/>-->
+      <!--      </right-panel>-->
     </div>
   </div>
 </template>
