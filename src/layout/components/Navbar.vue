@@ -60,13 +60,13 @@ export default {
       this.$store.dispatch('app/toggleSideBar')
     },
     logout() {
-      this.$confirm('您确认要退出登录吗?该操作会导致您其他端的登录状态同时失效.', '提示', {
+      this.$confirm('您确认要退出登录吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         this.$store.dispatch('user/logout').then(() => {
-          this.$router.replace(`/login?redirect=${this.$route.fullPath}`)
+          this.$router.replace(`/login`)
         })
       }).catch(() => {
 

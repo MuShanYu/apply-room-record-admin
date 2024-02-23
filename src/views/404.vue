@@ -23,7 +23,7 @@
 <script>
 
 export default {
-  name: 'Page404',
+  name: 'NotFound',
   computed: {
     message() {
       return 'The webmaster said that you can not enter this page...'

@@ -80,7 +80,7 @@ import configApi from '@/api/config'
 import userApi from '@/api/user'
 
 export default {
-  name: "UserProfile",
+  name: "Profile",
   data() {
     const validateMail = (rule, value, callback) => {
       // 用户填写了邮箱

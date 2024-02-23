@@ -5,15 +5,18 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
+import fa from "element-ui/src/locale/lang/fa";
 
 export const constantRoutes = [
   {
+    name: 'Login',
     path: '/login',
     component: () => import('@/views/login/login'),
     hidden: true
   },
 
   {
+    name: 'NotFound',
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true
@@ -39,7 +42,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'NoticeManager',
         component: () => import('@/views/notice/notice'),
-        meta: {title: '公告管理', icon: 'notice', noCache: true}
+        meta: {title: '公告管理', icon: 'notice', noCache: false}
       }
     ]
   },
@@ -54,19 +57,19 @@ export const constantRoutes = [
         path: 'list',
         name: 'RoomList',
         component: () => import('@/views/room/list/room-list'),
-        meta: {title: '房间列表', noCache: true}
+        meta: {title: '房间列表', noCache: false}
       },
       {
         path: 'approve',
         name: 'RoomApprove',
         component: () => import('@/views/room/approve/room-approve'),
-        meta: {title: '预约申请审批', noCache: true}
+        meta: {title: '预约申请审批', noCache: false}
       },
       {
         path: 'import',
         name: 'RoomImport',
         component: () => import('@/views/room/import/import-room'),
-        meta: {title: '导入房间数据', activeMenu: '/room/list'},
+        meta: {title: '导入房间数据', activeMenu: '/room/list', noCache: false},
         hidden: true
       }
     ]
@@ -80,13 +83,13 @@ export const constantRoutes = [
         path: 'index',
         name: 'UserManager',
         component: () => import('@/views/user/user'),
-        meta: {title: '用户管理', icon: 'user', noCache: true}
+        meta: {title: '用户管理', icon: 'user', noCache: false}
       },
       {
         path: 'import',
         name: 'UserImport',
         component: () => import('@/views/user/import/import-user'),
-        meta: {title: '导入用户数据', activeMenu: '/user/index'},
+        meta: {title: '导入用户数据', activeMenu: '/user/index', noCache: false},
         hidden: true
       }
     ]
@@ -114,7 +117,7 @@ export const constantRoutes = [
       path: 'index',
       name: 'Config',
       component: () => import('@/views/config/index'),
-      meta: {title: '配置管理', icon: 'config', noCache: true}
+      meta: {title: '配置管理', icon: 'config', noCache: false}
     }]
   },
   {

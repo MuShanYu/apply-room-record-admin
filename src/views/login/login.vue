@@ -91,6 +91,7 @@ export default {
       loginForm: {
         stuNum: "",
         pwd: "",
+        device: 'pc'
       },
       loginRules: {
         stuNum: [{ required: true, trigger: "blur", validator: validateTel }],
@@ -121,7 +122,6 @@ export default {
       });
     },
     handleLogin() {
-      console.log(this.loginForm);
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.loading = true;

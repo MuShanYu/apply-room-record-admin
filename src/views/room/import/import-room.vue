@@ -76,7 +76,7 @@ import UploadExcelComponent from '@/components/UploadExcel/index.vue'
 import roomApi from "@/api/room";
 
 export default {
-  name: 'UploadExcel',
+  name: 'RoomImport',
   components: {UploadExcelComponent},
   watch: {
     uploadCount(val, oldVal) {

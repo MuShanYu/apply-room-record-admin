@@ -142,7 +142,7 @@ import config from '@/common/sys-config'
 import {mapState} from "vuex";
 
 export default {
-  name: "User",
+  name: "UserManager",
   components: {
     Pagination,
     UserRoomReserve,

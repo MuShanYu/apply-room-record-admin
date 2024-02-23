@@ -137,7 +137,7 @@ import Pagination from "@/components/Pagination";
 import { mapState } from "vuex";
 
 export default {
-  name: "Notice",
+  name: "NoticeManager",
   components: {
     Pagination,
     NoticeAdd,

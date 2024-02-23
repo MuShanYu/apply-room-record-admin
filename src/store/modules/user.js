@@ -10,7 +10,6 @@ import {
   setRoles, getRoles
 } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
-import JSEncrypt from 'jsencrypt'
 import {Message} from "element-ui";
 
 const getDefaultState = () => {
@@ -24,9 +23,6 @@ const getDefaultState = () => {
 const state = getDefaultState()
 
 const mutations = {
-  RESET_STATE: (state) => {
-    Object.assign(state, getDefaultState())
-  },
   SET_TOKEN: (state, token) => {
     state.token = token
     setToken(token)
@@ -59,7 +55,8 @@ const actions = {
     return new Promise((resolve, reject) => {
       let userLoginDTO = {
         stuNum: stuNum.trim(),
-        pwd: pwd
+        pwd: pwd,
+        device: userInfo.device
       }
       userApi.login(userLoginDTO).then(data => {
         if (data !== null) {

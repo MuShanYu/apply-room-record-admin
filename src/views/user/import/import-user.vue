@@ -52,7 +52,7 @@ import config from "@/common/sys-config";
 import el from "element-ui/src/locale/lang/el";
 
 export default {
-  name: 'UploadExcel',
+  name: 'UserImport',
   components: {UploadExcelComponent},
   computed: {
     config() {

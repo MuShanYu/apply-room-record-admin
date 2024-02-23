@@ -125,7 +125,7 @@ import configApi from '@/api/config'
 import {mapState} from "vuex";
 
 export default {
-  name: 'JsonEditorDemo',
+  name: 'Config',
   components: {
     JsonEditor,
     Pagination
