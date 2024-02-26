@@ -1,4 +1,4 @@
-# 房间预约与流动统计客户端
+# 房间预约与流动统计管理端
 
 ## 项目演示
 
@@ -63,3 +63,10 @@
 
 项目使用MIT开源协议。
 
+## 联系方式
+
+QQ交流群
+
+![image-20240226155137983](https://mushanyu-note.oss-cn-beijing.aliyuncs.com/mk-image/image-20240226155137983.png)
+
+@MuShanYu：wx：wxid_f5ayc9d2mken22
