@@ -63,9 +63,3 @@
 
 项目使用MIT开源协议。
 
-## 联系方式
-
-微信交流群
-
-![image-20240226131311395](https://mushanyu-note.oss-cn-beijing.aliyuncs.com/mk-image/image-20240226131311395.png)
-
