@@ -1,7 +1,6 @@
 const CONFIG = {
   development: {
     baseUrl: 'http://localhost:8500',
-    // baseUrl: 'https://ip:8500',
     logo: 'http://localhost:9528/logo.png',
     avatar: 'http://localhost:9528/header1.gif',
     emptyImg: 'http://localhost:9528/empty.png',
