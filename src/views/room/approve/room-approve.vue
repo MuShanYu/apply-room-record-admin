@@ -210,7 +210,7 @@ export default {
       title: '提示',
       type: 'warning',
       dangerouslyUseHTMLString: true,
-      message: '<span style="color: red;">超过预约结束时间的申请管理员只能进行删除操作，不能进行通过或者拒绝操作。</span>',
+      message: '您可以在小程序-房间预约与流动统计中，方便进行房间预约审核。<span style="color: red;">超过预约结束时间的申请管理员只能进行删除操作，不能进行通过或者拒绝操作。</span>',
       duration: 8000
     });
   },
