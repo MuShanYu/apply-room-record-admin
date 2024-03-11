@@ -201,7 +201,7 @@
 
     <!-- 查看预约详情 -->
     <el-drawer
-      size="65%"
+      size="70%"
       title="预约详情"
       :show-close="false"
       :visible.sync="reservationDrawer"
