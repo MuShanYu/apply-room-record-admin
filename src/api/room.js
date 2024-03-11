@@ -66,14 +66,14 @@ export default {
       data: roomReserveReviewedDTO
     })
   },
-  passOrRejectRoomReserve(reserveId, passed, rejectReason = "") {
+  passOrRejectRoomReserve(reserveId, passed, reason = "") {
     return request({
       url: '/roomReservation/approval',
       method: 'get',
       params: {
         reserveId,
         passed,
-        rejectReason
+        reason
       }
     })
   },
