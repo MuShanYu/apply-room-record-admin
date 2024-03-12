@@ -45,14 +45,14 @@
             <span>{{ row.reserveStartTime | parseTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="星期" align="center" width="60">
-          <template slot-scope="{ row }">
-            <span>{{weekDay(row.reserveStartTime)}}</span>
-          </template>
-        </el-table-column>
         <el-table-column label="预约结束时间" align="center">
           <template slot-scope="{ row }">
             <span>{{ row.reserveEndTime | parseTime }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="星期" align="center" width="60">
+          <template slot-scope="{ row }">
+            <span>{{weekDay(row.reserveStartTime)}}</span>
           </template>
         </el-table-column>
         <el-table-column label="预约理由" align="center">

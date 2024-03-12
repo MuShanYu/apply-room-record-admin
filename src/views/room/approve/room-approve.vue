@@ -281,14 +281,14 @@ export default {
         }
       });
     },
-    handleRoomRecordDel(id, index) {
+    handleRoomRecordDel(item, index) {
       this.$confirm('确定要永久删除该房间预约记录吗?这会导致对应的预约人查看不到自己的该条预约记录。', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         this.tabLoading(this.query.state, true)
-        roomApi.delRoomReservationRecord(id).then(() => {
+        roomApi.delRoomReservationRecord(item.id).then(() => {
           // 刷新
           this.getRoomReservationList()
           this.$message.success('删除成功')
