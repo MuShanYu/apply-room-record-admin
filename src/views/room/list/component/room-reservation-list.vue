@@ -1,7 +1,7 @@
 <template>
   <div style="margin: 10px">
     <div style="margin-bottom: 10px">
-      <span class="tip">操作时间：</span>
+      <span class="tip">预约起始时间：</span>
       <el-date-picker
         :clearable="false"
         @change="handleTimeChange"
@@ -45,14 +45,14 @@
             <span>{{ row.reserveStartTime | parseTime }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="星期" align="center" width="60">
+          <template slot-scope="{ row }">
+            <span>{{ weekDay(row.reserveStartTime) }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="预约结束时间" align="center">
           <template slot-scope="{ row }">
             <span>{{ row.reserveEndTime | parseTime }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="星期" align="center" width="60">
-          <template slot-scope="{ row }">
-            <span>{{weekDay(row.reserveStartTime)}}</span>
           </template>
         </el-table-column>
         <el-table-column label="预约理由" align="center">
@@ -177,7 +177,31 @@ export default {
       pickerOptions: {
         shortcuts: [
           {
-            text: "最近一周",
+            text: "今天",
+            onClick(picker) {
+              const time = new Date();
+              picker.$emit("pick", [time.getTime(), time.getTime()]);
+            },
+          },
+          {
+            text: "明天",
+            onClick(picker) {
+              const time = new Date();
+              time.setTime(time.getTime() + 3600 * 1000 * 24);
+              picker.$emit("pick", [time.getTime(), time.getTime()]);
+            },
+          },
+          {
+            text: "后一周",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              end.setTime(start.getTime() + 3600 * 1000 * 24 * 7);
+              picker.$emit("pick", [start.getTime(), end.getTime()]);
+            },
+          },
+          {
+            text: "前一周",
             onClick(picker) {
               const end = new Date();
               const start = new Date();
@@ -186,7 +210,7 @@ export default {
             },
           },
           {
-            text: "最近半个月",
+            text: "前半个月",
             onClick(picker) {
               const end = new Date();
               const start = new Date();
@@ -195,7 +219,7 @@ export default {
             },
           },
           {
-            text: "最近一个月",
+            text: "前一个月",
             onClick(picker) {
               const end = new Date();
               const start = new Date();
