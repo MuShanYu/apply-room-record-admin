@@ -10,6 +10,7 @@
             <img src="https://mushanyu-app-arr.oss-cn-beijing.aliyuncs.com/static/logo.png" alt="Logo" class="logo">
           </div>
           <h1>房间预约与人员流动统计</h1>
+          <h2>欢迎使用后台管理系统！</h2>
         </div>
         <div class="divider">
           <div class="divider-line"></div>
