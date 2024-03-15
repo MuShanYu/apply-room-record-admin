@@ -32,12 +32,24 @@
         <div class="rights"> ©2023 MuShanYu All Rights Reserved.</div>
       </div>
     </div>
+
+
+    <div class="notification">
+      <div class="notification__body">
+        <img
+          src="@/assets/check-circle.svg"
+          alt="Success"
+          class="notification__icon"
+        >
+        账号密码修改与找回，请通过客户端小程序《房间预约与人员流动统计》修改 &#128640;
+      </div>
+      <div class="notification__progress"></div>
+    </div>
   </div>
 </template>
 
 <script>
 import '@/styles/login.css'
-import fa from "element-ui/src/locale/lang/fa";
 
 export default {
   name: "Login",
@@ -90,6 +102,70 @@ export default {
 </script>
 
 
-<style scoped>
+<style lang="scss" scoped>
+.notification {
+  position: absolute;
+  width: max-content;
+  left: 0;
+  right: 0;
+  top: 1.5rem;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 0.375rem;
+  background-color: #313e2c;
+  color: #aaec8a;
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+  transform: translateY(1.875rem);
+  opacity: 0;
+  visibility: hidden;
+  animation: fade-in 7s linear;
+}
 
+.notification__icon {
+  height: 1.625rem;
+  width: 1.625rem;
+  margin-right: 0.25rem;
+}
+
+.notification__body {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 1rem 0.5rem;
+}
+
+.notification__progress {
+  position: absolute;
+  left: 0.25rem;
+  bottom: 0.25rem;
+  width: calc(100% - 0.5rem);
+  height: 0.2rem;
+  transform: scaleX(0);
+  transform-origin: left;
+  background: linear-gradient(
+      to right,
+      #313e2c,
+      #aaec8a
+  );
+  border-radius: inherit;
+  animation: progress 6.5s 0.3s linear;
+}
+
+@keyframes fade-in {
+  5% {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  95% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes progress {
+  to {
+    transform: scaleX(1);
+  }
+}
 </style>

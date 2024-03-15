@@ -70,7 +70,7 @@ body {
 .form-wrapper {
   position: relative;
   display: grid;
-  grid-template-columns: 8fr 5fr;
+  grid-template-columns: 7fr 5fr;
   margin: 0 auto;
   height: 100%;
 }
@@ -97,7 +97,7 @@ body {
   justify-content: center;
   position: relative;
   gap: 2rem;
-  max-width: 26rem;
+  max-width: 28rem;
   width: 100%;
 }
 
