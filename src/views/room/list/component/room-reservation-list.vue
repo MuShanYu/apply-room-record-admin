@@ -3,6 +3,7 @@
     <div style="margin-bottom: 10px">
       <span class="tip">预约起始时间：</span>
       <el-date-picker
+        ref="datePick"
         :clearable="false"
         @change="handleTimeChange"
         v-model="selectedTime"
@@ -155,7 +156,14 @@ export default {
   },
   watch: {
     roomId(val, oldVal) {
-      this.getRoomReservationList();
+      this.selectedTime = [
+        new Date().getTime(),
+        new Date().getTime() + 7 * 24 * 60 * 60 * 1000,
+      ];
+      this.handleTimeChange([
+        new Date().getTime(),
+        new Date().getTime() + 7 * 24 * 60 * 60 * 1000,
+      ]);
     },
   },
   data() {
@@ -164,15 +172,15 @@ export default {
       query: {
         page: 1,
         size: 10,
-        startTime: new Date().getTime() - 7 * 24 * 60 * 60 * 1000,
-        endTime: new Date().getTime(),
+        startTime: new Date().getTime(),
+        endTime: new Date().getTime() + 7 * 24 * 60 * 60 * 1000,
         roomId: "",
       },
       dataList: [],
       total: 0,
       selectedTime: [
-        new Date().getTime() - 7 * 24 * 60 * 60 * 1000,
         new Date().getTime(),
+        new Date().getTime() + 7 * 24 * 60 * 60 * 1000,
       ],
       pickerOptions: {
         shortcuts: [
