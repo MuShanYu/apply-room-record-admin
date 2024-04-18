@@ -47,7 +47,7 @@ export default {
   },
   roomReservationDetail(roomApplyDetailListQueryDTO) {
     return request({
-      url: '/roomReservation/queryRoomApplyDetailList2',
+      url: '/roomReservation/queryRoomApplyDetailList',
       method: 'post',
       data: roomApplyDetailListQueryDTO
     })
