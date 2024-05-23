@@ -25,7 +25,7 @@
         <div class="text-field">
           <label for="password">密码</label>
           <input maxlength="16" v-model="loginForm.pwd" type="password" name="password"
-                 placeholder="请输入您的登录密码">
+                 placeholder="请输入您的登录密码" @keyup.enter="handleLogin">
         </div>
         <button @click="handleLogin" v-loading="loading" class="my-form__button" type="button">
           登 录

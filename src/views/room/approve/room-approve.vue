@@ -55,10 +55,10 @@
     <div>
       <el-tabs v-model="activeState" @tab-click="handleTabClick">
         <el-tab-pane v-loading="tabReviewLoading" label="待审批" name="0">
-          <div style="display: flex;flex-wrap: wrap;">
-            <el-empty v-if="roomReviewList.length === 0" :image-size="320" :image="config.emptyImg"
-                      description="暂无待审批申请"></el-empty>
-            <approve-card :current-time="currentTime" id="review" v-else v-for="(item, index) in roomReviewList"
+          <el-empty v-if="roomReviewList.length === 0" :image-size="320" :image="config.emptyImg"
+                    description="暂无待审批申请"></el-empty>
+          <div class="card-container" v-if="roomReviewList.length > 0">
+            <approve-card :current-time="currentTime" id="review" v-for="(item, index) in roomReviewList"
                           @roomReservationPassClick="handleRoomReservationPassClick(item, index)"
                           @roomUpdateRejectClick="handleRoomUpdateRejectClick(item, index)"
                           @roomRecordDelClick="handleRoomRecordDel(item, index)"
@@ -66,10 +66,10 @@
           </div>
         </el-tab-pane>
         <el-tab-pane v-loading="tabReviewedLoading" label="已审批" name="1">
-          <div style="display: flex;flex-wrap: wrap;">
-            <el-empty v-if="roomReviewedList.length === 0" :image-size="320" :image="config.emptyImg"
-                      description="暂无已审批申请"></el-empty>
-            <approve-card :current-time="currentTime" id="reviewed" v-else v-for="(item, index) in roomReviewedList"
+          <el-empty v-if="roomReviewedList.length === 0" :image-size="320" :image="config.emptyImg"
+                    description="暂无已审批申请"></el-empty>
+          <div class="card-container" v-if="roomReviewedList.length > 0">
+            <approve-card :current-time="currentTime" id="reviewed" v-for="(item, index) in roomReviewedList"
                           @roomReservationPassClick="handleRoomReservationPassClick(item, index)"
                           @roomUpdateRejectClick="handleRoomUpdateRejectClick(item, index)"
                           @roomRecordDelClick="handleRoomRecordDel(item, index)"
@@ -77,10 +77,10 @@
           </div>
         </el-tab-pane>
         <el-tab-pane v-loading="tabRejectLoading" label="已驳回" name="3">
-          <div style="display: flex;flex-wrap: wrap;">
-            <el-empty v-if="roomRejectList.length === 0" :image-size="320" :image="config.emptyImg"
-                      description="暂无已驳回申请"></el-empty>
-            <approve-card :current-time="currentTime" id="reject" v-else v-for="(item, index) in roomRejectList"
+          <el-empty v-if="roomRejectList.length === 0" :image-size="320" :image="config.emptyImg"
+                    description="暂无已驳回申请"></el-empty>
+          <div class="card-container" v-if="roomRejectList.length > 0">
+            <approve-card :current-time="currentTime" id="reject" v-for="(item, index) in roomRejectList"
                           @roomReservationPassClick="handleRoomReservationPassClick(item, index)"
                           @roomUpdateRejectClick="handleRoomUpdateRejectClick(item, index)"
                           @roomRecordDelClick="handleRoomRecordDel(item, index)"
@@ -88,10 +88,10 @@
           </div>
         </el-tab-pane>
         <el-tab-pane v-loading="tabCancelLoading" label="用户已取消" name="2">
-          <div style="display: flex;flex-wrap: wrap;">
-            <el-empty v-if="roomCancelList.length === 0" :image-size="320" :image="config.emptyImg"
-                      description="暂无已驳回申请"></el-empty>
-            <approve-card :current-time="currentTime" id="cancel" v-else v-for="(item, index) in roomCancelList"
+          <el-empty v-if="roomCancelList.length === 0" :image-size="320" :image="config.emptyImg"
+                    description="暂无已驳回申请"></el-empty>
+          <div class="card-container" v-if="roomCancelList.length > 0">
+            <approve-card :current-time="currentTime" id="cancel" v-for="(item, index) in roomCancelList"
                           @roomReservationPassClick="handleRoomReservationPassClick(item, index)"
                           @roomUpdateRejectClick="handleRoomUpdateRejectClick(item, index)"
                           @roomRecordDelClick="handleRoomRecordDel(item, index)"
@@ -99,10 +99,10 @@
           </div>
         </el-tab-pane>
         <el-tab-pane v-loading="tabTimeoutLoading" label="超时未处理" name="4">
-          <div style="display: flex;flex-wrap: wrap;">
-            <el-empty v-if="roomTimeoutList.length === 0" :image-size="320" :image="config.emptyImg"
-                      description="暂无已驳回申请"></el-empty>
-            <approve-card :current-time="currentTime" id="timeout" v-else v-for="(item, index) in roomTimeoutList"
+          <el-empty v-if="roomTimeoutList.length === 0" :image-size="320" :image="config.emptyImg"
+                    description="暂无已驳回申请"></el-empty>
+          <div class="card-container" v-if="roomTimeoutList.length > 0">
+            <approve-card :current-time="currentTime" id="timeout" v-for="(item, index) in roomTimeoutList"
                           @roomReservationPassClick="handleRoomReservationPassClick(item, index)"
                           @roomUpdateRejectClick="handleRoomUpdateRejectClick(item, index)"
                           @roomRecordDelClick="handleRoomRecordDel(item, index)"
@@ -141,7 +141,6 @@ import {mapState} from "vuex";
 import config from "@/common/sys-config";
 
 import {getTime} from '@/utils'
-import da from "element-ui/src/locale/lang/da";
 
 export default {
   name: "RoomApprove",
@@ -353,6 +352,10 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+ .card-container {
+   display: grid;
+   grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+   grid-column-gap: 30px;
+ }
 </style>

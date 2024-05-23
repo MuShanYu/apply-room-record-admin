@@ -1,53 +1,55 @@
 <template>
   <div class="card-container">
-    <!-- tag -->
-    <div class="card-tag-position">
-      <el-tag size="small" :type="roomReservation.state | statusFilter">{{ roomReservation.state | msgFilter }}</el-tag>
-    </div>
-    <!--header-->
-    <div class="card-title">
-      <div style="font-weight: bold;">
-        {{ roomReservation.roomName }}
+    <div class="card-wrap">
+      <!-- tag -->
+      <div class="card-tag-position">
+        <el-tag size="small" :type="roomReservation.state | statusFilter">{{ roomReservation.state | msgFilter }}</el-tag>
       </div>
-      <div style="color: #909399;font-size: 14px;">
-        {{ roomReservation.createTime | parseTime('{y}年{m}月{d}日 {h}:{i}') }}
-      </div>
-    </div>
-    <div class="card-time">
-      预约时间：{{ roomReservation.reserveStartTime | parseTime('{y}年{m}月{d}日 {h}:{i}') }}~{{ roomReservation.reserveEndTime | parseTime('{h}:{i}') }}
-    </div>
-    <!--body-->
-    <div style="margin-bottom: 15px;">
-      <div class="card-reason">
-        申请理由：{{ roomReservation.roomUsage }}
-      </div>
-      <div class="card-tip">
-        <div>
-          <i class="el-icon-postcard"></i> {{ roomReservation.stuNum }}
+      <!--header-->
+      <div class="card-title">
+        <div style="font-weight: bold;font-size: 16px;">
+          {{ roomReservation.roomName }}
         </div>
-        <div>
-          <i class="el-icon-user"></i> {{ roomReservation.name }}
-        </div>
-        <div>
-          <i class="el-icon-location-outline"></i> {{ roomReservation.teachBuilding }}
+        <div style="color: #909399;font-size: 13px;">
+          {{ roomReservation.createTime | parseTime('{y}年{m}月{d}日 {h}:{i}') }}
         </div>
       </div>
+      <div class="card-time">
+        预约时间：{{ roomReservation.reserveStartTime | parseTime('{y}年{m}月{d}日 {h}:{i}') }}~{{ roomReservation.reserveEndTime | parseTime('{h}:{i}') }}
+      </div>
+      <!--body-->
+      <div style="margin-bottom: 15px;">
+        <div class="card-reason">
+          申请理由：{{ roomReservation.roomUsage }}
+        </div>
+        <div class="card-tip">
+          <div>
+            <i class="el-icon-postcard"></i> {{ roomReservation.stuNum }}
+          </div>
+          <div>
+            <i class="el-icon-user"></i> {{ roomReservation.name }}
+          </div>
+          <div>
+            <i class="el-icon-location-outline"></i> {{ roomReservation.teachBuilding }}
+          </div>
+        </div>
 
-    </div>
-    <!--footer-->
-    <div v-if="roomReservation.state !== 0" style="font-size: 14px;color: #909399;">
-      备注： {{roomReservation.remark === '' ? '无' : roomReservation.remark}}
-    </div>
-    <div style="margin-top: 15px;text-align: right;">
-      <el-button @click="handleRoomReservationPassClick"
-                 :disabled="passBtn"
-                 style="margin-right: 5px;" type="primary" size="mini">通过
-      </el-button>
-      <el-button style="margin-right: 5px;" @click="handleRoomUpdateRejectClick"
-                 :disabled="rejectBtn"
-                 type="danger" size="mini">拒绝
-      </el-button>
-      <el-button @click="handleRoomRecordDel" icon="el-icon-delete" type="text"></el-button>
+      </div>
+      <!--footer-->
+      <div v-if="roomReservation.state !== 0 && (roomReservation.remark !== null && roomReservation.remark.length > 0)" style="font-size: 14px;color: #909399;">
+        备注： {{roomReservation.remark === '' ? '无' : roomReservation.remark}}
+      </div>
+      <div style="margin-top: 15px;text-align: right;">
+        <el-button @click="handleRoomReservationPassClick"
+                   :disabled="passBtn"
+                   style="margin-right: 5px;" type="primary" size="mini">通过
+        </el-button>
+        <el-button style="margin-right: 5px;" @click="handleRoomUpdateRejectClick"
+                   :disabled="rejectBtn"
+                   type="danger" size="mini">拒绝
+        </el-button>
+        <el-button @click="handleRoomRecordDel" icon="el-icon-delete" type="text"></el-button>
+      </div>
     </div>
   </div>
 </template>
@@ -152,17 +154,20 @@ export default {
 <style scoped>
 .card-container {
   border: 1px solid #dcdfe6;
-  margin: 15px;
-  width: 480px;
-  padding: 15px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+  border-radius: 8px;
   position: relative;
+  margin-bottom: 30px;
+}
+
+.card-wrap {
+  padding: 15px;
+  line-height: 1.5;
 }
 
 .card-title {
   word-break: break-all;
   margin-top: 20px;
-  font-size: 16px;
   color: #303133;
   margin-bottom: 15px;
   text-align: center;

@@ -121,12 +121,16 @@ export const constantRoutes = [
     }]
   },
   {
-    path: 'qrcode-link',
+    path: '/about',
     component: Layout,
+    name: "AboutM",
+    meta: {title: "关于项目"},
     children: [
       {
-        path: 'https://cn.online-qrcode-generator.com/',
-        meta: {title: '自定义二维码生成', icon: 'link'}
+        path: 'index',
+        name: "About",
+        component: () => import("@/views/about/index"),
+        meta: {title: '关于项目', icon: 'link', noCache: true}
       }
     ]
   },
