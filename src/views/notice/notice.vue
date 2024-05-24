@@ -52,7 +52,9 @@
         </el-table-column>
         <el-table-column label="内容" align="center">
           <template slot-scope="{ row }">
-            <span class="config-value-text">{{ row.content }}</span>
+            <el-tooltip transition="el-zoom-in-center" effect="dark" :content="row.content" placement="right-start">
+              <span class="notice-content">{{ row.content }}</span>
+            </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column label="状态" align="center">
@@ -134,7 +136,7 @@ import noticeApi from "@/api/notice";
 import NoticeAdd from "@/views/notice/component/notice-add";
 import NoticeUpdate from "@/views/notice/component/notice-update";
 import Pagination from "@/components/Pagination";
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 
 export default {
   name: "NoticeManager",
@@ -158,7 +160,7 @@ export default {
       },
       listLoading: false,
       addNoticeDialog: false,
-      updateNoticeDialog:false,
+      updateNoticeDialog: false,
       currentNotice: {},
       noticeList: [],
       total: 0,
@@ -186,7 +188,7 @@ export default {
       this.getNoticeList();
       this.addNoticeDialog = false;
     },
-    updateNoticeSuccessHandler(notice){
+    updateNoticeSuccessHandler(notice) {
       let noticeIndex = this.noticeList.findIndex(item => item.id === notice.id)
       this.noticeList.splice(noticeIndex, 1, notice);
       this.updateNoticeDialog = false
@@ -216,10 +218,21 @@ export default {
             });
           }
         })
-        .catch((e) => {});
+        .catch((e) => {
+        });
     },
   },
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.notice-content {
+  display: -webkit-box;
+  overflow: hidden;
+  white-space: normal !important;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+</style>
