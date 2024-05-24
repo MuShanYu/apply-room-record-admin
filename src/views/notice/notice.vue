@@ -53,6 +53,11 @@
         <el-table-column label="内容" align="center">
           <template slot-scope="{ row }">
             <el-tooltip transition="el-zoom-in-center" effect="dark" :content="row.content" placement="right-start">
+              <div slot="content">
+                <div style="width: 350px;word-break: break-all;line-height: 1.5;">
+                  {{row.content}}
+                </div>
+              </div>
               <span class="notice-content">{{ row.content }}</span>
             </el-tooltip>
           </template>

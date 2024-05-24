@@ -16,6 +16,8 @@
           <el-input
             placeholder="请输入要发布的公告内容)"
             :rows="6"
+            maxlength="1024"
+            show-word-limit
             type="textarea"
             v-model="notice.content"
           ></el-input>
