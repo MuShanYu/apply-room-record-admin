@@ -214,6 +214,7 @@ export default {
     }
   },
   created() {
+    this.roomCountDTO.chargerPersonId = this.$store.getters.userInfo.id;
     this.getCountData()
     this.getSystemCountInfo()
     this.getRoomClassifyInfo()
