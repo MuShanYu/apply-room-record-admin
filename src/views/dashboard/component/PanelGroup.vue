@@ -1,56 +1,93 @@
 <template>
-  <el-row :gutter="40" class="panel-group">
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div v-loading="loading" class="card-panel">
-        <div class="card-panel-icon-wrapper icon-people">
-          <svg-icon icon-class="peoples" class-name="card-panel-icon" />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            用户数量
-          </div>
-          <count-to :start-val="0" :end-val="countData.userCount" :duration="2600" class="card-panel-num" />
-        </div>
-      </div>
+  <el-row :gutter="20" class="panel-group" justify="space-between">
+
+    <el-col :xl="6" :lg="6" :md="12" :sm="12" :xs="24" class="card-panel-col">
+      <el-card shadow="hover" class="card-panel">
+        <el-skeleton :loading="loading" animated :rows="2">
+          <template #default>
+            <div class="" style="display: flex;justify-content: space-between;">
+              <div class="card-panel-icon-wrapper icon-people">
+                <svg-icon icon-class="peoples" class-name="card-panel-icon"/>
+              </div>
+              <div style="display: flex;flex-direction: column; justify-content: space-between;">
+                <div style="font-size: 16px;font-weight: 500;color: rgb(107 114 128);">
+                  用户数量
+                </div>
+                <div style="font-weight: 700;font-size: 20px;">
+                  <count-to :start-val="0" :end-val="countData.userCount" :duration="2600" class="card-panel-num"/>
+                </div>
+              </div>
+            </div>
+          </template>
+        </el-skeleton>
+      </el-card>
+
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div v-loading="loading" class="card-panel">
-        <div class="card-panel-icon-wrapper icon-message">
-          <svg-icon icon-class="room" class-name="card-panel-icon" />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            房间数量
-          </div>
-          <count-to :start-val="0" :end-val="countData.roomCount" :duration="2600" class="card-panel-num" />
-        </div>
-      </div>
+
+    <el-col :xl="6" :lg="6" :md="12" :sm="12" :xs="24" class="card-panel-col">
+      <el-card shadow="hover" class="card-panel">
+        <el-skeleton :loading="loading" animated :rows="2">
+          <template #default>
+            <div class="" style="display: flex;justify-content: space-between;">
+              <div class="card-panel-icon-wrapper icon-room">
+                <svg-icon icon-class="room" class-name="card-panel-icon"/>
+              </div>
+              <div style="display: flex;flex-direction: column; justify-content: space-between;">
+                <div style="font-size: 16px;font-weight: 500;color: rgb(107 114 128);">
+                  房间数量
+                </div>
+                <div style="font-weight: 700;font-size: 20px;">
+                  <count-to :start-val="0" :end-val="countData.roomCount" :duration="2600" class="card-panel-num"/>
+                </div>
+              </div>
+            </div>
+          </template>
+        </el-skeleton>
+      </el-card>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div v-loading="loading" class="card-panel">
-        <div class="card-panel-icon-wrapper icon-money">
-          <svg-icon icon-class="apply" class-name="card-panel-icon" />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            有效预约次数
-          </div>
-          <count-to :start-val="0" :end-val="countData.roomReserveReviewed" :duration="2600" class="card-panel-num" />
-        </div>
-      </div>
+
+    <el-col :xl="6" :lg="6" :md="12" :sm="12" :xs="24" class="card-panel-col">
+      <el-card shadow="hover" class="card-panel">
+        <el-skeleton :loading="loading" animated :rows="2">
+          <template #default>
+            <div class="" style="display: flex;justify-content: space-between;">
+              <div class="card-panel-icon-wrapper icon-apply">
+                <svg-icon icon-class="apply" class-name="card-panel-icon"/>
+              </div>
+              <div style="display: flex;flex-direction: column; justify-content: space-between;">
+                <div style="font-size: 16px;font-weight: 500;color: rgb(107 114 128);">
+                  用户数量
+                </div>
+                <div style="font-weight: 700;font-size: 20px;">
+                  <count-to :start-val="0" :end-val="countData.roomReserveReviewed" :duration="2600" class="card-panel-num"/>
+                </div>
+              </div>
+            </div>
+          </template>
+        </el-skeleton>
+      </el-card>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div v-loading="loading" class="card-panel">
-        <div class="card-panel-icon-wrapper icon-shopping">
-          <svg-icon icon-class="liudong" class-name="card-panel-icon" />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            人员流动记录条数
-          </div>
-          <count-to :start-val="0" :end-val="countData.accessRecordCount" :duration="2600" class="card-panel-num" />
-        </div>
-      </div>
+
+    <el-col :xl="6" :lg="6" :md="12" :sm="12" :xs="24" class="card-panel-col">
+      <el-card shadow="hover" class="card-panel">
+        <el-skeleton :loading="loading" animated :rows="2">
+          <template #default>
+            <div class="" style="display: flex;justify-content: space-between;">
+              <div class="card-panel-icon-wrapper icon-liudong">
+                <svg-icon icon-class="liudong" class-name="card-panel-icon"/>
+              </div>
+              <div style="display: flex;flex-direction: column; justify-content: space-between;">
+                <div style="font-size: 16px;font-weight: 500;color: rgb(107 114 128);">
+                  用户数量
+                </div>
+                <div style="font-weight: 700;font-size: 20px;">
+                  <count-to :start-val="0" :end-val="countData.accessRecordCount" :duration="2600" class="card-panel-num"/>
+                </div>
+              </div>
+            </div>
+          </template>
+        </el-skeleton>
+      </el-card>
     </el-col>
   </el-row>
 </template>
@@ -62,7 +99,7 @@ export default {
   components: {
     CountTo
   },
-  props:{
+  props: {
     countData: {
       type: Object,
       default() {
@@ -79,30 +116,16 @@ export default {
       default: true
     }
   },
-  methods: {
-
-  }
+  methods: {}
 }
 </script>
 
 <style lang="scss" scoped>
-.panel-group {
-  margin-top: 18px;
 
-  .card-panel-col {
-    margin-bottom: 32px;
-  }
+.panel-group {
 
   .card-panel {
-    height: 108px;
-    cursor: pointer;
-    font-size: 12px;
-    position: relative;
-    overflow: hidden;
-    color: #666;
-    background: #fff;
-    box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
-    border-color: rgba(0, 0, 0, .05);
+    margin-bottom: 20px;
 
     &:hover {
       .card-panel-icon-wrapper {
@@ -113,15 +136,15 @@ export default {
         background: #40c9c6;
       }
 
-      .icon-message {
+      .icon-room {
         background: #36a3f7;
       }
 
-      .icon-money {
+      .icon-apply {
         background: #f4516c;
       }
 
-      .icon-shopping {
+      .icon-liudong {
         background: #34bfa3
       }
     }
@@ -130,67 +153,28 @@ export default {
       color: #40c9c6;
     }
 
-    .icon-message {
+    .icon-room {
       color: #36a3f7;
     }
 
-    .icon-money {
+    .icon-apply {
       color: #f4516c;
     }
 
-    .icon-shopping {
+    .icon-liudong {
       color: #34bfa3
     }
 
-    .card-panel-icon-wrapper {
-      float: left;
-      margin: 14px 0 0 14px;
-      padding: 16px;
-      transition: all 0.38s ease-out;
-      border-radius: 6px;
-    }
-
-    .card-panel-icon {
-      float: left;
-      font-size: 48px;
-    }
-
-    .card-panel-description {
-      float: right;
-      font-weight: bold;
-      margin: 26px;
-      margin-left: 0px;
-
-      .card-panel-text {
-        line-height: 18px;
-        color: rgba(0, 0, 0, 0.45);
-        font-size: 16px;
-        margin-bottom: 12px;
-      }
-
-      .card-panel-num {
-        font-size: 20px;
-      }
-    }
   }
-}
 
-@media (max-width:550px) {
-  .card-panel-description {
-    display: none;
+  .card-panel-icon {
+    font-size: 40px;
   }
 
   .card-panel-icon-wrapper {
-    float: none !important;
-    width: 100%;
-    height: 100%;
-    margin: 0 !important;
-
-    .svg-icon {
-      display: block;
-      margin: 14px auto !important;
-      float: none !important;
-    }
+    padding: 16px;
+    border-radius: 6px;
   }
+
 }
 </style>

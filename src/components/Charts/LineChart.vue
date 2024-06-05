@@ -4,7 +4,6 @@
 
 <script>
 import echarts from 'echarts'
-require('echarts/theme/macarons') // echarts theme
 import resize from './mixins/resize'
 
 export default {
@@ -20,7 +19,7 @@ export default {
     },
     height: {
       type: String,
-      default: '400px'
+      default: '350px'
     },
     autoResize: {
       type: Boolean,
@@ -60,101 +59,104 @@ export default {
   },
   methods: {
     initChart() {
-      this.chart = echarts.init(this.$el, 'macarons')
+      this.chart = echarts.init(this.$el)
       this.setOptions(this.chartData)
     },
-    setOptions({ entryTimes, outTimes, dates } = {}) {
+    setOptions({ rejectTimes, canceledTimes, reviewTimes, reviewedTimes, dates } = {}) {
       this.chart.setOption({
         title: {
-          text: '人员进出人次统计',
-          textStyle: {
-            fontWeight: 'normal',
-            fontSize: 14,
-            color: '#909399'
-          }
+          text: '房间预约次数统计',
+          left: 'center'
         },
         xAxis: {
-          type: 'category',
+          data: dates,
           boundaryGap: false,
-          axisLine: {
-            lineStyle: {
-              color: '#409EFF'
-            }
-          },
-          data: dates
+          axisTick: {
+            show: false
+          }
         },
         grid: {
-          top: 60,
-          left: '2%',
-          right: '2%',
-          bottom: '3%',
+          left: 20,
+          right: 20,
+          bottom: 20,
+          top: 80,
           containLabel: true
         },
         tooltip: {
           trigger: 'axis',
           axisPointer: {
-            lineStyle: {
-              color: '#57617B'
-            }
-          }
+            type: 'cross'
+          },
+          padding: [5, 10]
         },
         yAxis: {
           axisTick: {
             show: false
           },
-          axisLine: {
+          name: '预约次数'
+        },
+        legend: {
+          data: ['已预约','已通过', '已驳回', '已取消'],
+          top: 50
+        },
+        series: [
+          {
+            name: '已预约',
+            smooth: true,
+            type: 'line',
+            data: reviewTimes,
+            animationDuration: 2800,
+            animationEasing: 'quadraticOut',
+            itemStyle: {
+              color: '#409EFF'
+            },
             lineStyle: {
               color: '#409EFF'
             }
-          }
-        },
-        legend: {
-          legend: {
-            top: 5,
-            icon: 'rect',
-            itemWidth: 14,
-            itemHeight: 5,
-            itemGap: 13,
-            data: ['进入次数', '离开次数'],
-            textStyle: {
-              fontSize: 12
-            }
-          }
-        },
-        series: [{
-          name: '进入次数',
-          itemStyle: {
-            normal: {
-              color: '#FF005A',
-              lineStyle: {
-                color: '#FF005A',
-                width: 2
-              }
+          },
+          {
+            name: '已通过',
+            smooth: true,
+            type: 'line',
+            data: reviewedTimes,
+            animationDuration: 2800,
+            animationEasing: 'quadraticOut',
+            itemStyle: {
+              color: '#67c23a'
+            },
+            lineStyle: {
+              color: '#67c23a'
             }
           },
-          smooth: true,
-          type: 'line',
-          data: entryTimes,
-          animationDuration: 2800,
-          animationEasing: 'cubicInOut'
-        },
-        {
-          name: '离开次数',
-          smooth: true,
-          type: 'line',
-          itemStyle: {
-            normal: {
-              color: '#3888fa',
-              lineStyle: {
-                color: '#3888fa',
-                width: 2
-              }
+          {
+            name: '已驳回',
+            smooth: true,
+            type: 'line',
+            data: rejectTimes,
+            animationDuration: 2800,
+            animationEasing: 'quadraticOut',
+            itemStyle: {
+              color: '#db3233'
+            },
+            lineStyle: {
+              color: '#db3233'
             }
           },
-          data: outTimes,
-          animationDuration: 2800,
-          animationEasing: 'quadraticOut'
-        }]
+          {
+            name: '已取消',
+            smooth: true,
+            type: 'line',
+            data: canceledTimes,
+            animationDuration: 2800,
+            animationEasing: 'quadraticOut',
+            itemStyle: {
+              color: '#909399'
+            },
+            lineStyle: {
+              color: '#909399'
+            }
+          }
+        ]
       })
     }
   }

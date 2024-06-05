@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div style="display: flex;justify-content: flex-start;"
+    <div style="display: flex;justify-content: flex-start;background-color: #ffffff;padding: 15px;"
          :style="fixedHeader ? 'margin-top: 35px;' : ''">
       <div id="room-list-add">
         <el-button style="margin-right: 10px;" v-permission="['super-admin']" @click="addRoomDrawer = true" v-waves
@@ -14,7 +14,7 @@
           禁止预约/解除
         </el-button>
       </div>
-      <div id="room-list-operate-ban" >
+      <div id="room-list-operate-ban">
         <el-button @click="handleBatchDisableRoom" v-waves
                    type="danger"
                    icon="el-icon-circle-close">
@@ -62,7 +62,7 @@
         </el-button>
       </div>
     </div>
-    <div style="margin-bottom: 18px;display: flex;justify-content: flex-start;margin-top: 15px;">
+    <div class="oper-2">
       <el-button id="room-list-operate-qr-code" v-permission="['super-admin']" @click="handleBatchDownloadQRCode"
                  v-waves type="primary" icon="el-icon-picture-outline">
         生成房间二维码
@@ -142,7 +142,8 @@
           <template slot="header">
             <div id="room-list-my-charge">
               <span style="margin-right: 4px;">负责人</span>
-              <el-tooltip v-if="isSuperAdmin" effect="light" :content="eyeIcon === 'eye' ? '点击查看所有房间' : '点击查看您负责的房间'" placement="top">
+              <el-tooltip v-if="isSuperAdmin" effect="light"
+                          :content="eyeIcon === 'eye' ? '点击查看所有房间' : '点击查看您负责的房间'" placement="top">
                 <svg-icon @click.stop="getMyChargeRoom" class="link-type" :icon-class="eyeIcon"/>
               </el-tooltip>
             </div>
@@ -342,7 +343,7 @@ export default {
       addRoomDrawer: false,
       currentRoomId: '',
       accessRecordDrawer: false,
-      accessAttendanceDrawer:false,
+      accessAttendanceDrawer: false,
       currentUserId: '',
       isSuperAdmin: false,
       roomSelectedList: [],
@@ -421,7 +422,7 @@ export default {
       this.currentRoomId = row.id
       this.accessRecordDrawer = true
     },
-    handleRoomAttendanceClick(row, index){
+    handleRoomAttendanceClick(row, index) {
       this.currentRoomId = row.id
       this.accessAttendanceDrawer = true
     },
@@ -536,5 +537,15 @@ export default {
     color: rgb(32, 160, 255);
   }
 
+}
+
+.oper-2 {
+  margin-bottom: 18px;
+  display: flex;
+  justify-content: flex-start;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 15px;
+  background-color: #ffffff;
 }
 </style>

@@ -4,10 +4,7 @@
 
 <script>
 import echarts from 'echarts'
-require('echarts/theme/macarons') // echarts theme
 import resize from './mixins/resize'
-
-const animationDuration = 6000
 
 export default {
   mixins: [resize],
@@ -22,7 +19,7 @@ export default {
     },
     height: {
       type: String,
-      default: '400px'
+      default: '300px'
     },
     chartData: {
       type: Object,
@@ -58,54 +55,79 @@ export default {
   },
   methods: {
     initChart() {
-      this.chart = echarts.init(this.$el, 'macarons')
+      this.chart = echarts.init(this.$el)
       this.setOptions(this.chartData)
     },
-    setOptions({dates, totalEntryAndOutPeople} = {}) {
+    setOptions({dates, totalEntryAndOutPeople, entryTimes, outTimes} = {}) {
       this.chart.setOption({
         title: {
-          text: '人员进出人数统计',
-          textStyle: {
-            fontWeight: 'normal',
-            fontSize: 14,
-            color: '#909399'
-          }
-        },
-
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: { // 坐标轴指示器，坐标轴触发有效
-            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
-          }
+          text: '房间人员进出统计'
         },
         grid: {
-          top: 60,
-          left: '2%',
-          right: '2%',
-          bottom: '3%',
+          left: 20,
+          right: 20,
+          bottom: 20,
+          top: 80,
           containLabel: true
         },
-        xAxis: [{
-          type: 'category',
-          data: dates,
-          axisTick: {
-            alignWithLabel: true
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross'
           }
-        }],
-        yAxis: [{
-          type: 'value',
-          axisTick: {
-            show: false
+        },
+        legend: {
+          data: ['进出总数', '进入次数', '离开次数']
+        },
+        xAxis: [
+          {
+            type: 'category',
+            data: dates,
+            axisPointer: {
+              type: 'shadow'
+            }
           }
-        }],
-        series: [{
-          name: '进出人数',
-          type: 'bar',
-          stack: 'vistors',
-          barWidth: '60%',
-          data: totalEntryAndOutPeople,
-          animationDuration
-        }]
+        ],
+        yAxis: [
+          {
+            type: 'value',
+            name: '离开/进入次数'
+          },
+          {
+            type: 'value',
+            name: '进出人数'
+          }
+        ],
+        series: [
+          {
+            name: '进入次数',
+            type: 'bar',
+            data: entryTimes,
+            itemStyle: {
+              color: '#5470c6'  // 设置进入次数的颜色
+            }
+          },
+          {
+            name: '离开次数',
+            type: 'bar',
+            data: outTimes,
+            itemStyle: {
+              color: '#67c23a'  // 设置进入次数的颜色
+            }
+          },
+          {
+            name: '进出总数',
+            type: 'line',
+            yAxisIndex: 1,
+            data: totalEntryAndOutPeople,
+            itemStyle: {
+              color: '#fac858'  // 设置进出总数的颜色
+            },
+            lineStyle: {
+              color: '#fac858'  // 设置线条的颜色，防止线条和点颜色不一致
+            }
+          }
+        ]
       })
     }
   }

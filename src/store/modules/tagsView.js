@@ -1,5 +1,3 @@
-import { number } from 'echarts/lib/export'
-
 const state = {
   visitedViews: [],
   cachedViews: []

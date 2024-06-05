@@ -4,7 +4,6 @@
 
 <script>
 import echarts from 'echarts'
-require('echarts/theme/macarons') // echarts theme
 import resize from './mixins/resize'
 
 export default {
@@ -20,7 +19,7 @@ export default {
     },
     height: {
       type: String,
-      default: '450px'
+      default: '300px'
     },
     chartData: {
       type: Object,
@@ -56,53 +55,50 @@ export default {
   },
   methods: {
     initChart() {
-      this.chart = echarts.init(this.$el, 'macarons')
+      this.chart = echarts.init(this.$el)
       this.setOptions(this.chartData)
     },
     setOptions({rejectTimesCount, cancelTimesCount, reviewTimesCount, reviewedTimesCount} = {}) {
       this.chart.setOption({
         title: {
-          text: '房间预约总次数统计(所指定的时间跨度内)',
-          textStyle: {
-            fontWeight: 'normal',
-            fontSize: 14,
-            color: '#909399'
-          }
-        },
-        xAxis: {
-          max: 'dataMax'
-        },
-        yAxis: {
-          type: 'category',
-          data: ['已预约总次数', '已取消总次数', '已通过总次数', '已驳回总次数'],
-          inverse: true,
-          animationDuration: 300,
-          animationDurationUpdate: 300,
-          max: 3 // only the largest 3 bars will be displayed
+          text: '房间预约次数统计',
+          left: 'center'
         },
         tooltip: {
           trigger: 'item',
-          formatter: '{b} : {c}'
+          formatter: '{a} <br/>{b} : {c} ({d}%)'
+        },
+        legend: {
+          orient: 'vertical',
+          left: 'left'
         },
         series: [
           {
             name: '总次数',
-            type: 'bar',
-            data: [reviewTimesCount, cancelTimesCount, reviewedTimesCount, rejectTimesCount],
-            label: {
-              show: true,
-              position: 'right',
-              valueAnimation: true
+            type: 'pie',
+            radius: '55%',
+            center: ['50%', '60%'],
+            data: [
+              { value: reviewTimesCount, name: '已预约次数' },
+              { value: reviewedTimesCount, name: '已通过次数' },
+              { value: rejectTimesCount, name: '已驳回次数' },
+              { value: cancelTimesCount, name: '已取消次数' }
+            ],
+            itemStyle: {
+              normal: {
+                color: function(params) {
+                  let colorList = [
+                    '#409eff',
+                    '#67c23a',
+                    '#ee6666',
+                    '#909399'
+                  ];
+                  return colorList[params.dataIndex];
+                }
+              }
             }
           }
-        ],
-        legend: {
-          show: true
-        },
-        animationDuration: 2000,
-        animationDurationUpdate: 3000,
-        animationEasing: 'linear',
-        animationEasingUpdate: 'linear'
+        ]
       })
     }
   }

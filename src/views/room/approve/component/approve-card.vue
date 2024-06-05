@@ -158,6 +158,7 @@ export default {
   border-radius: 8px;
   position: relative;
   margin-bottom: 30px;
+  background-color: #ffffff;
 }
 
 .card-wrap {

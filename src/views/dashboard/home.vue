@@ -1,9 +1,8 @@
 <template>
   <div class="home-container">
-    <div>
-      <panel-group :loading="countLoading" :count-data="countData"/>
-    </div>
-    <div style="margin-bottom: 10px;background: #ffffff;padding: 15px;" class="">
+    <panel-group :loading="countLoading" :count-data="countData"/>
+
+    <el-card shadow="hover" :body-style="{ padding: '0'}" style="margin-bottom: 20px;background: #ffffff;padding: 15px;">
       <div style="display: flex;justify-content: flex-start;">
         <div id="home-select-time">
           <el-date-picker
@@ -49,28 +48,41 @@
           </el-select>
         </div>
         <div id="home-export-btn" style="margin-left: 15px;" >
+          <el-checkbox @change="handleCheckBoxChange" style="margin-right: 15px;" v-model="iManaged" label="我管理的" border></el-checkbox>
           <el-button @click="handleExportCountDataClick" icon="el-icon-download" type="primary">
             导出报表数据
           </el-button>
+          <span style="font-size: 13px;color: #909399;">（统计分析筛选条件）</span>
         </div>
       </div>
-    </div>
+    </el-card>
 
-    <div v-loading="loading" class="chart-wrapper">
-      <line-chart :chart-data="accessRecordCount" :class-name="'line-chart'"/>
-    </div>
-    <div v-loading="loading" class="chart-wrapper">
-      <bar-chart :chart-data="accessRecordCount" :class-name="'bar-chart'"/>
-    </div>
-    <div v-loading="loading" class="chart-wrapper">
-      <line-marker :chart-data="roomReserveCount" :id="'line-marker'" :width="'100%'" :height="'400px'"/>
-    </div>
-    <div v-loading="loading" class="chart-wrapper">
-      <pie-chart :chart-data="roomReserveCount" :class-name="'pie-chart'"/>
-    </div>
+    <el-row :gutter="20" justify="space-between">
+      <el-col :xl="10" :lg="10" :md="24" :sm="24" :xs="24">
+        <el-card shadow="hover" style="margin-bottom: 20px;">
+          <el-skeleton :loading="loading" animated :rows="4">
+            <pie-chart :chart-data="roomReserveCount" :class-name="'pie-chart'"/>
+          </el-skeleton>
+        </el-card>
+      </el-col>
+      <el-col :xl="14" :lg="14" :md="24" :sm="24" :xs="24">
+        <el-card shadow="hover" style="margin-bottom: 20px;">
+          <el-skeleton :loading="loading" animated :rows="4">
+            <bar-chart :chart-data="accessRecordCount" :class-name="'bar-chart'"/>
+          </el-skeleton>
+        </el-card>
+      </el-col>
+      <el-col :span="24">
+        <el-card shadow="hover" style="margin-bottom: 20px;">
+          <el-skeleton :loading="loading" animated :rows="4">
+            <line-chart :chart-data="roomReserveCount" :class-name="'line-chart'"/>
+          </el-skeleton>
+        </el-card>
+      </el-col>
+    </el-row>
 
     <el-dialog
-      title="请您核对数据导出条件"
+      title="请您核对数据导出条件（导出人员进出统计信息）"
       center
       :visible.sync="exportDialog">
       <div>
@@ -78,7 +90,7 @@
           <el-descriptions :column="2" border>
             <template slot="extra">
               <el-button :loading="exportCountDataBtnLoading" @click="exportCountData" size="small"
-                         icon="el-icon-download" type="primary">导出
+                         icon="el-icon-download" type="primary">{{iManaged ? '导出我管理的' : '导出'}}
               </el-button>
             </template>
             <el-descriptions-item>
@@ -126,18 +138,14 @@ import dataStatistics from "@/api/data-statistics";
 import {downloadFile} from "@/utils";
 
 import PanelGroup from "@/views/dashboard/component/PanelGroup";
-import LineMarker from "@/components/Charts/LineMarker";
 import PieChart from "@/components/Charts/PieChart";
 import BarChart from "@/components/Charts/BarChart";
 import LineChart from "@/components/Charts/LineChart";
-import configApi from "@/api/config";
-import Cookies from "js-cookie";
 
 export default {
   name: 'Dashboard',
   computed: {},
   components: {
-    LineMarker,
     PieChart,
     LineChart,
     BarChart,
@@ -145,13 +153,15 @@ export default {
   },
   data() {
     return {
+      iManaged: true,
       roomOptions: [],
       roomName: '',
       roomCountDTO: {
         roomId: '',
         roomCategory: '',
         startTime: new Date().getTime() - (7 * 24 * 60 * 60 * 1000),
-        endTime: new Date().getTime()
+        endTime: new Date().getTime(),
+        chargerPersonId: null
       },
       roomReserveCount: {},
       accessRecordCount: {},
@@ -284,6 +294,15 @@ export default {
         this.$message.success('统计数据成功导出')
         downloadFile(response)
       })
+    },
+    handleCheckBoxChange(value) {
+      if (value) {
+        // 我负责的房间统计信息
+        this.roomCountDTO.chargerPersonId = this.$store.getters.userInfo.id;
+      } else {
+        this.roomCountDTO.chargerPersonId = null;
+      }
+      this.getCountData()
     }
   }
 }
@@ -291,20 +310,6 @@ export default {
 
 <style lang="scss" scoped>
 .home-container {
-  padding: 32px;
-  background-color: #f1f1f1;
-  position: relative;
-}
-
-.chart-wrapper {
-  background: #fff;
-  padding: 16px 16px 0;
-  margin-bottom: 32px;
-}
-
-@media (max-width: 1024px) {
-  .chart-wrapper {
-    padding: 8px;
-  }
+  padding: 20px;
 }
 </style>
