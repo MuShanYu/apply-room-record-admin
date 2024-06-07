@@ -56,7 +56,7 @@
               </div>
               <div style="display: flex;flex-direction: column; justify-content: space-between;">
                 <div style="font-size: 16px;font-weight: 500;color: rgb(107 114 128);">
-                  用户数量
+                  有效预约次数
                 </div>
                 <div style="font-weight: 700;font-size: 20px;">
                   <count-to :start-val="0" :end-val="countData.roomReserveReviewed" :duration="2600" class="card-panel-num"/>
@@ -78,7 +78,7 @@
               </div>
               <div style="display: flex;flex-direction: column; justify-content: space-between;">
                 <div style="font-size: 16px;font-weight: 500;color: rgb(107 114 128);">
-                  用户数量
+                  人员流动记录条数
                 </div>
                 <div style="font-weight: 700;font-size: 20px;">
                   <count-to :start-val="0" :end-val="countData.accessRecordCount" :duration="2600" class="card-panel-num"/>
