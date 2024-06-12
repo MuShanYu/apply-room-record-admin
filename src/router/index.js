@@ -109,6 +109,22 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/monitor',
+    component: Layout,
+    name: 'Monitor',
+    alwaysShow: true,
+    redirect: '/monitor/online-user',
+    meta: {title: '系统监控', icon: 'monitor'},
+    children: [
+      {
+        path: 'online-user',
+        name: 'OnlineUser',
+        component: () => import('@/views/monitor/onlineUser'),
+        meta: {title: '在线用户', noCache: false}
+      }
+    ]
+  },
+  {
     path: '/config',
     component: Layout,
     name: 'ConfigM',

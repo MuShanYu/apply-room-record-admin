@@ -65,8 +65,7 @@
         </el-table-column>
         <el-table-column label="权限" width="200" align="center">
           <template slot-scope="{row}">
-            <span v-if="row.roleList.length === 0">未赋予角色</span>
-            <el-tag v-else style="margin: 3px;" v-for="item in row.roleList" :key="item.id" type="primary">
+            <el-tag style="margin: 3px;" v-for="item in row.roleList" :key="item.id" type="primary">
               {{ item.roleDes }}
             </el-tag>
           </template>

@@ -20,15 +20,10 @@ import TagsView from './components/TagsView/index'
 import RightPanel from '@/components/RightPanel'
 import {AppMain, Navbar, Settings, Sidebar} from './components'
 import ResizeMixin from './mixin/ResizeHandler'
-
-import homeSteps from "@/layout/steps/home-steps";
-import roomListStepsAdmin from "@/layout/steps/room-list-steps-admin";
-import roomListStepsSuperAdmin from "@/layout/steps/room-list-steps-super-admin";
-import configListSteps from '@/layout/steps/config-list-steps'
-
 import {mapState} from 'vuex'
-import Driver from "driver.js";
-import 'driver.js/dist/driver.min.css';
+import {getUserInfo} from "@/utils/auth";
+import {closeWebsocket, sendWebsocket} from "@/utils/websocket";
+import SysConfig from "@/common/sys-config";
 
 export default {
   name: 'Layout',
@@ -60,60 +55,37 @@ export default {
     isSuperAdmin() {
       return this.$store.getters.roles.some(v => v === 'super-admin')
     },
+    sysConfig() {
+      return SysConfig;
+    }
   },
   data() {
     return {
-      driver: null
+
     }
   },
   mounted() {
-    this.driver = new Driver({
-      doneBtnText: '明白了',
-      closeBtnText: '不想看了',
-      nextBtnText: '下一步',
-      prevBtnText: '上一步',
-    })
+    this.buildSocketConnect()
+  },
+  beforeDestroy() {
+    closeWebsocket()
   },
   methods: {
     handleClickOutside() {
       this.$store.dispatch('app/closeSideBar', {withoutAnimation: false})
     },
-    handleShowHelpClick(toPath) {
-      let that = this
-      let path = this.$route.path
-      if (path !== toPath) {
-        this.$message.success('等待数据刷新完毕，1秒后开始帮助演示')
-        this.$router.push(toPath)
-      }
-      this.$refs.rightPanel.closePanel()
-      // 等待跳转doom刷新完毕
-      this.$nextTick(() => {
-        // 开始引导操作
-        switch (toPath) {
-          case '/dashboard':
-            setTimeout(() => {
-              that.driver.defineSteps(homeSteps)
-              that.driver.start()
-            }, 1000)
-            break
-          case '/room/list':
-            setTimeout(() => {
-              if (this.isSuperAdmin) {
-                that.driver.defineSteps(roomListStepsSuperAdmin)
-              } else {
-                that.driver.defineSteps(roomListStepsAdmin)
-              }
-              that.driver.start()
-            }, 1000)
-            break
-          case '/config/index':
-            setTimeout(() => {
-              that.driver.defineSteps(configListSteps)
-              that.driver.start()
-            }, 1000)
-            break
+    buildSocketConnect() {
+      const whiteList = ['/login']
+      const user = getUserInfo()
+      if (user) {
+        // 建立web socket连接
+        if (whiteList.indexOf(this.$route.fullPath) === -1) {
+          // 发送在线信息
+          sendWebsocket(this.sysConfig.websocketPath + "?userId=" + user.id, navigator.userAgent, msg => {
+            this.$store.dispatch('app/connectSocketChannel', msg)
+          }, e => {})
         }
-      })
+      }
     }
   }
 }

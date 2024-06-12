@@ -1,6 +1,7 @@
 const CONFIG = {
   development: {
     baseUrl: 'http://localhost:8500',
+    websocketPath: 'ws://localhost:9500/websocket',
     logo: 'http://localhost:9528/logo.png',
     avatar: 'http://localhost:9528/header1.gif',
     emptyImg: 'http://localhost:9528/empty.png',
@@ -11,6 +12,7 @@ const CONFIG = {
   // 内网访问后端服务
   production: {
     baseUrl: 'https://ip:8500',
+    websocketPath: 'wss://ip:9500/websocket',
     logo: 'https://ip/logo.png',
     avatar: 'https://ip/header1.gif',
     emptyImg: 'https://ip/empty.png',

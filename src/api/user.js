@@ -1,13 +1,10 @@
 import request from '@/utils/request'
 
 export default {
-  getPublicKey(currentTimeMills) {
+  getOnlineUserApi() {
     return request({
-      url: '/user/publicKey',
-      method: 'get',
-      params: {
-        currentTimeMills
-      }
+      url: '/admin/get/online/users',
+      method: 'get'
     })
   },
   login(userLoginDTO) {
@@ -42,13 +39,6 @@ export default {
       url: '/admin/update/role',
       method: 'post',
       data: userRoleChangeDTO
-    })
-  },
-  updateUserTel(userUpdateTelDTO) {
-    return request({
-      url: '/admin/update/user/tel',
-      method: 'post',
-      data: userUpdateTelDTO
     })
   },
   updateUserName(userUpdateNameDTO) {
