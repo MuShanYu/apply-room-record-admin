@@ -45,7 +45,7 @@
         </el-table-column>
         <el-table-column label="姓名" align="center">
           <template slot-scope="{row}">
-            <span>{{ row.nickname }}</span>
+            <span>{{ row.name }}</span>
           </template>
         </el-table-column>
         <el-table-column label="状态" align="center">
