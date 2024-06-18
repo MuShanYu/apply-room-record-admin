@@ -183,7 +183,7 @@ export default {
           this.noticeList = data.pageData;
           this.total = data.totalSize;
           this.listLoading = false;
-          // console.log(this.noticeList);
+          // console.sysOperateLog(this.noticeList);
         })
         .catch((e) => {
           this.listLoading = false;

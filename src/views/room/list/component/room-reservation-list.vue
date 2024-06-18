@@ -251,7 +251,7 @@ export default {
         .then((data) => {
           this.dataList = data.pageData;
           this.total = data.totalSize;
-          // console.log(this.dataList);
+          // console.sysOperateLog(this.dataList);
           this.listLoading = false;
         })
         .catch((e) => {

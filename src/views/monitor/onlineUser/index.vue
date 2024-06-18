@@ -64,7 +64,7 @@
 <script>
 import userApi from '@/api/user'
 export default {
-  name: 'onlineUser',
+  name: 'OnlineUser',
   data() {
     return {
       listLoading: true,

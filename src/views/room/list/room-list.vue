@@ -106,9 +106,7 @@
         </el-table-column>
         <el-table-column label="房间名" align="center">
           <template slot-scope="{row}">
-            <span @click="handleCopy(config.qrCodeUrlPrefix + row.id, $event)" class="link-type">{{
-                row.roomName
-              }}</span>
+            <span>{{ row.roomName }}</span>
           </template>
         </el-table-column>
         <el-table-column label="设备信息" align="center">
@@ -365,7 +363,7 @@ export default {
         this.roomList = data.pageData
         this.total = data.totalSize
         this.listLoading = false
-        // console.log(this.roomList);
+        // console.sysOperateLog(this.roomList);
       }).catch(e => {
         this.listLoading = false
       })
@@ -470,7 +468,7 @@ export default {
           }
           resolve()
         }).catch(e => {
-          // console.log(e);
+          // console.sysOperateLog(e);
           resolve()
         })
       })
@@ -507,7 +505,7 @@ export default {
           }
           resolve()
         }).catch(e => {
-          // console.log(e);
+          // console.sysOperateLog(e);
           resolve()
         })
       })

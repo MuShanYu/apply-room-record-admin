@@ -6,22 +6,33 @@
 
     <div class="right-menu">
       <template v-if="device !== 'mobile'">
-        <div @click="handleUpdateWeb" class="right-menu-item hover-effect">
-          更新<svg-icon icon-class="fullscreen" />
-        </div>
+
+        <el-tooltip content="项目地址" effect="dark" placement="bottom">
+          <div @click="goto" class="right-menu-item hover-effect">
+            <svg-icon icon-class="github" />
+          </div>
+        </el-tooltip>
+
+        <el-tooltip content="更新版本" effect="dark" placement="bottom">
+          <div @click="handleUpdateWeb" class="right-menu-item hover-effect">
+            <svg-icon icon-class="refresh" />
+          </div>
+        </el-tooltip>
+
+        <screen-full id="screenfull" class="right-menu-item hover-effect" />
+
       </template>
 
-      <el-dropdown class="avatar-container" trigger="click">
+      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <!--          <span v-if="userInfo" style="font-size: 13px;">{{userInfo.nickname}}</span>-->
           <img :src="config.avatar" class="user-avatar">
           <i class="el-icon-caret-bottom"/>
         </div>
-        <el-dropdown-menu slot="dropdown" class="user-dropdown">
+        <el-dropdown-menu slot="dropdown">
           <router-link to="/profile/index">
             <el-dropdown-item>个人中心</el-dropdown-item>
           </router-link>
-          <el-dropdown-item @click.native="logout">
+          <el-dropdown-item divided @click.native="logout">
             <span style="display:block;">退出登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
@@ -34,6 +45,8 @@
 import {mapGetters} from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import ScreenFull from "@/components/ScreenFull/index.vue";
+
 import config from "@/common/sys-config";
 
 import configApi from '@/api/config'
@@ -43,7 +56,8 @@ import Cookies from 'js-cookie'
 export default {
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
+    ScreenFull
   },
   computed: {
     ...mapGetters([
@@ -108,6 +122,9 @@ export default {
           }, 3000)
         }
       })
+    },
+    goto() {
+      window.open('https://github.com/MuShanYu')
     }
   }
 }

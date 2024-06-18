@@ -154,7 +154,7 @@ export default {
       this.$message.success('数据解析成功，请查看，确认后一键上传')
       this.tableData = results
       this.tableHeader = header
-      // console.log(this.tableData);
+      // console.sysOperateLog(this.tableData);
       this.showConfirm = true
     },
     async handleUpload() {

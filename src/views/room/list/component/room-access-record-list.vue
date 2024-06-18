@@ -156,7 +156,7 @@ export default {
       recordApi.queryUserAccessRecordByRoomIdApi(this.query).then(res => {
         this.listLoading = false
         this.recordList = res.pageData
-        // console.log(this.recordList);
+        // console.sysOperateLog(this.recordList);
         this.total = res.totalSize
       })
     },

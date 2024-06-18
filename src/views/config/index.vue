@@ -167,7 +167,7 @@ export default {
         this.configList = res.pageData
         this.total = res.totalSize
         this.loading = false
-        // console.log(this.config)
+        // console.sysOperateLog(this.config)
       }).catch(e => {
         this.loading = false
       })

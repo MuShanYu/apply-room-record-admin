@@ -63,7 +63,7 @@ export const constantRoutes = [
         path: 'approve',
         name: 'RoomApprove',
         component: () => import('@/views/room/approve/room-approve'),
-        meta: {title: '预约申请审批', noCache: false}
+        meta: {title: '预约审批', noCache: false}
       },
       {
         path: 'import',
@@ -112,7 +112,6 @@ export const constantRoutes = [
     path: '/monitor',
     component: Layout,
     name: 'Monitor',
-    alwaysShow: true,
     redirect: '/monitor/online-user',
     meta: {title: '系统监控', icon: 'monitor'},
     children: [
@@ -121,6 +120,18 @@ export const constantRoutes = [
         name: 'OnlineUser',
         component: () => import('@/views/monitor/onlineUser'),
         meta: {title: '在线用户', noCache: false}
+      },
+      {
+        path: 'server',
+        name: 'Server',
+        component: () => import('@/views/monitor/server'),
+        meta: {title: '服务监控', noCache: false}
+      },
+      {
+        path: 'sys-operate-log',
+        name: 'SysOperateLog',
+        component: () => import('@/views/monitor/sysOperateLog'),
+        meta: {title: '操作日志', noCache: false}
       }
     ]
   },

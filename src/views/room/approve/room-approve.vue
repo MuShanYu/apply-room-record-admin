@@ -220,7 +220,7 @@ export default {
         this.assignmentRightRoomList(data.pageData, this.query.state)
         this.total = data.totalSize
         this.tabLoading(this.query.state, false)
-        // console.log(data.pageData);
+        // console.sysOperateLog(data.pageData);
       }).catch(e => {
         this.tabLoading(this.query.state, false)
       })

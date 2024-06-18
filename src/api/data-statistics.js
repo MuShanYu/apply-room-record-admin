@@ -51,4 +51,10 @@ export default {
       data: roomRecordCountDTO
     })
   },
+  getServerInfoApi() {
+    return request({
+      url: '/admin/query/server/info',
+      method: 'get'
+    })
+  },
 }

@@ -208,7 +208,7 @@ export default {
         this.userList = data.pageData
         this.total = data.totalSize
         this.listLoading = false
-        // console.log(this.userList);
+        // console.sysOperateLog(this.userList);
       }).catch(e => {
         this.listLoading = false
       })
@@ -228,7 +228,7 @@ export default {
     },
     updateRole() {
       let that = this
-      // console.log(this.currentUser);
+      // console.sysOperateLog(this.currentUser);
       userApi.changeRole({
         userId: that.currentUser.id,
         roleIds: that.roleIds

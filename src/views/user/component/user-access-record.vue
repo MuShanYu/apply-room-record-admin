@@ -156,7 +156,7 @@
           this.countTotal = res.totalSize
           this.countLoading = false
           this.btnLoading = false
-          // console.log(this.countList);
+          // console.sysOperateLog(this.countList);
         }).catch(e => {
           this.countLoading = false
           this.btnLoading = false
@@ -168,7 +168,7 @@
           this.recordList = res.pageData
           this.total = res.totalSize
           this.listLoading = false
-          // console.log(this.recordList);
+          // console.sysOperateLog(this.recordList);
         }).catch(e => {
           this.listLoading = false
         })
