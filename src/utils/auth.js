@@ -53,3 +53,23 @@ export function getRoles() {
 export function removeRoles() {
   Cookies.remove("roles")
 }
+
+export function setPermissions(permissions) {
+  let userPermissions = []
+  if (permissions) {
+    userPermissions = JSON.stringify(permissions)
+  }
+  Cookies.set("permissions", userPermissions, { expires: 7 })
+}
+
+export function getPermissions() {
+  let userPermissions = Cookies.get("permissions")
+  if (userPermissions) {
+    return JSON.parse(userPermissions)
+  }
+  return []
+}
+
+export function removePermissions() {
+  Cookies.remove("permissions")
+}

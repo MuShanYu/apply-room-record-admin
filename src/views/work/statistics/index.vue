@@ -137,13 +137,13 @@
 import dataStatistics from "@/api/data-statistics";
 import {downloadFile} from "@/utils";
 
-import PanelGroup from "@/views/dashboard/component/PanelGroup";
+import PanelGroup from "./component/PanelGroup";
 import PieChart from "@/components/Charts/PieChart";
 import BarChart from "@/components/Charts/BarChart";
 import LineChart from "@/components/Charts/LineChart";
 
 export default {
-  name: 'Dashboard',
+  name: 'DataStatistics',
   computed: {},
   components: {
     PieChart,

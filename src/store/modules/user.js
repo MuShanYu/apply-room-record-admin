@@ -7,16 +7,21 @@ import {
   removeUserInfo,
   setUserInfo,
   removeRoles,
-  setRoles, getRoles
+  setRoles,
+  getRoles,
+  getPermissions,
+  setPermissions,
+  removePermissions
 } from '@/utils/auth'
-import router, { resetRouter } from '@/router'
+import router from '@/router'
 import {Message} from "element-ui";
 
 const getDefaultState = () => {
   return {
     token: getToken(),
     userInfo: getUserInfo(),
-    roles: getRoles()
+    roles: getRoles(),
+    permissions: getPermissions()
   }
 }
 
@@ -35,6 +40,10 @@ const mutations = {
     state.roles = roles
     setRoles(roles)
   },
+  SET_PERMISSIONS: (state, permissions) => {
+    state.permissions = permissions
+    setPermissions(permissions)
+  },
   LOGOUT: (state) => {
     userApi.logout().then(() => {
       state.token = null
@@ -43,6 +52,7 @@ const mutations = {
       removeUserInfo()
       removeToken()
       removeRoles()
+      removePermissions()
       router.replace("/login")
     })
   }
@@ -50,8 +60,8 @@ const mutations = {
 
 const actions = {
   // user login
-  login({ commit }, userInfo) {
-    const { stuNum, pwd } = userInfo
+  login({commit}, userInfo) {
+    const {stuNum, pwd} = userInfo
     return new Promise((resolve, reject) => {
       let userLoginDTO = {
         stuNum: stuNum.trim(),
@@ -63,6 +73,7 @@ const actions = {
           commit('SET_TOKEN', data.token)
           commit('SET_USER_INFO', data.user)
           commit('SET_ROLES', data.roles)
+          commit('SET_PERMISSIONS', data.permissions)
           resolve()
         } else {
           Message({
@@ -77,10 +88,10 @@ const actions = {
       })
     })
   },
-  logout({ commit }) {
+  logout({commit}) {
     commit('LOGOUT')
   },
-  updateUserInfo({ commit }, newUserInfo) {
+  updateUserInfo({commit}, newUserInfo) {
     commit('SET_USER_INFO', newUserInfo)
   }
 }

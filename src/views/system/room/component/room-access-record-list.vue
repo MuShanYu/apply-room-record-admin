@@ -55,12 +55,12 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="进入时间" align="center">
+        <el-table-column label="进入时间" align="center" width="160">
           <template slot-scope="{row}">
             <span>{{ row.entryTime | parseTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="离开时间" align="center">
+        <el-table-column label="离开时间" align="center" width="160">
           <template slot-scope="{row}">
             <span v-if="row.outTime !== null">{{ row.outTime | parseTime }}</span>
             <span v-else>暂无</span>

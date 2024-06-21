@@ -90,7 +90,7 @@ export default {
       this.$emit('handleShowHelpClick', '/dashboard')
     },
     handleShowRoomListHelpClick() {
-      this.$emit('handleShowHelpClick', '/room/list')
+      this.$emit('handleShowHelpClick', '/room/room')
     },
     handleShowConfigListHelpClick() {
       this.$emit('handleShowHelpClick', '/config/index')

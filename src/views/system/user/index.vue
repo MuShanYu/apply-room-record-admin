@@ -19,7 +19,7 @@
                  @click="getUserList">
         搜索
       </el-button>
-      <el-button class="filter-item" v-permission="['super-admin']" @click="$router.push('/user/import')" v-waves style="margin-left: 10px;"
+      <el-button class="filter-item" v-permission="['super-admin']" @click="$router.push('/data-import/user')" v-waves style="margin-left: 10px;"
                  type="primary" icon="el-icon-upload2">
         导入
       </el-button>
@@ -133,8 +133,8 @@
 import userApi from "@/api/user";
 import dataStatistics from "@/api/data-statistics";
 
-import UserRoomReserve from "@/views/user/component/user-room-reserve";
-import UserAccessRecord from "@/views/user/component/user-access-record";
+import UserRoomReserve from "./component/user-room-reserve";
+import UserAccessRecord from "./component/user-access-record";
 import Pagination from "@/components/Pagination";
 
 import config from '@/common/sys-config'

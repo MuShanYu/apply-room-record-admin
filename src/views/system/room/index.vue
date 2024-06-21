@@ -68,7 +68,7 @@
         生成房间二维码
       </el-button>
       <div id="room-list-import" style="display: flex;margin-left: 10px;">
-        <el-button v-permission="['super-admin']" @click="$router.push('/room/import')"
+        <el-button v-permission="['super-admin']" @click="$router.push('/data-import/room')"
                    v-waves type="primary" icon="el-icon-upload2">
           导入
         </el-button>
@@ -131,7 +131,7 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" width="150" align="center">
+        <el-table-column label="创建时间" width="160" align="center">
           <template slot-scope="{row}">
             <span>{{ row.createTime | parseTime }}</span>
           </template>
@@ -255,12 +255,12 @@ import roomApi from '@/api/room'
 import dataStatistics from "@/api/data-statistics";
 
 import Pagination from "@/components/Pagination";
-import RoomReservationList from "@/views/room/list/component/room-reservation-list";
-import RoomUpdate from "@/views/room/list/component/room-update";
-import RoomAdd from "@/views/room/list/component/room-add";
-import RoomAccessRecordList from "@/views/room/list/component/room-access-record-list";
-import RoomQrCodeGenerate from "@/views/room/list/component/room-qr-code-generate";
-import RoomAttendanceList from "@/views/room/list/component/room-attendance-list";
+import RoomReservationList from "./component/room-reservation-list";
+import RoomUpdate from "./component/room-update";
+import RoomAdd from "./component/room-add";
+import RoomAccessRecordList from "./component/room-access-record-list";
+import RoomQrCodeGenerate from "./component/room-qr-code-generate";
+import RoomAttendanceList from "./component/room-attendance-list";
 
 import clip from '@/utils/clipboard' // use clipboard directly
 import clipboard from '@/directive/clipboard/index.js'

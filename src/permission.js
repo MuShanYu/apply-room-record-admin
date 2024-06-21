@@ -5,6 +5,7 @@ import getPageTitle from '@/utils/get-page-title'
 import configApi from "@/api/config";
 import Cookies from "js-cookie";
 import {getToken, getUserInfo} from '@/utils/auth'
+import store from './store'
 
 import { Message } from 'element-ui'
 
@@ -31,6 +32,13 @@ router.beforeEach(async(to, from, next) => {
       next(`/login?redirect=${to.path}`)
     }
   } else {
+    store.dispatch('GenerateRoutes').then(accessRoutes => {
+      console.log(accessRoutes);
+      // 根据roles权限生成可访问的路由表
+      // router.addRoutes(accessRoutes) // 动态添加可访问路由表
+      // next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
+
+    })
     next()
   }
 })

@@ -90,7 +90,7 @@ export default {
         this.loading = true;
         this.$store.dispatch("user/login", this.loginForm)
           .then(() => {
-            this.$router.push({path: this.redirect || "/"});
+            this.$router.push({path: this.redirect || "/work/data-statistics"});
             this.loading = false;
           })
           .catch(() => {
