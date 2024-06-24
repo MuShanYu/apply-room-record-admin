@@ -47,9 +47,7 @@ export const constantRoutes = [
     path: '/',
     component: Layout,
     redirect: '/work/data-statistics'
-  },
-  // 404 page must be placed at the end !!!
-  {path: '*', redirect: '/404', hidden: true}
+  }
 ]
 
 export const dynamicRoutes = []

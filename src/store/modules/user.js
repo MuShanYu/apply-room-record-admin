@@ -1,17 +1,12 @@
 import userApi from '@/api/user'
+import {getUserPermissionAndRole} from "@/api/user";
 import {
   getToken,
   setToken,
   removeToken,
   getUserInfo,
   removeUserInfo,
-  setUserInfo,
-  removeRoles,
-  setRoles,
-  getRoles,
-  getPermissions,
-  setPermissions,
-  removePermissions
+  setUserInfo
 } from '@/utils/auth'
 import router from '@/router'
 import {Message} from "element-ui";
@@ -20,8 +15,8 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     userInfo: getUserInfo(),
-    roles: getRoles(),
-    permissions: getPermissions()
+    roles: [],
+    permissions: []
   }
 }
 
@@ -38,11 +33,9 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
-    setRoles(roles)
   },
   SET_PERMISSIONS: (state, permissions) => {
     state.permissions = permissions
-    setPermissions(permissions)
   },
   LOGOUT: (state) => {
     userApi.logout().then(() => {
@@ -51,8 +44,6 @@ const mutations = {
       state.roles = []
       removeUserInfo()
       removeToken()
-      removeRoles()
-      removePermissions()
       router.replace("/login")
     })
   }
@@ -72,8 +63,6 @@ const actions = {
         if (data !== null) {
           commit('SET_TOKEN', data.token)
           commit('SET_USER_INFO', data.user)
-          commit('SET_ROLES', data.roles)
-          commit('SET_PERMISSIONS', data.permissions)
           resolve()
         } else {
           Message({
@@ -93,7 +82,23 @@ const actions = {
   },
   updateUserInfo({commit}, newUserInfo) {
     commit('SET_USER_INFO', newUserInfo)
-  }
+  },
+  // 获取用户信息
+  getUserPermissionAndRole({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      getUserPermissionAndRole().then(res => {
+        if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
+          commit('SET_ROLES', res.roles)
+          commit('SET_PERMISSIONS', res.permission)
+        } else {
+          commit('SET_ROLES', ['ROLE_DEFAULT'])
+        }
+        resolve(res)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
 }
 
 export default {

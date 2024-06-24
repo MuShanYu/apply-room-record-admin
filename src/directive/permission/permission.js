@@ -1,9 +1,8 @@
 import store from '@/store'
-import {getRoles} from "@/utils/auth";
 
 function checkPermission(el, binding) {
   const { value } = binding
-  const roles = getRoles()
+  const roles = store.getters.roles
   if (value && value instanceof Array) {
     if (value.length > 0) {
       const permissionRoles = value

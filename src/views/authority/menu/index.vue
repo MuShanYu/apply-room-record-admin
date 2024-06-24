@@ -38,13 +38,10 @@
         <el-table-column align="center" prop="orderNum" label="排序" width="60"></el-table-column>
         <el-table-column align="center" prop="perms" label="权限标识" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column align="center" prop="component" label="组件路径" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column align="center" prop="state" label="状态" width="80">
+        <el-table-column align="center" prop="state" label="类型" width="80">
           <template slot-scope="{ row }">
-            <el-tag v-if="row.state === 1 || row.state === 0" :type="row.state === 1 ? 'success' : 'info'">
-              {{ row.state === 1 ? "正常" : "停用" }}
-            </el-tag>
-            <el-tag v-if="row.state === 2" type="danger">
-              删除
+            <el-tag type="primary">
+              {{row.menuType | messageTypeFilter}}
             </el-tag>
           </template>
         </el-table-column>
@@ -109,6 +106,18 @@ export default {
   },
   mounted() {
     this.getTreeSelect()
+  },
+  filters: {
+    messageTypeFilter(type) {
+      switch (type) {
+        case 0:
+          return '目录';
+        case 1:
+          return '菜单';
+        case 2:
+          return '按钮'
+      }
+    }
   },
   methods: {
     /** 查询菜单下拉树结构 */

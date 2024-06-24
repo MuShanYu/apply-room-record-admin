@@ -49,7 +49,7 @@
             <el-input v-model="form.title" placeholder="请输入目录/菜单/按钮名称"/>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="12" v-if="form.menuType !== 2">
           <el-form-item label="路由名称" prop="name">
             <el-input v-model="form.name" placeholder="请输入路由名称"/>
           </el-form-item>

@@ -56,3 +56,10 @@ export default {
     })
   }
 }
+
+export function getUserPermissionAndRole() {
+  return request({
+    url: '/user/get/auth',
+    method: 'get'
+  })
+}

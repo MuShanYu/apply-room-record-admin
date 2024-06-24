@@ -309,11 +309,15 @@ export default {
   name: 'Server',
   data() {
     return {
-      server: {}
+      server: {},
+      timer: null
     }
   },
   created() {
     this.fetchDataPeriodically(3000)
+  },
+  beforeDestroy() {
+    clearInterval(this.timer)
   },
   methods: {
     async fetchDataPeriodically(interval) {
@@ -326,7 +330,7 @@ export default {
       let isFetching = false;
       this.server = await dataStatistics.getServerInfoApi();
       loading.close()
-      setInterval(async () => {
+      this.timer = setInterval(async () => {
         if (isFetching) return; // 如果当前正在进行请求，则返回，避免并发请求
         isFetching = true;
         try {

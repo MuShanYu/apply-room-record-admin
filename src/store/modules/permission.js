@@ -1,83 +1,77 @@
+import { constantRoutes } from '@/router'
 import {getBuiltMenuApi} from "@/api/sys-menu";
-import router, {constantRoutes, dynamicRoutes} from '@/router'
 import Layout from '@/layout/index'
-import ParentView from '@/components/ParentView'
-import {getDayCountOfMonth} from "element-ui";
-import {load} from "runjs/lib/script";
 
-const permission = {
-  state: {
-    routes: [],
-    addRoutes: [],
-    defaultRoutes: [],
-    topBarRouters: [],
-    sidebarRouters: []
-  },
-  mutations: {
-    SET_ROUTES: (state, routes) => {
-      state.addRoutes = routes
-      state.routes = constantRoutes.concat(routes)
-    },
-    SET_DEFAULT_ROUTES: (state, routes) => {
-      state.defaultRoutes = constantRoutes.concat(routes)
-    },
-    SET_TOP_BAR_ROUTES: (state, routes) => {
-      state.topBarRouters = routes
-    },
-    SET_SIDEBAR_ROUTERS: (state, routes) => {
-      state.sidebarRouters = routes
-    },
-  },
-  actions: {
-    // 生成路由
-    GenerateRoutes({commit}) {
-      return new Promise(resolve => {
-        // 向后端请求路由数据
-        getBuiltMenuApi().then(res => {
-          let routes = [...res];
-          routes.forEach(item => {
-            item.children = loadRouteChildren(item.children)
-            item.component = loadComponent(item.component)
-          })
-          commit('SET_ROUTES', routes)
-          // commit('SET_SIDEBAR_ROUTERS', constantRoutes.concat(routes))
-          resolve(routes)
-        })
+const state = {
+  routes: [],
+  addRoutes: []
+}
+
+const mutations = {
+  SET_ROUTES: (state, routes) => {
+    state.addRoutes = routes
+    state.routes = constantRoutes.concat(routes)
+  }
+}
+
+const actions = {
+  // 生成路由
+  generateRoutes({ commit }) {
+    return new Promise(resolve => {
+      // 向后端请求路由数据
+      getBuiltMenuApi().then(res => {
+        console.log(res);
+        // console.log(res.data)
+        const rewriteRoutes = filterAsyncRouter(res)
+        rewriteRoutes.push({ path: '*', redirect: '/404', hidden: true })
+        commit('SET_ROUTES', rewriteRoutes)
+        console.log(rewriteRoutes);
+        resolve(rewriteRoutes)
       })
-    }
+    })
   }
 }
 
-function loadRouteChildren(children) {
-  children.forEach(v => {
-    v.component = loadComponent(v.component)
-    if (v.children) {
-      v.children = loadRouteChildren(v.children)
+// 遍历后台传来的路由字符串，转换为组件对象
+function filterAsyncRouter(asyncRouterMap) {
+  return asyncRouterMap.filter(route => {
+    if (route.component !== '' && route.component !== null) {
+      // Layout 组件特殊处理
+      if (route.component === 'Layout') {
+        route.component = Layout
+        // 首组件前加上/
+        route.path = '/' + route.path
+      } else {
+        route.component = loadView(route.component)
+      }
     }
-  })
-  return children
-}
-
-function loadComponent(component) {
-  if (component) {
-    // Layout ParentView 组件特殊处理
-    if (component === 'Layout') {
-      return Layout
-    } else if (component === 'ParentView') {
-      return ParentView
+    // 这个组件是否还有组件，有就进行递归 第二个的值可能为undefined
+    if (route.children !== null && route.children && route.children.length > 0) {
+      route.children = filterAsyncRouter(route.children)
     } else {
-      return loadView(component)
+      // 没有孩子了就删除一些属性
+      delete route['children']
+      // 删除子节点 isAlwaysShow属性
+      delete route['alwaysShow']
     }
-  }
+    // 删除一些不用属性
+    delete route['parentId']
+    delete route['orderNum']
+    delete route['id']
+    delete route['isLink']
+    delete route['menuType']
+    return true
+  })
 }
 
-export const loadView = (view) => {
-  if (process.env.NODE_ENV === 'development') {
-    return (resolve) => require([`@/views/${view}`], resolve)
-  } else {
-    // 使用 import 实现生产环境的路由懒加载
-    return () => import(`@/views/${view}`)
-  }
+export const loadView = (view) => { // 路由懒加载
+                                    // console.log(view)
+  return (resolve) => require([`@/views/${view}`], resolve)
 }
 
-export default permission
+export default {
+  namespaced: true,
+  state,
+  mutations,
+  actions
+}

@@ -32,10 +32,29 @@ export function updateMenuApi(data) {
     data: data
   })
 }
+
 export function delMenuApi(id) {
   return request({
     url: '/sys-menu/del/' + id,
     method: 'delete'
+  })
+}
+
+export function getRoleMenuApi(roleId) {
+  return request({
+    url: '/sys-menu/query/role-menu',
+    method: 'get',
+    params: {
+      roleId
+    }
+  })
+}
+
+export function grantMenuToRoleApi(data) {
+  return request({
+    url: '/sys-menu/grant-to-role',
+    method: 'put',
+    data: data
   })
 }
 
