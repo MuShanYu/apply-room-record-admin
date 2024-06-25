@@ -93,7 +93,7 @@
 
         <el-table-column label="操作" align="center">
           <template slot-scope="{row, $index}">
-            <el-button @click="handleDetail($index)" icon="el-icon-view" size="medium" type="text">
+            <el-button @click="handleDetail($index)" icon="el-icon-view" size="mini" type="primary">
               详情
             </el-button>
           </template>

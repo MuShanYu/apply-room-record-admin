@@ -70,13 +70,13 @@
 <!--            </el-tag>-->
 <!--          </template>-->
 <!--        </el-table-column>-->
-        <el-table-column width="230" label="操作" align="center">
+        <el-table-column width="250" label="操作" align="center">
           <template slot-scope="{row, $index}">
-            <el-button icon="el-icon-position" @click="handleUserAccessRecordClick(row, $index)" type="text"
+            <el-button icon="el-icon-position" @click="handleUserAccessRecordClick(row, $index)" type="primary"
                        size="mini">
               足迹详情
             </el-button>
-            <el-button icon="el-icon-time" @click="handleReserveDetailClick(row, $index)" style="margin-left: 10px;" type="text"
+            <el-button icon="el-icon-time" @click="handleReserveDetailClick(row, $index)" style="margin-left: 10px;" type="primary"
                        size="mini">
               预约详情
             </el-button>

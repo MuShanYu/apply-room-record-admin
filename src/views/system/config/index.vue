@@ -49,14 +49,14 @@
             <span>{{ row.createTime | parseTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column width="150" label="操作" align="center">
+        <el-table-column width="200" label="操作" align="center">
           <template slot-scope="{row, $index}">
             <el-button v-permission="['super-admin']" :disabled="row.state !== 1"
                        icon="el-icon-edit"
-                       @click="handleUpdateConfigClick(row, $index)" type="text" size="mini">
+                       @click="handleUpdateConfigClick(row, $index)" type="primary" size="mini">
               修改
             </el-button>
-            <el-button type="text" @click="handleDelClick(row, $index)"
+            <el-button type="danger" @click="handleDelClick(row, $index)"
                        icon="el-icon-delete"
                        v-permission="['super-admin']" style="margin-left: 10px;" size="mini">
               {{ row.state === -1 ? '解除' : '禁用' }}

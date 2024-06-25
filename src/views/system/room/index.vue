@@ -150,12 +150,12 @@
             <span>{{ row.chargePerson }}</span>
           </template>
         </el-table-column>
-        <el-table-column width="230" label="操作" align="center">
+        <el-table-column width="250" label="操作" align="center">
           <template slot-scope="{row, $index}">
-            <el-button @click="handleRoomReservationClick(row, $index)" icon="el-icon-time" type="text" size="mini">
+            <el-button @click="handleRoomReservationClick(row, $index)" icon="el-icon-time" type="primary" size="mini">
               预约详情
             </el-button>
-            <el-button @click="handleRoomAttendanceClick(row, $index)" icon="el-icon-date" style="margin-left: 10px;" type="text" size="mini">
+            <el-button @click="handleRoomAttendanceClick(row, $index)" icon="el-icon-date" style="margin-left: 10px;" type="primary" size="mini">
               签到详情
             </el-button>
 

@@ -54,18 +54,18 @@
             <span>{{ row.createTime | parseTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="220">
+        <el-table-column label="操作" align="center" width="250">
           <template slot-scope="scope">
             <el-button
               size="mini"
-              type="text"
+              type="primary"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
             >修改
             </el-button>
             <el-button
               size="mini"
-              type="text"
+              type="danger"
               icon="el-icon-delete"
               @click="handleDelRole(scope.row)"
             >删除
