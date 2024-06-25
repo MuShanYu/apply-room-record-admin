@@ -63,27 +63,36 @@
             <span>{{ row.createTime | parseTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="权限" width="200" align="center">
-          <template slot-scope="{row}">
-            <el-tag style="margin: 3px;" v-for="item in row.roleList" :key="item.id" type="primary">
-              {{ item.roleDes }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column width="300" label="操作" align="center">
+<!--        <el-table-column label="权限" width="200" align="center">-->
+<!--          <template slot-scope="{row}">-->
+<!--            <el-tag style="margin: 3px;" v-for="item in row.roleList" :key="item.id" type="primary">-->
+<!--              {{ item.roleDes }}-->
+<!--            </el-tag>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
+        <el-table-column width="230" label="操作" align="center">
           <template slot-scope="{row, $index}">
-            <el-button @click="handleUserAccessRecordClick(row, $index)" v-waves style="margin: 3px;" type="primary"
+            <el-button icon="el-icon-position" @click="handleUserAccessRecordClick(row, $index)" type="text"
                        size="mini">
               足迹详情
             </el-button>
-            <el-button @click="handleReserveDetailClick(row, $index)" v-waves style="margin: 3px;" type="primary"
+            <el-button icon="el-icon-time" @click="handleReserveDetailClick(row, $index)" style="margin-left: 10px;" type="text"
                        size="mini">
               预约详情
             </el-button>
-            <el-button plain type="primary" @click="handleUpdateRoleClick(row, $index)" v-waves
-                       v-permission="['super-admin']" style="margin: 3px;" size="mini">
-              权限修改
-            </el-button>
+<!--            <el-button plain type="primary" @click="handleUpdateRoleClick(row, $index)" v-waves-->
+<!--                       v-permission="['super-admin']" style="margin: 3px;" size="mini">-->
+<!--              权限修改-->
+<!--            </el-button>-->
+            <el-dropdown style="margin-left: 10px;" size="mini"
+                         @command="(command) => handleCommand(command, row)">
+              <el-button size="mini" type="text" icon="el-icon-d-arrow-right">更多</el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="handleUpdateUserInfo" icon="el-icon-edit">修改信息</el-dropdown-item>
+                <el-dropdown-item command="handleResetPwd" icon="el-icon-unlock">重置密码</el-dropdown-item>
+                <el-dropdown-item command="handleGrantRoleClick" icon="el-icon-user">分配角色</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </template>
         </el-table-column>
       </el-table>
@@ -126,16 +135,31 @@
       </div>
     </el-dialog>
 
+    <el-dialog center :visible.sync="updateDialog" title="修改用户信息">
+      <update-info :user="currentUser" @submitClick="handleUserUpdate" @cancelClick="updateDialog = false"/>
+    </el-dialog>
+
+    <el-drawer
+      title="分配角色"
+      size="60%"
+      :visible.sync="drawer"
+      direction="rtl">
+        <grant-role :user-id="currentUser.id" />
+    </el-drawer>
+
   </div>
 </template>
 
 <script>
 import userApi from "@/api/user";
 import dataStatistics from "@/api/data-statistics";
+import {resetUserPwdApi, adminUpdateUserInfoApi} from "@/api/user";
 
 import UserRoomReserve from "./component/user-room-reserve";
 import UserAccessRecord from "./component/user-access-record";
 import Pagination from "@/components/Pagination";
+import UpdateInfo from "@/views/system/user/component/update-info.vue";
+import GrantRole from "@/views/system/user/component/grant-role.vue";
 
 import config from '@/common/sys-config'
 import {mapState} from "vuex";
@@ -145,7 +169,9 @@ export default {
   components: {
     Pagination,
     UserRoomReserve,
-    UserAccessRecord
+    UserAccessRecord,
+    UpdateInfo,
+    GrantRole
   },
   computed: {
     config() {
@@ -194,6 +220,9 @@ export default {
       recordUserId: '',
       reserveUserId: '',
       isSuperAdmin: false,
+      updateDialog: false,
+      drawer: false,
+
     }
   },
   created() {
@@ -296,6 +325,54 @@ export default {
         return name.replace(name.substring(1, name.length - 1), "*");
       }
       return name;
+    },
+    handleCommand(command, row) {
+      switch (command) {
+        case "handleResetPwd":
+          this.handleResetPwd(row);
+          break;
+        case "handleUpdateUserInfo":
+          this.handleUpdateUserInfo(row);
+          break;
+        case "handleGrantRoleClick":
+          this.handleGrantRoleClick(row);
+          break;
+        default:
+          break;
+      }
+    },
+    handleResetPwd(row) {
+      this.$prompt('请输入要重置的新密码', '重置密码', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: /^.{4,16}$/,
+        inputErrorMessage: '密码的长度在4~16位'
+      }).then(({ value }) => {
+        resetUserPwdApi(row.id, value).then(res => {
+          this.$message.success('修改成功')
+        })
+      }).catch(() => {
+
+      });
+    },
+    handleUpdateUserInfo(row) {
+      this.currentUser = Object.assign({}, row)
+      this.updateDialog = true
+    },
+    handleUserUpdate(user) {
+      this.updateDialog = false
+      let obj = Object.assign({}, user)
+      delete obj['roleList']
+      this.listLoading = true
+      adminUpdateUserInfoApi(obj).then(res => {
+        this.$message.success('修改成功')
+        this.listLoading = false
+        this.getUserList()
+      }).catch(e => this.listLoading = false)
+    },
+    handleGrantRoleClick(row) {
+      this.currentUser = Object.assign({}, row)
+      this.drawer = true
     }
   }
 }

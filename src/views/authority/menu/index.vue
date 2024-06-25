@@ -40,7 +40,7 @@
         <el-table-column align="center" prop="component" label="组件路径" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column align="center" prop="state" label="类型" width="80">
           <template slot-scope="{ row }">
-            <el-tag type="primary">
+            <el-tag type="info">
               {{row.menuType | messageTypeFilter}}
             </el-tag>
           </template>

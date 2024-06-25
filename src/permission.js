@@ -79,9 +79,13 @@ function handleUpdateWeb() {
           duration: 3000
         });
         setTimeout(() => {
+          Message.info({
+            message: "正在下载新版本",
+            duration: 1500
+          })
           window.location.reload();
           Cookies.set(localKey, currentVersion);
-        }, 3000)
+        }, 2000)
       }
     } else {
       // 存储版本

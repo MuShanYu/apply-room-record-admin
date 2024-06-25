@@ -20,12 +20,10 @@ const actions = {
     return new Promise(resolve => {
       // 向后端请求路由数据
       getBuiltMenuApi().then(res => {
-        console.log(res);
         // console.log(res.data)
         const rewriteRoutes = filterAsyncRouter(res)
         rewriteRoutes.push({ path: '*', redirect: '/404', hidden: true })
         commit('SET_ROUTES', rewriteRoutes)
-        console.log(rewriteRoutes);
         resolve(rewriteRoutes)
       })
     })

@@ -63,3 +63,22 @@ export function getUserPermissionAndRole() {
     method: 'get'
   })
 }
+
+export function adminUpdateUserInfoApi(userUpdateDTO) {
+  return request({
+    url: '/admin/update/userInfo',
+    method: 'post',
+    data: userUpdateDTO
+  })
+}
+
+export function resetUserPwdApi(userId, newPwd) {
+  return request({
+    url: '/admin/rest/pwd',
+    method: 'post',
+    params: {
+      userId,
+      newPwd
+    }
+  })
+}

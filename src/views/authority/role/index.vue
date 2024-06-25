@@ -74,14 +74,17 @@
                          @command="(command) => handleCommand(command, scope.row)">
               <el-button size="mini" type="text" icon="el-icon-d-arrow-right">更多</el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="handleUpdateMenuAuth" icon="el-icon-circle-check">菜单权限</el-dropdown-item>
-                <el-dropdown-item command="handleAuthUser" icon="el-icon-user">分配用户</el-dropdown-item>
+                <el-dropdown-item command="handleUpdateMenuAuth" icon="el-icon-key">菜单权限</el-dropdown-item>
+                <el-dropdown-item command="handleDistributeUserClick" icon="el-icon-user">分配用户</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </template>
         </el-table-column>
       </el-table>
     </div>
+
+    <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.size"
+                @pagination="getDataList"/>
 
     <el-dialog title="添加菜单" :visible.sync="addDialog" append-to-body center>
       <add-update-role @clickCancel="addDialog = false" @clickSubmit="handleAddSubmit"/>
@@ -102,6 +105,14 @@
                              ref="updateRoleMenu" :menu-tree="menuTree" :selected-menu="selectedMenu"/>
     </el-dialog>
 
+    <el-drawer
+      title="分配用户"
+      size="60%"
+      :visible.sync="drawer"
+      direction="rtl">
+     <role-distribute-user :role-id="curRole.id" />
+    </el-drawer>
+
   </div>
 </template>
 
@@ -111,12 +122,16 @@ import {getRoleMenuApi, queryMenuListApi, grantMenuToRoleApi} from "@/api/sys-me
 
 import AddUpdateRole from "@/views/authority/role/component/add-update-role.vue";
 import UpdateRoleMenuAuth from "@/views/authority/role/component/update-role-menu-auth.vue";
+import RoleDistributeUser from "@/views/authority/role/component/role-distribute-user.vue";
+import Pagination from "@/components/Pagination";
 
 export default {
   name: 'SysRole',
   components: {
     AddUpdateRole,
-    UpdateRoleMenuAuth
+    UpdateRoleMenuAuth,
+    RoleDistributeUser,
+    Pagination
   },
   data() {
     return {
@@ -126,13 +141,15 @@ export default {
         roleDes: ''
       },
       listLoading: false,
+      total: 0,
       roleList: [],
       addDialog: false,
       updateDialog: false,
       curRole: {},
       updateMenuAuthDialog: false,
       menuTree: [],
-      selectedMenu: []
+      selectedMenu: [],
+      drawer: false
     }
   },
   mounted() {
@@ -145,8 +162,8 @@ export default {
     getDataList() {
       this.listLoading = true
       getRoleListApi(this.query).then(res => {
-        console.log(res);
         this.roleList = res.pageData
+        this.total = res.totalSize
         this.listLoading = false
       }).catch(e => this.listLoading = false)
     },
@@ -195,8 +212,8 @@ export default {
         case "handleUpdateMenuAuth":
           this.handleUpdateMenuAuth(row);
           break;
-        case "handleAuthUser":
-          this.handleAuthUser(row);
+        case "handleDistributeUserClick":
+          this.handleDistributeUserClick(row);
           break;
         default:
           break;
@@ -221,6 +238,10 @@ export default {
         this.$message.success('修改成功')
         this.listLoading = false
       }).catch(e => this.listLoading = false)
+    },
+    handleDistributeUserClick(row) {
+      this.curRole = Object.assign({}, row)
+      this.drawer = true
     }
   }
 }

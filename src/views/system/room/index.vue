@@ -150,38 +150,24 @@
             <span>{{ row.chargePerson }}</span>
           </template>
         </el-table-column>
-        <el-table-column width="250" label="操作" align="center">
+        <el-table-column width="230" label="操作" align="center">
           <template slot-scope="{row, $index}">
-            <el-button @click="handleRoomReservationClick(row, $index)" v-waves
-                       style="margin: 3px;" type="primary"
-                       size="mini">
+            <el-button @click="handleRoomReservationClick(row, $index)" icon="el-icon-time" type="text" size="mini">
               预约详情
             </el-button>
-            <el-button @click="handleRoomAttendanceClick(row, $index)" v-waves
-                       style="margin: 3px;" type="primary"
-                       size="mini">
+            <el-button @click="handleRoomAttendanceClick(row, $index)" icon="el-icon-date" style="margin-left: 10px;" type="text" size="mini">
               签到详情
             </el-button>
-            <el-button @click="handleAccessRecordClick(row, $index)" v-waves
-                       style="margin-left: 3px;" type="primary"
-                       size="mini">
-              足迹详情
-            </el-button>
-            <el-button v-if="currentUserId === row.chargePersonId || isSuperAdmin"
-                       @click="handleRoomUpdateClick(row, $index)" v-waves
-                       style="margin: 3px;" type="info" size="mini">
-              修改
-            </el-button>
 
-            <el-tooltip effect="light" placement="bottom-start">
-              <el-button v-if="row.chargePersonId === currentUserId || isSuperAdmin" type="danger" v-waves plain
-                         @click="handleDisableClick(row)" style="margin: 3px;" size="mini">
-                {{ row.state === 2 ? '解除' : '禁用' }}
-              </el-button>
-              <div slot="content">
-                禁用是指该房间相关数据将不会再被统计，<br/>但是不影响旧数据的查看与统计
-              </div>
-            </el-tooltip>
+            <el-dropdown style="margin-left: 10px;" size="mini"
+                         @command="(command) => handleCommand(command, row)">
+              <el-button size="mini" type="text" icon="el-icon-d-arrow-right">更多</el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="handleAccessRecordClick" icon="el-icon-position">足迹详情</el-dropdown-item>
+                <el-dropdown-item command="handleRoomUpdateClick" icon="el-icon-edit">修改</el-dropdown-item>
+                <el-dropdown-item command="handleDisableClick" icon="el-icon-delete">{{ row.state === 2 ? '解除' : '禁用' }}</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </template>
         </el-table-column>
       </el-table>
@@ -262,7 +248,6 @@ import RoomAccessRecordList from "./component/room-access-record-list";
 import RoomQrCodeGenerate from "./component/room-qr-code-generate";
 import RoomAttendanceList from "./component/room-attendance-list";
 
-import clip from '@/utils/clipboard' // use clipboard directly
 import clipboard from '@/directive/clipboard/index.js'
 import {mapState} from "vuex"; // use clipboard by v-directive
 import config from "@/common/sys-config";
@@ -379,7 +364,7 @@ export default {
       this.currentRoomId = row.id
       this.reservationDrawer = true
     },
-    handleRoomUpdateClick(item, index) {
+    handleRoomUpdateClick(item) {
       this.currentRoom = Object.assign({}, item)
       this.updateRoomDrawer = true
     },
@@ -413,10 +398,7 @@ export default {
       this.roomList.push(room)
       this.addRoomDrawer = false
     },
-    handleCopy(text, event) {
-      clip(text, event)
-    },
-    handleAccessRecordClick(row, index) {
+    handleAccessRecordClick(row) {
       this.currentRoomId = row.id
       this.accessRecordDrawer = true
     },
@@ -520,7 +502,22 @@ export default {
       }
       this.query.page = 1
       this.getRoomList()
-    }
+    },
+    handleCommand(command, row) {
+      switch (command) {
+        case "handleDisableClick":
+          this.handleDisableClick(row);
+          break;
+        case "handleRoomUpdateClick":
+          this.handleRoomUpdateClick(row);
+          break;
+        case "handleAccessRecordClick":
+          this.handleAccessRecordClick(row);
+          break;
+        default:
+          break;
+      }
+    },
   }
 }
 </script>

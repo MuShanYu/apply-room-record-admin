@@ -9,7 +9,7 @@
         node-key="id"
         ref="tree"
         highlight-current
-        :default-expanded-keys="selectedMenu"
+        default-expand-all
         :default-checked-keys="selectedMenu">
        <span class="custom-tree-node" slot-scope="{ node, data }">
         <span>{{ node.label }}</span>

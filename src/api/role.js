@@ -34,3 +34,52 @@ export function delRoleApi(id) {
     method: 'delete'
   })
 }
+
+export function queryRoleGrantedUserApi(id, query) {
+  return request({
+    url: '/role/granted/user/' + id,
+    method: 'get',
+    params: {
+      page: query.page,
+      size: query.size,
+      stuNum: query.stuNum
+    }
+  })
+}
+
+export function grantUserRoleApi(stuNum, roleId) {
+  return request({
+    url: '/role/grant/user',
+    method: 'put',
+    params: {
+      stuNum: stuNum,
+      roleId: roleId
+    }
+  })
+}
+
+export function cancelRoleGrantApi(data) {
+  return request({
+    url: '/role/cancel/grant',
+    method: 'delete',
+    data: data
+  })
+}
+
+export function queryRoleByUserIdApi(userId) {
+  return request({
+    url: '/role/get/by-user-id',
+    method: 'get',
+    params: {
+      userId
+    }
+  })
+}
+
+export function grantRoleToUserBatchApi(data) {
+  return request({
+    url: '/role/grant/user/batch',
+    method: 'post',
+    data: data
+  })
+}
