@@ -31,8 +31,8 @@
         </el-date-picker>
         <el-button @click="handleSearch" style="margin-left: 10px;" icon="el-icon-search" type="primary">搜索
         </el-button>
-<!--        <el-button @click="handleBatchDel" style="margin-left: 10px;" icon="el-icon-delete" type="danger">批量删除-->
-<!--        </el-button>-->
+        <el-button v-permission="['monitor:sysOperateLog:del']" @click="handleBatchDel" style="margin-left: 10px;" icon="el-icon-delete" type="danger">批量删除
+        </el-button>
         <el-button @click="handleReset" icon="el-icon-refresh-right">重置条件</el-button>
       </el-col>
     </el-row>
@@ -93,7 +93,7 @@
 
         <el-table-column label="操作" align="center">
           <template slot-scope="{row, $index}">
-            <el-button @click="handleDetail($index)" icon="el-icon-view" size="mini" type="primary">
+            <el-button v-permission="['monitor:sysOperateLog:detail']" @click="handleDetail($index)" icon="el-icon-view" size="mini" type="primary">
               详情
             </el-button>
           </template>

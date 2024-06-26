@@ -19,11 +19,11 @@
                  @click="getUserList">
         搜索
       </el-button>
-      <el-button class="filter-item" v-permission="['super-admin']" @click="$router.push('/data-import/user')" v-waves style="margin-left: 10px;"
+      <el-button class="filter-item" v-permission="['system:user:import']" @click="$router.push('/data-import/user')" v-waves style="margin-left: 10px;"
                  type="primary" icon="el-icon-upload2">
         导入
       </el-button>
-      <el-link :href="config.userExcelHref" v-permission="['super-admin']" style="margin-left: 18px;"
+      <el-link :href="config.userExcelHref" v-permission="['system:user:downloadTemplate']" style="margin-left: 18px;"
                :underline="false" type="primary">
         导入模板下载 <i class="el-icon-download"></i>
       </el-link>
@@ -63,34 +63,23 @@
             <span>{{ row.createTime | parseTime }}</span>
           </template>
         </el-table-column>
-<!--        <el-table-column label="权限" width="200" align="center">-->
-<!--          <template slot-scope="{row}">-->
-<!--            <el-tag style="margin: 3px;" v-for="item in row.roleList" :key="item.id" type="primary">-->
-<!--              {{ item.roleDes }}-->
-<!--            </el-tag>-->
-<!--          </template>-->
-<!--        </el-table-column>-->
         <el-table-column width="250" label="操作" align="center">
           <template slot-scope="{row, $index}">
-            <el-button icon="el-icon-position" @click="handleUserAccessRecordClick(row, $index)" type="primary"
+            <el-button v-permission="['system:user:accessRecord']" icon="el-icon-position" @click="handleUserAccessRecordClick(row, $index)" type="primary"
                        size="mini">
               足迹详情
             </el-button>
-            <el-button icon="el-icon-time" @click="handleReserveDetailClick(row, $index)" style="margin-left: 10px;" type="primary"
+            <el-button v-permission="['system:user:reserveDetail']" icon="el-icon-time" @click="handleReserveDetailClick(row, $index)" style="margin-left: 10px;" type="primary"
                        size="mini">
               预约详情
             </el-button>
-<!--            <el-button plain type="primary" @click="handleUpdateRoleClick(row, $index)" v-waves-->
-<!--                       v-permission="['super-admin']" style="margin: 3px;" size="mini">-->
-<!--              权限修改-->
-<!--            </el-button>-->
             <el-dropdown style="margin-left: 10px;" size="mini"
                          @command="(command) => handleCommand(command, row)">
               <el-button size="mini" type="text" icon="el-icon-d-arrow-right">更多</el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="handleUpdateUserInfo" icon="el-icon-edit">修改信息</el-dropdown-item>
-                <el-dropdown-item command="handleResetPwd" icon="el-icon-unlock">重置密码</el-dropdown-item>
-                <el-dropdown-item command="handleGrantRoleClick" icon="el-icon-user">分配角色</el-dropdown-item>
+                <el-dropdown-item v-permission="['system:user:update']" command="handleUpdateUserInfo" icon="el-icon-edit">修改信息</el-dropdown-item>
+                <el-dropdown-item v-permission="['system:user:resetPwd']" command="handleResetPwd" icon="el-icon-unlock">重置密码</el-dropdown-item>
+                <el-dropdown-item v-permission="['system:user:distributeRole']" command="handleGrantRoleClick" icon="el-icon-user">分配角色</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </template>
@@ -118,22 +107,6 @@
       direction="rtl">
       <user-access-record :id="recordUserId"/>
     </el-drawer>
-
-    <el-dialog @close="resetUpdateTempData" :close-on-click-modal="false" :center="true"
-               :visible.sync="dialogFormVisible" title="修改权限">
-      <div style="text-align: center;">
-        <el-checkbox-group v-model="roleIds">
-          <el-checkbox :disabled="item.id === '0'" v-for="(item, index) in roleOptions" :label="item.id"
-                       :key="index">
-            {{ item.roleDes }}
-          </el-checkbox>
-        </el-checkbox-group>
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button style="margin-right: 10px;" v-waves @click="dialogFormVisible = false">取消</el-button>
-        <el-button @click="updateRole" v-waves type="primary">确认</el-button>
-      </div>
-    </el-dialog>
 
     <el-dialog center :visible.sync="updateDialog" title="修改用户信息">
       <update-info :user="currentUser" @submitClick="handleUserUpdate" @cancelClick="updateDialog = false"/>
@@ -194,23 +167,6 @@ export default {
       listLoading: false,
       userList: [],
       total: 0,
-      roleOptions: [
-        {
-          roleDes: '普通用户',
-          roleName: 'user',
-          id: '0'
-        },
-        {
-          roleDes: '管理员',
-          roleName: 'admin',
-          id: '1'
-        },
-        {
-          roleDes: '超级管理员',
-          roleName: 'super-admin',
-          id: '2'
-        }
-      ],
       roleIds: [],
       currentUser: {},
       dialogFormVisible: false,
@@ -245,40 +201,6 @@ export default {
     async getInstitute() {
       let data = await dataStatistics.getInstituteClassifyInfo();
       this.institute = data.institutes;
-    },
-    resetUpdateTempData() {
-      this.currentUser = {}
-      this.roleIds = []
-    },
-    handleUpdateRoleClick(row, index) {
-      this.currentUser = Object.assign({}, row)
-      this.currentUser.roleList.forEach(item => this.roleIds.push(item.id))
-      this.dialogFormVisible = true
-    },
-    updateRole() {
-      let that = this
-      // console.sysOperateLog(this.currentUser);
-      userApi.changeRole({
-        userId: that.currentUser.id,
-        roleIds: that.roleIds
-      }).then(res => {
-        let userIndex = this.userList.findIndex(value => value.id === this.currentUser.id)
-        this.userList[userIndex].roleList.splice(0, this.userList[userIndex].roleList.length)
-        this.roleIds.forEach(val => {
-          let role = this.roleOptions.find(item => item.id === val)
-          this.userList[userIndex].roleList.push(role);
-        })
-        this.resetUpdateTempData()
-        this.dialogFormVisible = false
-        this.$notify({
-          title: '系统提示',
-          message: '操作成功',
-          type: 'success',
-          duration: 2000
-        })
-      }).catch(e => {
-        this.dialogFormVisible = false
-      })
     },
     handleReserveDetailClick(row, index) {
       this.reserveUserId = row.id

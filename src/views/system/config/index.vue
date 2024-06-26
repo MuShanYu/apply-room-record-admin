@@ -2,7 +2,7 @@
   <div class="app-container">
     <div :style="fixedHeader ? 'margin-top: 35px;' : ''" class="filter-container"
          style="text-align: left;margin-bottom: 10px;">
-      <el-button id="config-list-add" v-permission="['super-admin']" v-waves icon="el-icon-plus" @click="showAdd = true"
+      <el-button id="config-list-add" v-permission="['system:config:add']" v-waves icon="el-icon-plus" @click="showAdd = true"
                  type="primary">
         添加配置
       </el-button>
@@ -51,14 +51,14 @@
         </el-table-column>
         <el-table-column width="200" label="操作" align="center">
           <template slot-scope="{row, $index}">
-            <el-button v-permission="['super-admin']" :disabled="row.state !== 1"
+            <el-button v-permission="['system:config:update']" :disabled="row.state !== 1"
                        icon="el-icon-edit"
                        @click="handleUpdateConfigClick(row, $index)" type="primary" size="mini">
               修改
             </el-button>
             <el-button type="danger" @click="handleDelClick(row, $index)"
                        icon="el-icon-delete"
-                       v-permission="['super-admin']" style="margin-left: 10px;" size="mini">
+                       v-permission="['system:config:disable']" style="margin-left: 10px;" size="mini">
               {{ row.state === -1 ? '解除' : '禁用' }}
             </el-button>
           </template>

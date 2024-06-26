@@ -26,7 +26,7 @@
       </el-button>
       <el-button
         class="filter-item"
-        v-permission="['super-admin']"
+        v-permission="['system:notice:add']"
         @click="addNoticeDialog = true"
         v-waves
         type="primary"
@@ -87,7 +87,7 @@
         <el-table-column width="200" label="操作" align="center">
           <template slot-scope="{ row, $index }">
             <el-button
-              v-permission="['super-admin']"
+              v-permission="['system:notice:update']"
               :disabled="row.state !== 1"
               icon="el-icon-edit"
               @click="handleUpdateNoticeClick(row, $index)"
@@ -100,7 +100,7 @@
               type="danger"
               icon="el-icon-delete"
               @click="handleDelClick(row, $index)"
-              v-permission="['super-admin']"
+              v-permission="['system:notice:revoke']"
               style="margin-left: 10px;"
               size="mini"
             >

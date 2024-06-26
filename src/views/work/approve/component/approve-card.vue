@@ -42,13 +42,15 @@
       <div style="margin-top: 15px;text-align: right;">
         <el-button @click="handleRoomReservationPassClick"
                    :disabled="passBtn"
+                   v-permission="['work:roomApprove:pass']"
                    style="margin-right: 5px;" type="primary" size="mini">通过
         </el-button>
         <el-button style="margin-right: 5px;" @click="handleRoomUpdateRejectClick"
                    :disabled="rejectBtn"
+                   v-permission="['work:roomApprove:reject']"
                    type="danger" size="mini">拒绝
         </el-button>
-        <el-button @click="handleRoomRecordDel" icon="el-icon-delete" type="text"></el-button>
+        <el-button v-permission="['work:roomApprove:del']" @click="handleRoomRecordDel" icon="el-icon-delete" type="text"></el-button>
       </div>
     </div>
   </div>

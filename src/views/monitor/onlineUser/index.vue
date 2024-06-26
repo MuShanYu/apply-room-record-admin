@@ -51,7 +51,7 @@
                   {{item}}
                 </div>
               </div>
-              <el-button type="primary" size="mini" slot="reference">设备列表</el-button>
+              <el-button v-permission="['monitor:onlineUser:equipment']" type="primary" size="mini" slot="reference">设备列表</el-button>
             </el-popover>
           </template>
         </el-table-column>

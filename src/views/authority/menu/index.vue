@@ -11,7 +11,7 @@
       <el-col :span="18">
         <el-button @click="getTreeSelect" icon="el-icon-search" type="primary">搜索
         </el-button>
-        <el-button @click="open = true" icon="el-icon-plus" type="primary" style="margin-left: 15px;">添加
+        <el-button v-permission="['authority:menu:add']" @click="open = true" icon="el-icon-plus" type="primary" style="margin-left: 15px;">添加
         </el-button>
         <el-button @click="handleExpandAll" style="margin-left: 15px;" icon="el-icon-folder">展开/折叠
         </el-button>
@@ -56,12 +56,14 @@
               size="mini"
               type="primary"
               icon="el-icon-edit"
+              v-permission="['authority:menu:update']"
               @click="handleUpdate(scope.row)"
             >修改</el-button>
             <el-button
               size="mini"
               type="danger"
               icon="el-icon-delete"
+              v-permission="['authority:menu:del']"
               @click="handleDel(scope.row)"
             >删除</el-button>
           </template>

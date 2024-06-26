@@ -48,7 +48,7 @@
         </el-option>
       </el-select>
       <el-tooltip effect="light" content="刷新数据" placement="top-start">
-        <el-button @click="refreshData" type="text" style="margin-left: 15px;"><i class="el-icon-refresh"></i>
+        <el-button v-permission="['work:roomApprove:refresh']" @click="refreshData" type="text" style="margin-left: 15px;"><i class="el-icon-refresh"></i>
         </el-button>
       </el-tooltip>
     </div>

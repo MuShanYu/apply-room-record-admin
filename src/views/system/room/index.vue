@@ -3,13 +3,13 @@
     <div style="display: flex;justify-content: flex-start;background-color: #ffffff;padding: 15px;"
          :style="fixedHeader ? 'margin-top: 35px;' : ''">
       <div id="room-list-add">
-        <el-button style="margin-right: 10px;" v-permission="['super-admin']" @click="addRoomDrawer = true" v-waves
+        <el-button style="margin-right: 10px;" v-permission="['system:room:add']" @click="addRoomDrawer = true" v-waves
                    type="primary" icon="el-icon-plus">
           添加
         </el-button>
       </div>
       <div id="room-list-operate-apply" style="margin-right: 10px;">
-        <el-button @click="handleBatchDisableReserve" v-waves type="info"
+        <el-button v-permission="['system:room:disableReserveAndRollBack']" @click="handleBatchDisableReserve" v-waves type="info"
                    icon="el-icon-document-delete">
           禁止预约/解除
         </el-button>
@@ -17,6 +17,7 @@
       <div id="room-list-operate-ban">
         <el-button @click="handleBatchDisableRoom" v-waves
                    type="danger"
+                   v-permission="['system:room:disableAndRollBack']"
                    icon="el-icon-circle-close">
           批量禁用/解除
         </el-button>
@@ -56,23 +57,23 @@
                   @clear="getRoomList"
                   placeholder="请输入检索的房间名称" style="width: 200px;"
                   @keyup.enter.native="getRoomList"/>
-        <el-button v-waves style="margin-left: 10px;" type="primary" icon="el-icon-search"
+        <el-button v-permission="['system:room:search']" v-waves style="margin-left: 10px;" type="primary" icon="el-icon-search"
                    @click="getRoomList">
           搜索
         </el-button>
       </div>
     </div>
     <div class="oper-2">
-      <el-button id="room-list-operate-qr-code" v-permission="['super-admin']" @click="handleBatchDownloadQRCode"
+      <el-button id="room-list-operate-qr-code" v-permission="['system:room:generateQRCode']" @click="handleBatchDownloadQRCode"
                  v-waves type="primary" icon="el-icon-picture-outline">
         生成房间二维码
       </el-button>
       <div id="room-list-import" style="display: flex;margin-left: 10px;">
-        <el-button v-permission="['super-admin']" @click="$router.push('/data-import/room')"
+        <el-button v-permission="['system:room:import']" @click="$router.push('/data-import/room')"
                    v-waves type="primary" icon="el-icon-upload2">
           导入
         </el-button>
-        <el-link :href="config.roomExcelHref" v-permission="['super-admin']" style="margin-left: 15px;"
+        <el-link :href="config.roomExcelHref" v-permission="['system:room:downloadTemplate']" style="margin-left: 15px;"
                  :underline="false" type="primary">
           导入模板下载 <i class="el-icon-download"></i>
         </el-link>

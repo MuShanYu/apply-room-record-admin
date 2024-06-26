@@ -47,9 +47,9 @@
             </el-option>
           </el-select>
         </div>
-        <div id="home-export-btn" style="margin-left: 15px;" >
-          <el-checkbox @change="handleCheckBoxChange" style="margin-right: 15px;" v-model="iManaged" label="我管理的" border></el-checkbox>
-          <el-button @click="handleExportCountDataClick" icon="el-icon-download" type="primary">
+        <div id="home-export-btn" style="margin-left: 15px;display: flex;" >
+          <el-checkbox v-permission="['work:statistics:self']" @change="handleCheckBoxChange" style="margin-right: 15px;" v-model="iManaged" label="我管理的" border></el-checkbox>
+          <el-button v-permission="['work:statistics:export']" @click="handleExportCountDataClick" icon="el-icon-download" type="primary">
             导出报表数据
           </el-button>
           <span style="font-size: 13px;color: #909399;">（统计分析筛选条件）</span>

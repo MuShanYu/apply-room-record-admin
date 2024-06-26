@@ -12,7 +12,7 @@
         <el-col :span="18">
           <el-button @click="getDataList" icon="el-icon-search" type="primary">搜索
           </el-button>
-          <el-button @click="addDialog = true" icon="el-icon-plus" type="primary" style="margin-left: 15px;">添加
+          <el-button v-permission="['authority:role:add']" @click="addDialog = true" icon="el-icon-plus" type="primary" style="margin-left: 15px;">添加
           </el-button>
         </el-col>
       </el-row>
@@ -60,12 +60,14 @@
               size="mini"
               type="primary"
               icon="el-icon-edit"
+              v-permission="['authority:role:update']"
               @click="handleUpdate(scope.row)"
             >修改
             </el-button>
             <el-button
               size="mini"
               type="danger"
+              v-permission="['authority:role:del']"
               icon="el-icon-delete"
               @click="handleDelRole(scope.row)"
             >删除
@@ -74,8 +76,8 @@
                          @command="(command) => handleCommand(command, scope.row)">
               <el-button size="mini" type="text" icon="el-icon-d-arrow-right">更多</el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="handleUpdateMenuAuth" icon="el-icon-key">菜单权限</el-dropdown-item>
-                <el-dropdown-item command="handleDistributeUserClick" icon="el-icon-user">分配用户</el-dropdown-item>
+                <el-dropdown-item v-permission="['authority:role:menuDistribute']" command="handleUpdateMenuAuth" icon="el-icon-key">菜单权限</el-dropdown-item>
+                <el-dropdown-item v-permission="['authority:role:userDistribute']" command="handleDistributeUserClick" icon="el-icon-user">分配用户</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </template>
@@ -86,11 +88,11 @@
     <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.size"
                 @pagination="getDataList"/>
 
-    <el-dialog title="添加菜单" :visible.sync="addDialog" append-to-body center>
+    <el-dialog title="添加角色" :visible.sync="addDialog" append-to-body center>
       <add-update-role @clickCancel="addDialog = false" @clickSubmit="handleAddSubmit"/>
     </el-dialog>
 
-    <el-dialog title="修改菜单" :visible.sync="updateDialog" append-to-body center>
+    <el-dialog title="修改角色" :visible.sync="updateDialog" append-to-body center>
       <add-update-role :role="curRole" @clickCancel="updateDialog = false" @clickSubmit="handleUpdateSubmit"/>
     </el-dialog>
 
