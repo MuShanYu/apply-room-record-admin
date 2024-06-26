@@ -3,7 +3,6 @@ import store from '@/store'
 function checkPermission(el, binding) {
   const { value } = binding
   const permissions = store.getters.permissions
-  console.log(permissions);
   if (value && value instanceof Array) {
     if (value.length > 0) {
       const assignPermission = value

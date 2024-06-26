@@ -141,7 +141,7 @@
           <template slot="header">
             <div id="room-list-my-charge">
               <span style="margin-right: 4px;">负责人</span>
-              <el-tooltip v-if="isSuperAdmin" effect="light"
+              <el-tooltip v-permission="['system:room:all']" v-if="isSuperAdmin" effect="light"
                           :content="eyeIcon === 'eye' ? '点击查看所有房间' : '点击查看您负责的房间'" placement="top">
                 <svg-icon @click.stop="getMyChargeRoom" class="link-type" :icon-class="eyeIcon"/>
               </el-tooltip>
@@ -153,10 +153,10 @@
         </el-table-column>
         <el-table-column width="250" label="操作" align="center">
           <template slot-scope="{row, $index}">
-            <el-button @click="handleRoomReservationClick(row, $index)" icon="el-icon-time" type="primary" size="mini">
+            <el-button v-permission="['system:room:reserveDetail']" @click="handleRoomReservationClick(row, $index)" icon="el-icon-time" type="primary" size="mini">
               预约详情
             </el-button>
-            <el-button @click="handleRoomAttendanceClick(row, $index)" icon="el-icon-date" style="margin-left: 10px;" type="primary" size="mini">
+            <el-button v-permission="['system:room:attendanceDetail']" @click="handleRoomAttendanceClick(row, $index)" icon="el-icon-date" style="margin-left: 10px;" type="primary" size="mini">
               签到详情
             </el-button>
 
@@ -164,9 +164,9 @@
                          @command="(command) => handleCommand(command, row)">
               <el-button size="mini" type="text" icon="el-icon-d-arrow-right">更多</el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="handleAccessRecordClick" icon="el-icon-position">足迹详情</el-dropdown-item>
-                <el-dropdown-item command="handleRoomUpdateClick" icon="el-icon-edit">修改</el-dropdown-item>
-                <el-dropdown-item command="handleDisableClick" icon="el-icon-delete">{{ row.state === 2 ? '解除' : '禁用' }}</el-dropdown-item>
+                <el-dropdown-item  v-permission="['system:room:accessRecordDetail']" command="handleAccessRecordClick" icon="el-icon-position">足迹详情</el-dropdown-item>
+                <el-dropdown-item  v-permission="['system:room:disable']" command="handleRoomUpdateClick" icon="el-icon-edit">修改</el-dropdown-item>
+                <el-dropdown-item  v-permission="['system:room:update']" command="handleDisableClick" icon="el-icon-delete">{{ row.state === 2 ? '解除' : '禁用' }}</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </template>
