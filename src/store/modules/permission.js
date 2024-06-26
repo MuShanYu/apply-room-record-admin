@@ -21,10 +21,16 @@ const actions = {
       // 向后端请求路由数据
       getBuiltMenuApi().then(res => {
         // console.log(res.data)
-        const rewriteRoutes = filterAsyncRouter(res)
-        rewriteRoutes.push({ path: '*', redirect: '/404', hidden: true })
-        commit('SET_ROUTES', rewriteRoutes)
-        resolve(rewriteRoutes)
+        if (res) {
+          const rewriteRoutes = filterAsyncRouter(res)
+          rewriteRoutes.push({ path: '*', redirect: '/404', hidden: true })
+          commit('SET_ROUTES', rewriteRoutes)
+          resolve(rewriteRoutes)
+        } else {
+          const rewriteRoutes = [{ path: '*', redirect: '/404', hidden: true }]
+          commit('SET_ROUTES', rewriteRoutes)
+          resolve(rewriteRoutes)
+        }
       })
     })
   }

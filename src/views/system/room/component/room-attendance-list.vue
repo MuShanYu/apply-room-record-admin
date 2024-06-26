@@ -54,7 +54,7 @@
 
 <script>
   import Pagination from "@/components/Pagination";
-  import attendanceApi from "@/api/attendance";
+  import {queryAttendanceCountList} from "@/api/attendance";
   import RoomAttendanceDetail from "./room-attendance-detail";
 
   export default {
@@ -126,7 +126,7 @@
       getRoomAttendanceList() {
         this.listLoading = true
         this.query.roomId = this.roomId
-        attendanceApi.queryAttendanceCountList(this.query).then(data => {
+        queryAttendanceCountList(this.query).then(data => {
           this.dataList = data.pageData
           this.total = data.totalSize
           // console.sysOperateLog(this.dataList);

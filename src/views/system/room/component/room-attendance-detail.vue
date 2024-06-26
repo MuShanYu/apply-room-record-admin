@@ -43,7 +43,7 @@
 
 <script>
   import Pagination from "@/components/Pagination";
-  import attendanceApi from "@/api/attendance";
+  import {queryAttendanceCountDetailList} from "@/api/attendance";
   import recordApi from '@/api/record'
 
   export default {
@@ -109,7 +109,7 @@
         this.query.userId = this.userId
         this.query.roomId = this.roomId
         console.log(this.startTime + " " + this.endTime + " " + this.userId + " " + this.roomId);
-        attendanceApi.queryAttendanceCountDetailList(this.query).then(data => {
+        queryAttendanceCountDetailList(this.query).then(data => {
           this.dataList = data.pageData
           this.total = data.totalSize
           // console.sysOperateLog(this.dataList);

@@ -42,6 +42,7 @@ const mutations = {
       state.token = null
       state.userInfo = null
       state.roles = []
+      state.permissions = []
       removeUserInfo()
       removeToken()
       router.replace("/login")
@@ -87,11 +88,11 @@ const actions = {
   getUserPermissionAndRole({ commit, state }) {
     return new Promise((resolve, reject) => {
       getUserPermissionAndRole().then(res => {
-        if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
+        if (res.permission && res.permission.length > 0) { // 验证返回的roles是否是一个非空数组
           commit('SET_ROLES', res.roles)
           commit('SET_PERMISSIONS', res.permission)
         } else {
-          commit('SET_ROLES', ['ROLE_DEFAULT'])
+          commit('SET_PERMISSIONS', ['DEFAULT_PERMISSION'])
         }
         resolve(res)
       }).catch(error => {
