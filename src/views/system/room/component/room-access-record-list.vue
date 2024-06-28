@@ -15,7 +15,7 @@
       <el-button @click="handleExportData" :loading="exportBtnLoading" style="margin-left: 10px;"  icon="el-icon-download" v-waves type="primary">
         导出表格数据
       </el-button>
-      <el-button @click="handleExportUserAccessCountData" :loading="exportCountBtnLoading" style="margin-left: 10px;"  icon="el-icon-download" v-waves type="primary">
+      <el-button v-permission="['system:room:exportRecord']" @click="handleExportUserAccessCountData" :loading="exportCountBtnLoading" style="margin-left: 10px;"  icon="el-icon-download" v-waves type="primary">
         导出统计数据
       </el-button>
     </div>
@@ -69,7 +69,7 @@
         <el-table-column label="操作" align="center">
           <template slot-scope="{row, $index}">
             <el-button plain type="danger" @click="handleDelRecord(row, $index)" v-waves
-                       v-permission="['super-admin']" style="margin: 3px;" size="mini">
+                       v-permission="['system:room:delRecord']" style="margin: 3px;" size="mini">
               {{row.state === 1 ? '删除记录' : '取消删除'}}
             </el-button>
           </template>

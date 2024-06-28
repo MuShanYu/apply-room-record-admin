@@ -47,7 +47,7 @@
             </el-option>
           </el-select>
         </div>
-        <div id="home-export-btn" style="margin-left: 15px;display: flex;" >
+        <div id="home-export-btn" style="margin-left: 15px;display: flex;align-items: center;" >
           <el-checkbox v-permission="['work:statistics:self']" @change="handleCheckBoxChange" style="margin-right: 15px;" v-model="iManaged" label="我管理的" border></el-checkbox>
           <el-button v-permission="['work:statistics:export']" @click="handleExportCountDataClick" icon="el-icon-download" type="primary">
             导出报表数据

@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getSysOperateListApi(params) {
   return request({
-    url: '/sys-log/query/list',
+    url: '/admin/sys-log/query/list',
     method: 'post',
     data: params
   })
@@ -10,7 +10,7 @@ export function getSysOperateListApi(params) {
 
 export function delLogApi(ids) {
   return request({
-    url: '/sys-log/del',
+    url: '/admin/sys-log/del',
     method: 'delete',
     data: ids
   })

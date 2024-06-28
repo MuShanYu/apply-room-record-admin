@@ -23,7 +23,7 @@
       </el-form-item>
       <el-form-item label="负责人" prop="chargePerson">
         <span>{{ room.chargePerson }}</span>
-        <el-button @click="updateCharger = true" style="margin-left: 15px;" type="text">修改</el-button>
+        <el-button v-permission="['system:room:updateCharger']" @click="updateCharger = true" style="margin-left: 15px;" type="text">修改</el-button>
       </el-form-item>
       <el-form-item label="设备信息" prop="equipmentInfo">
         <el-input placeholder="请输入设备信息" :rows="4" type="textarea" v-model="currentRoom.equipmentInfo"></el-input>

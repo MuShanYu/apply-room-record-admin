@@ -20,7 +20,7 @@ export function queryMenuListApi(menuName) {
 
 export function getBuiltMenuApi() {
   return request({
-    url: '/sys-menu/query/my-grant',
+    url: '/user/sys-menu/query/my-grant',
     method: 'get'
   })
 }

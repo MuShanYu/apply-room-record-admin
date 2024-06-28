@@ -18,7 +18,7 @@
 <script>
 import TagsView from './components/TagsView/index'
 import RightPanel from '@/components/RightPanel'
-import {AppMain, Navbar, Settings, Sidebar} from './components'
+import {AppMain, Navbar, Sidebar} from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import {mapState} from 'vuex'
 import {getUserInfo} from "@/utils/auth";
@@ -32,7 +32,6 @@ export default {
     Sidebar,
     AppMain,
     TagsView,
-    Settings,
     RightPanel
   },
   mixins: [ResizeMixin],
@@ -51,9 +50,6 @@ export default {
         withoutAnimation: this.sidebar.withoutAnimation,
         mobile: this.device === 'mobile'
       }
-    },
-    isSuperAdmin() {
-      return this.$store.getters.roles.some(v => v === 'super-admin')
     },
     sysConfig() {
       return SysConfig;

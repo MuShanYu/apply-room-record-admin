@@ -141,7 +141,7 @@
           <template slot="header">
             <div id="room-list-my-charge">
               <span style="margin-right: 4px;">负责人</span>
-              <el-tooltip v-permission="['system:room:all']" v-if="isSuperAdmin" effect="light"
+              <el-tooltip v-permission="['system:room:all']" effect="light"
                           :content="eyeIcon === 'eye' ? '点击查看所有房间' : '点击查看您负责的房间'" placement="top">
                 <svg-icon @click.stop="getMyChargeRoom" class="link-type" :icon-class="eyeIcon"/>
               </el-tooltip>
@@ -329,7 +329,6 @@ export default {
       accessRecordDrawer: false,
       accessAttendanceDrawer: false,
       currentUserId: '',
-      isSuperAdmin: false,
       roomSelectedList: [],
       generateQRCodeDialog: false,
       eyeIcon: 'eye'
@@ -338,7 +337,6 @@ export default {
   created() {
     this.currentUserId = this.userInfo.id
     this.query.chargePersonId = this.userInfo.id
-    this.isSuperAdmin = this.roles.some(v => v === 'super-admin')
     this.getRoomList()
     this.getRoomClassifyInfo()
   },
@@ -422,18 +420,6 @@ export default {
         this.$message.error('未选择要禁止预约的房间')
         return
       }
-      // 当前房间是不是我负责的，我是不是超级管理员
-      // 超级管理员不做限制
-      if (!this.isSuperAdmin) {
-        // 当前房间是不是我负责的，否则没有操作权限
-        for (let i = 0; i < this.roomSelectedList.length; i++) {
-          if (this.roomSelectedList[i].chargePersonId !== this.userInfo.id) {
-            // 这个房间不是我负责的
-            this.$message.error(this.roomSelectedList[i].roomName + '等，不是您负责的房间，无法完成操作！')
-            return
-          }
-        }
-      }
       this.$message.info('正在进行批量操作，请稍等')
       for (let room of this.roomSelectedList) {
         await this.doDisableReserveRoom(room)
@@ -460,16 +446,6 @@ export default {
       if (this.roomSelectedList.length === 0) {
         this.$message.error('未选择要禁用的房间')
         return
-      }
-      if (!this.isSuperAdmin) {
-        // 当前房间是不是我负责的，否则没有操作权限
-        for (let i = 0; i < this.roomSelectedList.length; i++) {
-          if (this.roomSelectedList[i].chargePersonId !== this.userInfo.id) {
-            // 这个房间不是我负责的
-            this.$message.error(this.roomSelectedList[i].roomName + '等，不是您负责的房间，无法完成操作！')
-            return
-          }
-        }
       }
       this.$message.info('正在进行批量操作，请稍等')
       for (let room of this.roomSelectedList) {

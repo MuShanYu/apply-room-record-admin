@@ -9,9 +9,9 @@
       </el-input>
       <el-button style="margin-left: 15px;" @click="getDataList" icon="el-icon-search" type="primary">搜索
       </el-button>
-      <el-button @click="handleGrantNewUser" icon="el-icon-plus" type="primary" style="margin-left: 15px;">授权新用户
+      <el-button v-permission="['authority:role:userDistribute']" @click="handleGrantNewUser" icon="el-icon-plus" type="primary" style="margin-left: 15px;">授权新用户
       </el-button>
-      <el-button :disabled="multipleSelection.length === 0" @click="handleBatchCancelGrant" icon="el-icon-close" plain type="danger" style="margin-left: 15px;">批量取消授权
+      <el-button v-permission="['authority:role:cancelUserDistribute']" :disabled="multipleSelection.length === 0" @click="handleBatchCancelGrant" icon="el-icon-close" plain type="danger" style="margin-left: 15px;">批量取消授权
       </el-button>
     </div>
     <div style="margin-top: 15px;">
@@ -53,7 +53,7 @@
         </el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="{row, $index}">
-            <el-button @click="handleCancelGrant(row)" v-waves type="primary"
+            <el-button v-permission="['authority:role:cancelUserDistribute']" @click="handleCancelGrant(row)" v-waves type="primary"
                        size="mini">
               取消授权
             </el-button>
@@ -162,7 +162,15 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-
+        let userIds = this.multipleSelection.map(item => item.id)
+        let obj = {
+          roleId: this.roleId,
+          userIds: userIds
+        }
+        cancelRoleGrantApi(obj).then(res => {
+          this.$message.success('取消授权成功')
+          this.getDataList()
+        })
       }).catch(() => {
 
       })

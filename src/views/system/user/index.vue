@@ -175,7 +175,6 @@ export default {
       accessRecordDrawer: false,
       recordUserId: '',
       reserveUserId: '',
-      isSuperAdmin: false,
       updateDialog: false,
       drawer: false,
 
@@ -184,7 +183,6 @@ export default {
   created() {
     this.getUserList()
     this.getInstitute()
-    this.isSuperAdmin = this.roles.some(v => v === 'super-admin')
   },
   methods: {
     getUserList() {
@@ -211,10 +209,6 @@ export default {
       this.accessRecordDrawer = true
     },
     handleUpdateUserNameClick(row) {
-      if (!this.isSuperAdmin) {
-        this.$message.error('您的权限不足，该修改操作需要超级管理员权限')
-        return
-      }
       this.$prompt('请输入要更改的新姓名', '更改用户姓名', {
         confirmButtonText: '更改',
         cancelButtonText: '取消',
