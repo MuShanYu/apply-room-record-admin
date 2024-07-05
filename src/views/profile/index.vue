@@ -37,7 +37,8 @@
                     <el-input v-model="ruleForm.name"></el-input>
                   </el-form-item>
                   <el-form-item label="学号/工号" prop="stuNum">
-                    <el-input v-model="ruleForm.stuNum"></el-input>
+                    <!--不允许修改学号/工号-->
+                    <el-input :disabled="true" v-model="ruleForm.stuNum"></el-input>
                   </el-form-item>
                   <el-form-item label="学院" prop="institute">
                     <el-select style="width: 100%;" v-model="ruleForm.institute" placeholder="请选择所在学院">
