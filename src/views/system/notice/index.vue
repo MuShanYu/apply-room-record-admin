@@ -104,7 +104,7 @@
               style="margin-left: 10px;"
               size="mini"
             >
-              {{ row.state === 1 ? "撤销" : "取消撤销" }}
+              {{ row.state === 1 ? "撤销" : "恢复" }}
             </el-button>
           </template>
         </el-table-column>

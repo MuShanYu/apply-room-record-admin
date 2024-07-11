@@ -50,7 +50,7 @@
         </el-table-column>
         <el-table-column label="姓名" align="center">
           <template slot-scope="{row}">
-            <span @click="handleUpdateUserNameClick(row)" class="link-type">{{ row.name }}</span>
+            <span>{{ row.name }}</span>
           </template>
         </el-table-column>
         <el-table-column label="学院" align="center">
@@ -208,40 +208,6 @@ export default {
       this.recordUserId = row.id
       this.accessRecordDrawer = true
     },
-    handleUpdateUserNameClick(row) {
-      this.$prompt('请输入要更改的新姓名', '更改用户姓名', {
-        confirmButtonText: '更改',
-        cancelButtonText: '取消',
-        inputValidator: (val) => {
-          if (val === null || val.trim() === '') {
-            return '请输入姓名'
-          } else if (val.trim().length < 2 || val.trim().length > 8) {
-            return '姓名的长度必须在2~8之间'
-          }
-        }
-      }).then(({value}) => {
-        this.$message.info('正在完成操作，请稍等')
-        let obj = {
-          userId: row.id,
-          name: value.trim()
-        }
-        userApi.updateUserName(obj).then(() => {
-          row.name = this.encodeName(value.trim())
-          this.$message.success('修改成功')
-        })
-      }).catch(() => {
-
-      });
-    },
-    encodeName(name) {
-      if (name !== null && name.length === 2) {
-        return name.replace(name.substring(1), "*");
-      }
-      if (name !== null && name.length > 2) {
-        return name.replace(name.substring(1, name.length - 1), "*");
-      }
-      return name;
-    },
     handleCommand(command, row) {
       switch (command) {
         case "handleResetPwd":
@@ -277,8 +243,13 @@ export default {
     },
     handleUserUpdate(user) {
       this.updateDialog = false
-      let obj = Object.assign({}, user)
-      delete obj['roleList']
+      let obj = {
+        id: user.id,
+        name: user.name,
+        institute: user.institute,
+        mail: user.mail,
+        stuNum: user.stuNum
+      }
       this.listLoading = true
       adminUpdateUserInfoApi(obj).then(res => {
         this.$message.success('修改成功')
