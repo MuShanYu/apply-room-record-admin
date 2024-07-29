@@ -1,4 +1,4 @@
-import {Message} from 'element-ui'
+import Bowser from 'bowser'
 
 let websocket = null
 let messageCallback = null
@@ -40,7 +40,8 @@ function onWebsocketClose(e) {
       setTimeout(function () {
         websocket = null
         tryTime++
-        initWebSocket()
+        let sendMsg = Bowser.name + Bowser.version + '(' + Bowser.osname + ')'
+        initWebSocket(sendMsg)
       }, 3 * 1000)
     }
   }
@@ -53,7 +54,7 @@ function onWebsocketOpen(e) {
 }
 
 // 初始化websocket
-function initWebSocket() {
+function initWebSocket(agentData) {
   if (typeof (WebSocket) === 'undefined') {
     return false
   }
@@ -62,7 +63,7 @@ function initWebSocket() {
     onWebsocketMsg(e)
   }
   websocket.onopen = function () {
-    onWebsocketOpen(navigator.userAgent)
+    onWebsocketOpen(agentData)
   }
   websocket.onerror = function () {
     errorCallback()
@@ -81,7 +82,7 @@ function initWebSocket() {
  */
 export function sendWebsocket(url, agentData, successCallback, errCallback) {
   wsUrl = url
-  initWebSocket()
+  initWebSocket(agentData)
   messageCallback = successCallback
   errorCallback = errCallback
 }

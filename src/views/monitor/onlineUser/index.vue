@@ -30,11 +30,6 @@
             <span>{{ row.institute }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="在线页面数量" align="center">
-          <template slot-scope="{row}">
-            <span>{{ row.sources.length }}</span>
-          </template>
-        </el-table-column>
         <el-table-column label="在线设备数量" align="center">
           <template slot-scope="{row}">
             <span>{{ row.equipments.length }}</span>
@@ -42,17 +37,16 @@
         </el-table-column>
         <el-table-column label="设备列表" align="center">
           <template slot-scope="{row}">
-            <el-popover
-              width="300"
-              placement="bottom"
-              trigger="click">
-              <div>
-                <div style="border-bottom: 1px solid #dcdfe6;" v-for="item in row.equipments">
+            <el-dropdown :hide-on-click="false" size="mini" trigger="click">
+              <el-button v-permission="['monitor:onlineUser:equipment']" type="primary" size="mini">
+                设备列表
+              </el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item v-for="item in row.equipments" :key="item">
                   {{item}}
-                </div>
-              </div>
-              <el-button v-permission="['monitor:onlineUser:equipment']" type="primary" size="mini" slot="reference">设备列表</el-button>
-            </el-popover>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </template>
         </el-table-column>
       </el-table>
@@ -63,6 +57,7 @@
 
 <script>
 import userApi from '@/api/user'
+
 export default {
   name: 'OnlineUser',
   data() {

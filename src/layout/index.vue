@@ -25,6 +25,8 @@ import {getUserInfo} from "@/utils/auth";
 import {closeWebsocket, sendWebsocket} from "@/utils/websocket";
 import SysConfig from "@/common/sys-config";
 
+import Bowser from 'bowser'
+
 export default {
   name: 'Layout',
   components: {
@@ -77,7 +79,8 @@ export default {
         // 建立web socket连接
         if (whiteList.indexOf(this.$route.fullPath) === -1) {
           // 发送在线信息
-          sendWebsocket(this.sysConfig.websocketPath + "?userId=" + user.id, navigator.userAgent, msg => {
+          let sendMsg = Bowser.name + Bowser.version + '(' + Bowser.osname + ')'
+          sendWebsocket(this.sysConfig.websocketPath + "?userId=" + user.id, sendMsg, msg => {
             this.$store.dispatch('app/connectSocketChannel', msg)
           }, e => {})
         }
