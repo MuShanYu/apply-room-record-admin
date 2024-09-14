@@ -19,7 +19,8 @@
                  @click="getUserList">
         搜索
       </el-button>
-      <el-button class="filter-item" v-permission="['system:user:import']" @click="$router.push('/data-import/user')" v-waves style="margin-left: 10px;"
+      <el-button class="filter-item" v-permission="['system:user:import']" @click="$router.push('/data-import/user')"
+                 v-waves style="margin-left: 10px;"
                  type="primary" icon="el-icon-upload2">
         导入
       </el-button>
@@ -65,11 +66,13 @@
         </el-table-column>
         <el-table-column width="250" label="操作" align="center">
           <template slot-scope="{row, $index}">
-            <el-button v-permission="['system:user:accessRecord']" icon="el-icon-position" @click="handleUserAccessRecordClick(row, $index)" type="primary"
+            <el-button v-permission="['system:user:accessRecord']" icon="el-icon-position"
+                       @click="handleUserAccessRecordClick(row, $index)" type="primary"
                        size="mini">
               足迹详情
             </el-button>
-            <el-button v-permission="['system:user:reserveDetail']" icon="el-icon-time" @click="handleReserveDetailClick(row, $index)" style="margin-left: 10px;" type="primary"
+            <el-button v-permission="['system:user:reserveDetail']" icon="el-icon-time"
+                       @click="handleReserveDetailClick(row, $index)" style="margin-left: 10px;" type="primary"
                        size="mini">
               预约详情
             </el-button>
@@ -77,9 +80,16 @@
                          @command="(command) => handleCommand(command, row)">
               <el-button size="mini" type="text" icon="el-icon-d-arrow-right">更多</el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item v-permission="['system:user:update']" command="handleUpdateUserInfo" icon="el-icon-edit">修改信息</el-dropdown-item>
-                <el-dropdown-item v-permission="['system:user:resetPwd']" command="handleResetPwd" icon="el-icon-unlock">重置密码</el-dropdown-item>
-                <el-dropdown-item v-permission="['system:user:distributeRole']" command="handleGrantRoleClick" icon="el-icon-user">分配角色</el-dropdown-item>
+                <el-dropdown-item v-permission="['system:user:update']" command="handleUpdateUserInfo"
+                                  icon="el-icon-edit">修改信息
+                </el-dropdown-item>
+                <el-dropdown-item v-permission="['system:user:resetPwd']" command="handleResetPwd"
+                                  icon="el-icon-unlock">重置密码
+                </el-dropdown-item>
+                <el-dropdown-item v-permission="['system:user:distributeRole']" command="handleGrantRoleClick"
+                                  icon="el-icon-user">分配角色
+                </el-dropdown-item>
+                <el-dropdown-item  v-permission="['system:user:sendMsg']" command="handleSendMsgClick" icon="el-icon-chat-dot-round">发送消息</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </template>
@@ -117,8 +127,13 @@
       size="60%"
       :visible.sync="drawer"
       direction="rtl">
-        <grant-role :user-id="currentUser.id" />
+      <grant-role :user-id="currentUser.id"/>
     </el-drawer>
+
+    <el-dialog title="发送消息" :visible.sync="sendMsgShow" center>
+      <send-msg :user-id="currentUser.id" @sendMsgSuccess="handleSendMsgSuccess" @sendMsgFailure="sendMsgShow = false"
+                @cancelClick="sendMsgShow = false"/>
+    </el-dialog>
 
   </div>
 </template>
@@ -133,6 +148,7 @@ import UserAccessRecord from "./component/user-access-record";
 import Pagination from "@/components/Pagination";
 import UpdateInfo from "@/views/system/user/component/update-info.vue";
 import GrantRole from "@/views/system/user/component/grant-role.vue";
+import SendMsg from "@/views/system/user/component/send-msg.vue";
 
 import config from '@/common/sys-config'
 import {mapState} from "vuex";
@@ -144,7 +160,8 @@ export default {
     UserRoomReserve,
     UserAccessRecord,
     UpdateInfo,
-    GrantRole
+    GrantRole,
+    SendMsg
   },
   computed: {
     config() {
@@ -177,7 +194,7 @@ export default {
       reserveUserId: '',
       updateDialog: false,
       drawer: false,
-
+      sendMsgShow: false
     }
   },
   created() {
@@ -219,6 +236,9 @@ export default {
         case "handleGrantRoleClick":
           this.handleGrantRoleClick(row);
           break;
+        case "handleSendMsgClick":
+          this.handleSendMsgClick(row)
+          break;
         default:
           break;
       }
@@ -229,7 +249,7 @@ export default {
         cancelButtonText: '取消',
         inputPattern: /^.{4,16}$/,
         inputErrorMessage: '密码的长度在4~16位'
-      }).then(({ value }) => {
+      }).then(({value}) => {
         resetUserPwdApi(row.id, value).then(res => {
           this.$message.success('修改成功')
         })
@@ -260,6 +280,14 @@ export default {
     handleGrantRoleClick(row) {
       this.currentUser = Object.assign({}, row)
       this.drawer = true
+    },
+    handleSendMsgClick(row) {
+      this.currentUser = Object.assign({}, row)
+      this.sendMsgShow = true
+    },
+    handleSendMsgSuccess() {
+      this.sendMsgShow = false
+      this.$message.success('消息发送成功')
     }
   }
 }
