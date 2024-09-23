@@ -65,7 +65,7 @@
     </div>
     <div class="oper-2">
       <el-button id="room-list-operate-qr-code" v-permission="['system:room:generateQRCode']" @click="handleBatchDownloadQRCode"
-                 v-waves type="primary" icon="el-icon-picture-outline">
+                 v-waves type="primary" :loading="qrCodeLoading" icon="el-icon-picture-outline">
         生成房间二维码
       </el-button>
       <div id="room-list-import" style="display: flex;margin-left: 10px;">
@@ -182,7 +182,7 @@
       title="批量生成房间二维码预览"
       :fullscreen="true"
       :visible.sync="generateQRCodeDialog">
-      <room-qr-code-generate :room-list="roomSelectedList"/>
+      <room-qr-code-generate :qr-code-room-list="qrCodeRoomList"/>
     </el-dialog>
 
     <!-- 查看预约详情 -->
@@ -248,6 +248,7 @@ import RoomAdd from "./component/room-add";
 import RoomAccessRecordList from "./component/room-access-record-list";
 import RoomQrCodeGenerate from "./component/room-qr-code-generate";
 import RoomAttendanceList from "./component/room-attendance-list";
+import {generateWxQRCodeApi} from "@/api/room";
 
 import clipboard from '@/directive/clipboard/index.js'
 import {mapState} from "vuex"; // use clipboard by v-directive
@@ -331,7 +332,9 @@ export default {
       currentUserId: '',
       roomSelectedList: [],
       generateQRCodeDialog: false,
-      eyeIcon: 'eye'
+      eyeIcon: 'eye',
+      qrCodeRoomList:[],
+      qrCodeLoading: false
     }
   },
   created() {
@@ -413,7 +416,32 @@ export default {
         this.$message.error("请选择要生成二维码的房间");
         return
       }
-      this.generateQRCodeDialog = true
+      // 调用生成二维码的接口
+      let dto = {
+        roomIds: [],
+        cover: false
+      }
+      this.roomSelectedList.forEach(item => dto.roomIds.push(item.id))
+      this.qrCodeLoading = true
+      this.qrCodeRoomList = [] // 重置内容
+      generateWxQRCodeApi(dto).then(res => {
+        // key value对象，key是room id,value是图片url
+        for (let roomId in res) {
+          let obj = {
+            room: {},
+            qrCodeUrl: ''
+          }
+          obj.room = this.roomSelectedList.find(val => val.id === roomId)
+          obj.qrCodeUrl = res[roomId]
+          this.qrCodeRoomList.push(obj)
+        }
+        this.qrCodeLoading = false
+        this.generateQRCodeDialog = true
+      }).catch(e => {
+        console.log(e);
+        this.$message.error('二维码生成失败')
+        this.qrCodeLoading = false
+      })
     },
     async handleBatchDisableReserve() {
       if (this.roomSelectedList.length === 0) {

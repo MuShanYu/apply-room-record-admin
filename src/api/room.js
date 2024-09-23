@@ -96,3 +96,11 @@ export default {
     })
   },
 }
+
+export function generateWxQRCodeApi(roomQRCodeDTO) {
+  return request({
+    url: '/room/generate/wxQRCode',
+    method: 'post',
+    data: roomQRCodeDTO
+  })
+}
