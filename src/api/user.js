@@ -14,12 +14,6 @@ export default {
       data: userLoginDTO
     })
   },
-  logout() {
-    return request({
-      url: '/user/logout',
-      method: 'get'
-    })
-  },
   userList(userListQueryDTO) {
     return request({
       url: '/admin/query/userList',
@@ -80,5 +74,12 @@ export function resetUserPwdApi(userId, newPwd) {
       userId,
       newPwd
     }
+  })
+}
+
+export function logout() {
+  return request({
+    url: '/user/logout',
+    method: 'get'
   })
 }

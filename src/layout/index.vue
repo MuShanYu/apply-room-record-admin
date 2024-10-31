@@ -21,11 +21,6 @@ import RightPanel from '@/components/RightPanel'
 import {AppMain, Navbar, Sidebar} from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import {mapState} from 'vuex'
-import {getUserInfo} from "@/utils/auth";
-import {closeWebsocket, sendWebsocket} from "@/utils/websocket";
-import SysConfig from "@/common/sys-config";
-
-import Bowser from 'bowser'
 
 export default {
   name: 'Layout',
@@ -52,9 +47,6 @@ export default {
         withoutAnimation: this.sidebar.withoutAnimation,
         mobile: this.device === 'mobile'
       }
-    },
-    sysConfig() {
-      return SysConfig;
     }
   },
   data() {
@@ -62,30 +54,10 @@ export default {
 
     }
   },
-  mounted() {
-    this.buildSocketConnect()
-  },
-  beforeDestroy() {
-    closeWebsocket()
-  },
   methods: {
     handleClickOutside() {
       this.$store.dispatch('app/closeSideBar', {withoutAnimation: false})
     },
-    buildSocketConnect() {
-      const whiteList = ['/login']
-      const user = getUserInfo()
-      if (user) {
-        // 建立web socket连接
-        if (whiteList.indexOf(this.$route.fullPath) === -1) {
-          // 发送在线信息
-          let sendMsg = Bowser.name + Bowser.version + '(' + Bowser.osname + ')'
-          sendWebsocket(this.sysConfig.websocketPath + "?userId=" + user.id, sendMsg, msg => {
-            this.$store.dispatch('app/connectSocketChannel', msg)
-          }, e => {})
-        }
-      }
-    }
   }
 }
 </script>

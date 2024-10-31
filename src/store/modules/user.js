@@ -1,3 +1,4 @@
+import sysConfig from "@/common/sys-config";
 import userApi from '@/api/user'
 import {getUserPermissionAndRole} from "@/api/user";
 import {
@@ -6,9 +7,10 @@ import {
   removeToken,
   getUserInfo,
   removeUserInfo,
-  setUserInfo
+  setUserInfo,
+  removeExpireTime,
+  setLoginExpireTime
 } from '@/utils/auth'
-import router from '@/router'
 import {Message} from "element-ui";
 
 const getDefaultState = () => {
@@ -38,15 +40,13 @@ const mutations = {
     state.permissions = permissions
   },
   LOGOUT: (state) => {
-    userApi.logout().then(() => {
-      state.token = null
-      state.userInfo = null
-      state.roles = []
-      state.permissions = []
-      removeUserInfo()
-      removeToken()
-      router.replace("/login")
-    })
+    state.token = null
+    state.userInfo = null
+    state.roles = []
+    state.permissions = []
+    removeUserInfo()
+    removeToken()
+    removeExpireTime()
   }
 }
 
@@ -64,6 +64,7 @@ const actions = {
         if (data !== null) {
           commit('SET_TOKEN', data.token)
           commit('SET_USER_INFO', data.user)
+          setLoginExpireTime(new Date().getTime() + sysConfig.expireTime)
           resolve()
         } else {
           Message({

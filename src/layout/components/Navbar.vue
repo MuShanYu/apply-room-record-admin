@@ -52,7 +52,7 @@ import config from "@/common/sys-config";
 import configApi from '@/api/config'
 
 import Cookies from 'js-cookie'
-
+import {logout} from '@/api/user'
 export default {
   components: {
     Breadcrumb,
@@ -79,8 +79,11 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$store.dispatch('user/logout').then(() => {
-          this.$router.replace(`/login`)
+        logout().then(() => {
+          this.$store.dispatch('user/logout').then(() => {
+            this.$store.dispatch('websocket/websocketCloseGuanBi')
+            this.$router.replace(`/login`)
+          })
         })
       }).catch(() => {
 

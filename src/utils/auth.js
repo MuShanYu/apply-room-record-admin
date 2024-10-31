@@ -7,7 +7,7 @@ export function getToken() {
 }
 
 export function setToken(token) {
-  return Cookies.set(TokenKey, token, { expires: 7 })
+  return Cookies.set(TokenKey, token)
 }
 
 export function removeToken() {
@@ -30,7 +30,27 @@ export function getUserInfo() {
   return '';
 }
 
+export function getUserId() {
+  let userInfoText = Cookies.get('userInfo')
+  if (userInfoText) {
+    return JSON.parse(userInfoText).id
+  }
+  return null;
+}
+
 export function removeUserInfo() {
   return Cookies.remove('userInfo')
+}
+
+export function setLoginExpireTime(timeMills) {
+  return Cookies.set("loginExpireTime", timeMills)
+}
+
+export function getLoginExpireTime() {
+  return Cookies.get('loginExpireTime')
+}
+
+export function removeExpireTime() {
+  return Cookies.remove('loginExpireTime')
 }
 

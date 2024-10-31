@@ -10,6 +10,11 @@
           :value="item">
         </el-option>
       </el-select>
+      <el-input v-model="query.stuNum"
+                clearable
+                @clear="getUserList"
+                placeholder="请输入检索的学号" style="width: 200px;margin-right: 10px;" class="filter-item"
+                @keyup.enter.native="getUserList"/>
       <el-input v-model="query.name"
                 clearable
                 @clear="getUserList"
@@ -179,7 +184,8 @@ export default {
         page: 1,
         size: 10,
         name: '',
-        institute: ''
+        institute: '',
+        stuNum: ''
       },
       listLoading: false,
       userList: [],

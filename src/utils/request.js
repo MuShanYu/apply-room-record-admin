@@ -1,16 +1,19 @@
 import axios from 'axios'
-import { MessageBox, Message } from 'element-ui'
+import {Message} from 'element-ui'
 import store from '@/store'
 import router from '@/router'
-import { getToken } from '@/utils/auth'
+import {getLoginExpireTime, getToken, getUserId} from '@/utils/auth'
 
 import constants from "@/common/sys-config";
 
-// create an axios instance
+const whiteList = [
+  "/config/get/by/",
+  "/user/logout",
+  "/admin/login"
+]
+
 const service = axios.create({
   baseURL: constants.baseUrl, // url = base url + request url
-  // baseURL: 'https://www.mushanyu.xyz:8500', // url = base url + request url
-  // withCredentials: true, // send cookies when cross-domain requests
   timeout: 50000 // request timeout
 })
 
@@ -18,15 +21,31 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-    if (store.getters.token) {
-      config.headers['token'] = getToken()
+    const token = getToken()
+    if (token) {
+      config.headers['token'] = token
+    }
+    let uri = config.url;
+    if (!whiteList.some((item) => uri.startsWith(item))) {
+      // 判断是否有登录状态，登录是否过期
+      const userId = getUserId();
+      const loginExpiredTime = getLoginExpireTime()
+      if (!userId || !token) {
+        handleServiceError(-1)
+        return Promise.reject()
+      }
+      if (loginExpiredTime < new Date().getTime()) {
+        // 登录过期，重新登录
+        handleServiceError(-2)
+        return Promise.reject()
+      }
     }
     // console.sysOperateLog(config);
     return config
   },
   error => {
     // do something with request error
-    console.log(error) // for debug
+    console.log('request reject') // for debug
     return Promise.reject(error)
   }
 )
@@ -42,47 +61,66 @@ service.interceptors.response.use(
     const res = response.data
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 200) {
-      // 需要动态刷新token
-      if (res.code === -2 || res.code === -3 || res.code === -4 || res.code === -5) {
-        store.dispatch('user/logout').then(() => {
-          Message({
-            message: '您的登录状态过期或者无效，请您重新登录！',
-            type: 'error',
-            duration: 2500
-          })
-        })
-      } else if (res.code === -1) {
-        MessageBox.confirm('未登录，请先登录！', '提示', {
-          confirmButtonText: '登录',
-          showCancelButton: false,
-          type: 'warning',
-        }).then(() => {
-          // 清除数据然后跳转至登录
-          router.replace(`/login`)
-        })
-      } else if (res.code === 999) {
-
-      } else {
-        Message({
-          message: res.message || 'Error',
-          type: 'error',
-          duration: 2500
-        })
-      }
+      handleServiceError(res.code, res.message)
       return Promise.reject(res.message || "Error")
     } else {
       return res.queryData
     }
   },
   error => {
-    console.log(error) // for debug
-    Message({
-      message: error.message,
-      type: 'error',
-      duration: 5 * 1000
-    })
-    return Promise.reject(error)
+    if (error) {
+      console.log(error) // for debug
+      Message({
+        message: error.message,
+        type: 'error',
+        duration: 5 * 1000
+      })
+      return Promise.reject(error)
+    }
   }
 )
+
+function handleServiceError(code, message = 'error') {
+  if (store.getters.webSocketIsOpen) {
+    store.dispatch('websocket/websocketCloseGuanBi').then(r => {})
+  }
+  if (code === -3 || code === -4 || code === -5) {
+    store.dispatch('user/logout').then(() => {
+      Message({
+        message: '您的登录状态异常，请您重新登录！',
+        type: 'error',
+        duration: 2500
+      })
+      router.replace(`/login`)
+    })
+  } else if (code === -2) {
+    store.dispatch('user/logout').then(() => {
+      Message({
+        message: '您的登录状态过期，请您重新登录！',
+        type: 'error',
+        duration: 2500
+      })
+      // 清除数据然后跳转至登录
+      router.replace(`/login`)
+    })
+  }
+  else if (code === -1) {
+    store.dispatch('user/logout').then(() => {
+      Message({
+        message: '未登录，请先登录！',
+        type: 'error',
+        duration: 2500
+      })
+      // 清除数据然后跳转至登录
+      router.replace(`/login`)
+    })
+  } else {
+    Message({
+      message: message || 'Error',
+      type: 'error',
+      duration: 2500
+    })
+  }
+}
 
 export default service

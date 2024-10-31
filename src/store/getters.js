@@ -9,5 +9,6 @@ const getters = {
   permissionRoutes: state => state.permission.routes,
   visitedViews: state => state.tagsView.visitedViews,
   cachedViews: state => state.tagsView.cachedViews,
+  webSocketIsOpen: state => state.websocket.webSocketIsOpen
 }
 export default getters
