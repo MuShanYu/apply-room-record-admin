@@ -60,14 +60,14 @@ const socketData = {
     },
     // 发送数据
     websocketSend({state, dispatch}, data) {
-      console.log("发送消息：",data);
+      // console.log("发送消息：",data);
       state.socketTask.send(data);
     },
     // 收到数据
     websocketOnMessage({commit, dispatch}, res) {
       // 修改状态为未连接
       //接到推送的消息--显示全局弹窗
-      console.log("收到服务器内容：" + res.data)
+      // console.log("收到服务器内容：" + res.data)
       if (res.data !== 'pong') // 如果不是心跳消息，处理消息逻辑
         dispatch('app/connectSocketChannel', res.data, {root: true})
     },
@@ -89,7 +89,7 @@ const socketData = {
     webSocketPing({ state, dispatch }) {
       if (getToken() && state.webSocketIsOpen) {
         state.webSocketPingTimer = setTimeout(() => {
-          console.log("发送心跳");
+          // console.log("发送心跳");
           dispatch("websocketSend", "ping");
           clearTimeout(state.webSocketPingTimer); // 清理当前心跳定时器
           dispatch("webSocketPing"); // 重新开始心跳
