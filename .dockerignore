@@ -1,0 +1,20 @@
+# 排除源码文件
+src/
+public/
+build/
+# 排除本地构建输出
+node_modules/
+# 排除项目配置文件
+babel.config.js
+jsconfig.json
+README.md
+package-lock.json
+jest.config.js
+LICENSE
+Jenkinsfile
+package.json
+postcss.config.js
+vue.config.js
+# 排除版本控制系统文件
+.git
+.gitignore
