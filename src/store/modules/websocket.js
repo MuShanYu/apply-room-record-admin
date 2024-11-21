@@ -54,7 +54,12 @@ const socketData = {
       commit("setReconnectCount", 1); // 重置重连计数
       // 发送在线设备信息
       let sendMsg = Bowser.name + Bowser.version + '(' + Bowser.osname + ')'
-      dispatch('websocketSend', sendMsg)
+      let msgBody = {
+        content: sendMsg,
+        type: 'device',
+        toUserId: ''
+      }
+      dispatch('websocketSend', JSON.stringify(msgBody))
       //开始心跳检测
       dispatch("webSocketPing");
     },

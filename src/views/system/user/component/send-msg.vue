@@ -14,6 +14,7 @@
         <el-select v-model="message.messageType" placeholder="请选择消息类型">
           <el-option label="待办通知" :value="0"></el-option>
           <el-option label="结果通知" :value="1"></el-option>
+          <el-option label="系统通知" :value="2"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="发送方式" prop="type">
